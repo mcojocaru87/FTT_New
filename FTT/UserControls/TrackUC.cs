@@ -24,6 +24,7 @@ namespace FTT.UserControls
         private int _workingExerciseId = 0;
         private decimal _previousTotalVolume = 0;
         private decimal _currentWeightUsed = 0;
+        private int _lastStrikeCount = 0;
 
         public event EventHandler TriggerButtonEvent;
 
@@ -173,13 +174,31 @@ namespace FTT.UserControls
         {
             var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
             var settings = _settingRepository.GetAll().FirstOrDefault();
+            var currentWeightUsed = _trackList.First().Weight;
 
             var maxFailAttempts = settings?.FailAttempts ?? 4;
             var maxReps = settings?.MaxReps ?? 12;
+            var notes = string.Empty;
+            var failAttempts = 0;
 
             if (currentTotalVolume <= _previousTotalVolume)
             {
+                failAttempts = _lastStrikeCount == maxFailAttempts ? 0 : _lastStrikeCount + 1;
 
+                if (failAttempts <= maxFailAttempts)
+                {
+                    notes = $"Keep going! - {currentWeightUsed} Kg";
+                }
+
+                if (_lastStrikeCount == maxFailAttempts)
+                {
+                    notes = "Lower weight!";
+                }
+            }
+            else
+            {
+                failAttempts = 0;
+                
             }
         }
 
@@ -312,6 +331,8 @@ namespace FTT.UserControls
 
                 var strikeCount = exerciseNotes.StrikeCount;
                 var notes = exerciseNotes.Notes;
+
+                _lastStrikeCount = strikeCount;
 
                 var displayStrikes = string.Empty;
 
