@@ -1,0 +1,98 @@
+﻿using FTT.Services;
+using FTT.UserControls;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace FTT
+{
+    public partial class MainForm : Form
+    {
+        private readonly IWorkoutService _workoutService;
+
+        public MainForm()
+        {
+            InitializeComponent();
+
+            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
+        }
+
+        public Button BeginWorkoutBtn => BeginWorkoutButton;
+        public Button TrackBtn => TrackButton;
+        public Button SettingsBtn => SettingsButton;
+        public Button DatabaseBtn => DatabaseButton;
+
+        private void DatabaseButton_Click(object sender, EventArgs e)
+        {
+            LoadDatabaseUserControl();
+        }
+
+        private void LoadDatabaseUserControl()
+        {
+            DatabaseUC databaseUserControl = new();
+
+            SetupUserControl(databaseUserControl);
+        }
+
+        private void LoadSettingsUserControl()
+        {
+            SettingsUC settingsUserControl = new();
+
+            SetupUserControl(settingsUserControl);
+        }
+
+        private void LoadTrackUserControl()
+        {
+            TrackUC trackUserControl = new(this);
+            trackUserControl.TriggerButtonEvent += BeginWorkoutButton_Click;
+
+            SetupUserControl(trackUserControl);
+        }
+
+        private void SetupUserControl(UserControl userControl)
+        {
+            userControl.Dock = DockStyle.Fill;
+
+            MainPanel.Controls.Clear();
+
+            MainPanel.Controls.Add(userControl);
+        }
+
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            LoadSettingsUserControl();
+        }
+
+        private void TrackButton_Click(object sender, EventArgs e)
+        {
+            LoadTrackUserControl();
+        }
+
+        private void BeginWorkoutButton_Click(object sender, EventArgs e)
+        {
+            var buttonText = BeginWorkoutButton.Text;
+
+            if (buttonText == "Begin Workout")
+            {
+                BeginWorkoutButton.Text = "Finish Workout";
+
+                InitiateWorkout initiateWorkout = new();
+
+                initiateWorkout.ShowDialog();
+
+                SetupWorkoutStatusPanel(true);
+            }
+            else
+            {
+                BeginWorkoutButton.Text = "Begin Workout";
+
+                if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
+                {
+                    _workoutService.FinishWorkout((int)Session.Instance.ActiveWorkoutId);
+                }
+
+                SetupWorkoutStatusPanel(false);
+            }
+        }
+
+        private void SetupWorkoutStatusPanel(bool isActive) => WorkoutStatusPanel.Visible = isActive;
+    }
+}
