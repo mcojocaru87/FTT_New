@@ -119,6 +119,7 @@ namespace FTT.UserControls
             }
 
             SetUpdateWorkoutDateButton();
+            LoadWorkingExerciseHistory();
 
             MainPanel.Visible = true;
 
@@ -482,6 +483,14 @@ namespace FTT.UserControls
             });
 
             txtReps.Clear();
+        }
+
+        private void LoadWorkingExerciseHistory()
+        {
+            var history = _trackService.GetWorkingExerciseHistory(_exerciseId);
+            var dataTable = _trackService.ConvertToDataTable(history);
+
+            dgvHistory.DataSource = dataTable;
         }
     }
 }

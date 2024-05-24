@@ -1,5 +1,6 @@
 ﻿using FTT.DbEntity;
 using FTT.ViewModels;
+using System.Data;
 
 namespace FTT.Services.Track
 {
@@ -11,5 +12,7 @@ namespace FTT.Services.Track
         LastTrackingViewModel? GetLastTracking(int exerciseId);
         void AddSetsToWorkingExercise(List<TrackListViewModel> list, int workingExerciseId);
         void FinishWorkingExercise(WorkingExercise workingExercise);
+        List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId);
+        DataTable ConvertToDataTable(List<HistoryViewModel> list);
     }
 }

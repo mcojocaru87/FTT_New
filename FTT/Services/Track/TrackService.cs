@@ -2,6 +2,7 @@
 using FTT.DbEntity;
 using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using System.Data;
 
 namespace FTT.Services.Track
 {
@@ -139,6 +140,78 @@ namespace FTT.Services.Track
                 _workingExerciseRepository.Update(workingExerciseToUpdate);
                 _workingExerciseRepository.Commit();
             }
+        }
+
+        public List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId)
+        {
+            List<HistoryViewModel> viewModel = [];
+
+            var workingExercises = _workingExerciseRepository
+                .Find(x => x.ExerciseId == exerciseId)
+                .OrderByDescending(x => x.WorkingDate)
+                .ToList();
+
+            var exercise = GetExercise(exerciseId);
+            var multiplier = exercise.Multiplier;
+
+            foreach (var item in workingExercises)
+            {
+                var viewModelItem = new HistoryViewModel();
+
+                var workingExerciseSets = _workingExerciseSetRepository
+                    .Find(x => x.WorkingExerciseId == item.Id)
+                    .OrderBy(x => x.SetNumber)
+                    .ToList();
+
+                var volume = workingExerciseSets.Sum(x => x.Reps * x.Weight * multiplier);
+
+                viewModelItem["Date"] = item.WorkingDate.ToString("MMM dd, yyyy");
+                viewModelItem["Attempts"] = item.FailCount;
+                viewModelItem["Volume"] = $"{volume} Kg";
+
+                foreach (var set in workingExerciseSets)
+                {
+                    viewModelItem[$"Set{set.SetNumber}"] = $"R{set.Reps} x W{set.Weight}{(multiplier > 1 ? $" x {multiplier}" : string.Empty)}";
+                }
+
+                if (volume > 0)
+                {
+                    viewModel.Add(viewModelItem);
+                }
+            }
+
+            return viewModel;
+        }
+
+        public DataTable ConvertToDataTable(List<HistoryViewModel> list)
+        {
+            DataTable dataTable = new();
+
+            if (list == null || list.Count == 0)
+            {
+                return dataTable;
+            }
+
+            var propertyNames = list
+                .SelectMany(x => x.GetProperties().Keys)
+                .Distinct()
+                .ToList();
+
+            foreach (var property in propertyNames)
+            {
+                dataTable.Columns.Add(property);
+            }
+
+            foreach (var item in list)
+            {
+                var row = dataTable.NewRow();
+                foreach (var property in item.GetProperties())
+                {
+                    row[property.Key] = property.Value ?? DBNull.Value;
+                }
+                dataTable.Rows.Add(row);
+            }
+            return dataTable;
         }
     }
 }
