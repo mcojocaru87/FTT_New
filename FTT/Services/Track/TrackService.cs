@@ -109,7 +109,7 @@ namespace FTT.Services.Track
             {
                 var set = new WorkingExerciseSet
                 {
-                    Reps = item.SetNumber,
+                    Reps = item.Reps,
                     SetNumber = item.SetNumber,
                     Weight = item.Weight,
                     WorkingExerciseId = workingExerciseId
@@ -124,6 +124,21 @@ namespace FTT.Services.Track
         private Exercise GetExercise(int exerciseId)
         {
             return _exerciseRepository.GetById(exerciseId);
+        }
+
+        public void FinishWorkingExercise(WorkingExercise workingExercise)
+        {
+            var workingExerciseToUpdate = _workingExerciseRepository.GetById(workingExercise.Id);
+
+            if (workingExerciseToUpdate != null)
+            {
+                workingExerciseToUpdate.WorkingDate = workingExercise.WorkingDate;
+                workingExerciseToUpdate.FailCount = workingExercise.FailCount;
+                workingExerciseToUpdate.Notes = workingExercise.Notes;
+
+                _workingExerciseRepository.Update(workingExerciseToUpdate);
+                _workingExerciseRepository.Commit();
+            }
         }
     }
 }

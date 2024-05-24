@@ -146,6 +146,8 @@ namespace FTT.UserControls
             if (trackListItems > 0)
             {
                 _trackService.AddSetsToWorkingExercise(_trackList.ToList(), _workingExerciseId);
+
+                FinishWorkingExerciseSession();
             }
             else
             {
@@ -175,6 +177,7 @@ namespace FTT.UserControls
             var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
             var settings = _settingRepository.GetAll().FirstOrDefault();
             var currentWeightUsed = _trackList.First().Weight;
+            var totalReps = _trackList.Sum(x => x.Reps);
 
             var maxFailAttempts = settings?.FailAttempts ?? 4;
             var maxReps = settings?.MaxReps ?? 12;
@@ -192,14 +195,37 @@ namespace FTT.UserControls
 
                 if (_lastStrikeCount == maxFailAttempts)
                 {
-                    notes = "Lower weight!";
+                    notes = $"Lower weight! - {currentWeightUsed} Kg";
                 }
             }
             else
             {
                 failAttempts = 0;
-                
+
+                notes = (totalReps / maxReps == _trackList.Count) ?
+                        $"Increase weight! - {currentWeightUsed} Kg" :
+                        $"Getting there! - {currentWeightUsed} Kg";
             }
+
+            var workingExercise = new WorkingExercise
+            {
+                Id = _workingExerciseId,
+                ExerciseId = _exerciseId,
+                FailCount = failAttempts,
+                Notes = notes,
+                WorkingDate = dtWorkingDate.Value
+            };
+
+            _trackService.FinishWorkingExercise(workingExercise);
+
+            _workingExerciseId = 0;
+            _exerciseId = 0;
+            _exerciseMultiplier = 0;
+            _trackList.Clear();
+            txtNotes.Clear();
+            txtReps.Clear();
+            txtWeight.Clear();
+            lstTrack.DataSource = _trackList;
         }
 
         private void SetMainFormButtonEnabled(bool enabled)

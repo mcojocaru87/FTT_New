@@ -10,5 +10,6 @@ namespace FTT.Services.Track
         TrackingNotesViewModel? GetTrackingNotes(int exerciseId);
         LastTrackingViewModel? GetLastTracking(int exerciseId);
         void AddSetsToWorkingExercise(List<TrackListViewModel> list, int workingExerciseId);
+        void FinishWorkingExercise(WorkingExercise workingExercise);
     }
 }
