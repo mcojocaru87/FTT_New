@@ -36,14 +36,16 @@
             label1 = new Label();
             WorkoutStatusPanel = new Panel();
             lblWorkoutStatus = new Label();
+            WorkoutsButton = new Button();
             WorkoutStatusPanel.SuspendLayout();
             SuspendLayout();
             // 
             // DatabaseButton
             // 
-            DatabaseButton.Location = new Point(694, 12);
+            DatabaseButton.Location = new Point(607, 9);
+            DatabaseButton.Margin = new Padding(3, 2, 3, 2);
             DatabaseButton.Name = "DatabaseButton";
-            DatabaseButton.Size = new Size(94, 29);
+            DatabaseButton.Size = new Size(82, 22);
             DatabaseButton.TabIndex = 0;
             DatabaseButton.Text = "Database";
             DatabaseButton.UseVisualStyleBackColor = true;
@@ -51,9 +53,10 @@
             // 
             // SettingsButton
             // 
-            SettingsButton.Location = new Point(594, 12);
+            SettingsButton.Location = new Point(520, 9);
+            SettingsButton.Margin = new Padding(3, 2, 3, 2);
             SettingsButton.Name = "SettingsButton";
-            SettingsButton.Size = new Size(94, 29);
+            SettingsButton.Size = new Size(82, 22);
             SettingsButton.TabIndex = 1;
             SettingsButton.Text = "Settings";
             SettingsButton.UseVisualStyleBackColor = true;
@@ -61,9 +64,10 @@
             // 
             // TrackButton
             // 
-            TrackButton.Location = new Point(12, 12);
+            TrackButton.Location = new Point(10, 9);
+            TrackButton.Margin = new Padding(3, 2, 3, 2);
             TrackButton.Name = "TrackButton";
-            TrackButton.Size = new Size(94, 29);
+            TrackButton.Size = new Size(82, 22);
             TrackButton.TabIndex = 2;
             TrackButton.Text = "Track";
             TrackButton.UseVisualStyleBackColor = true;
@@ -71,16 +75,18 @@
             // 
             // MainPanel
             // 
-            MainPanel.Location = new Point(12, 57);
+            MainPanel.Location = new Point(10, 43);
+            MainPanel.Margin = new Padding(3, 2, 3, 2);
             MainPanel.Name = "MainPanel";
-            MainPanel.Size = new Size(776, 381);
+            MainPanel.Size = new Size(679, 286);
             MainPanel.TabIndex = 3;
             // 
             // BeginWorkoutButton
             // 
-            BeginWorkoutButton.Location = new Point(112, 12);
+            BeginWorkoutButton.Location = new Point(98, 9);
+            BeginWorkoutButton.Margin = new Padding(3, 2, 3, 2);
             BeginWorkoutButton.Name = "BeginWorkoutButton";
-            BeginWorkoutButton.Size = new Size(123, 29);
+            BeginWorkoutButton.Size = new Size(108, 22);
             BeginWorkoutButton.TabIndex = 4;
             BeginWorkoutButton.Text = "Begin Workout";
             BeginWorkoutButton.UseVisualStyleBackColor = true;
@@ -90,9 +96,9 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(18, 14);
+            label1.Location = new Point(16, 10);
             label1.Name = "label1";
-            label1.Size = new Size(57, 20);
+            label1.Size = new Size(45, 15);
             label1.TabIndex = 5;
             label1.Text = "Status:";
             // 
@@ -100,9 +106,10 @@
             // 
             WorkoutStatusPanel.Controls.Add(lblWorkoutStatus);
             WorkoutStatusPanel.Controls.Add(label1);
-            WorkoutStatusPanel.Location = new Point(241, 2);
+            WorkoutStatusPanel.Location = new Point(211, 2);
+            WorkoutStatusPanel.Margin = new Padding(3, 2, 3, 2);
             WorkoutStatusPanel.Name = "WorkoutStatusPanel";
-            WorkoutStatusPanel.Size = new Size(193, 49);
+            WorkoutStatusPanel.Size = new Size(169, 37);
             WorkoutStatusPanel.TabIndex = 5;
             WorkoutStatusPanel.Visible = false;
             // 
@@ -110,23 +117,35 @@
             // 
             lblWorkoutStatus.AutoSize = true;
             lblWorkoutStatus.ForeColor = Color.FromArgb(0, 64, 0);
-            lblWorkoutStatus.Location = new Point(81, 14);
+            lblWorkoutStatus.Location = new Point(71, 10);
             lblWorkoutStatus.Name = "lblWorkoutStatus";
-            lblWorkoutStatus.Size = new Size(94, 20);
+            lblWorkoutStatus.Size = new Size(77, 15);
             lblWorkoutStatus.TabIndex = 0;
             lblWorkoutStatus.Text = "In Progress ...";
             // 
+            // WorkoutsButton
+            // 
+            WorkoutsButton.Location = new Point(439, 9);
+            WorkoutsButton.Name = "WorkoutsButton";
+            WorkoutsButton.Size = new Size(75, 23);
+            WorkoutsButton.TabIndex = 6;
+            WorkoutsButton.Text = "Workouts";
+            WorkoutsButton.UseVisualStyleBackColor = true;
+            WorkoutsButton.Click += WorkoutsButton_Click;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(700, 338);
+            Controls.Add(WorkoutsButton);
             Controls.Add(WorkoutStatusPanel);
             Controls.Add(BeginWorkoutButton);
             Controls.Add(MainPanel);
             Controls.Add(TrackButton);
             Controls.Add(SettingsButton);
             Controls.Add(DatabaseButton);
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
@@ -146,5 +165,6 @@
         private Label label1;
         private Panel WorkoutStatusPanel;
         private Label lblWorkoutStatus;
+        private Button WorkoutsButton;
     }
 }

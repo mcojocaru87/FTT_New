@@ -245,6 +245,7 @@ namespace FTT.UserControls
             _mainForm.BeginWorkoutBtn.Enabled = enabled;
             _mainForm.SettingsBtn.Enabled = enabled;
             _mainForm.DatabaseBtn.Enabled = enabled;
+            _mainForm.WorkoutsBtn.Enabled = enabled;
         }
 
         private void SetupWorkoutButtons()

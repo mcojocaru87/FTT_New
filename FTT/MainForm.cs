@@ -19,6 +19,7 @@ namespace FTT
         public Button TrackBtn => TrackButton;
         public Button SettingsBtn => SettingsButton;
         public Button DatabaseBtn => DatabaseButton;
+        public Button WorkoutsBtn => WorkoutsButton;
 
         private void DatabaseButton_Click(object sender, EventArgs e)
         {
@@ -94,5 +95,12 @@ namespace FTT
         }
 
         private void SetupWorkoutStatusPanel(bool isActive) => WorkoutStatusPanel.Visible = isActive;
+
+        private void WorkoutsButton_Click(object sender, EventArgs e)
+        {
+            var workoutsForm = new WorkoutsForm();
+
+            workoutsForm.ShowDialog();
+        }
     }
 }
