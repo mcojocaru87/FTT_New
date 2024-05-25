@@ -41,7 +41,7 @@ namespace FTT.UserControls
             _mainForm = mainForm;
 
             FinishButton.Enabled = false;
-            dtWorkingDate.MaxDate = DateTime.Now;
+            dtWorkingDate.MaxDate = DateTime.Today.AddDays(1).AddSeconds(-1);
             AddToTrackButton.Enabled = false;
 
             lstTrack.DataSource = _trackList;
@@ -219,6 +219,11 @@ namespace FTT.UserControls
 
             _trackService.FinishWorkingExercise(workingExercise);
 
+            ResetControls();
+        }
+
+        private void ResetControls()
+        {
             _workingExerciseId = 0;
             _exerciseId = 0;
             _exerciseMultiplier = 0;
@@ -227,6 +232,8 @@ namespace FTT.UserControls
             txtReps.Clear();
             txtWeight.Clear();
             lstTrack.DataSource = _trackList;
+            dtWorkingDate.Value = DateTime.Today.AddDays(1).AddSeconds(-1);
+            dtWorkingDate.Value = DateTime.Now;
         }
 
         private void SetMainFormButtonEnabled(bool enabled)
@@ -396,7 +403,7 @@ namespace FTT.UserControls
                 groupLastTracking.Visible = true;
 
                 lblTotalVolume.Text = $"{lastTracking.TotalVolume} Kg";
-                lblWorkingDate.Text = DateTime.Now.ToString("MMM dd, yyyy");
+                lblWorkingDate.Text = lastTracking.WorkingDate.ToString("MMM dd, yyyy");
 
                 _previousTotalVolume = lastTracking.TotalVolume;
 

@@ -1,6 +1,7 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 
@@ -93,6 +94,8 @@ namespace FTT.Services.Track
         {
             return _workingExerciseRepository
                 .Find(x => x.ExerciseId == exerciseId)
+                .Include("WorkingExerciseSets")
+                .Where(x => x.WorkingExerciseSets.Any())
                 .OrderByDescending(x => x.WorkingDate)
                 .FirstOrDefault();
         }
@@ -166,7 +169,7 @@ namespace FTT.Services.Track
                 var volume = workingExerciseSets.Sum(x => x.Reps * x.Weight * multiplier);
 
                 viewModelItem["Date"] = item.WorkingDate.ToString("MMM dd, yyyy");
-                viewModelItem["Attempts"] = item.FailCount;
+                viewModelItem["Failed"] = item.FailCount;
                 viewModelItem["Volume"] = $"{volume} Kg";
 
                 foreach (var set in workingExerciseSets)

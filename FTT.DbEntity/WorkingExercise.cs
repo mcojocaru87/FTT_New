@@ -6,5 +6,6 @@
         public DateTime WorkingDate { get; set; }
         public int FailCount { get; set; }
         public string Notes { get; set; }
+        public virtual ICollection<WorkingExerciseSet> WorkingExerciseSets { get; set; } = [];
     }
 }
