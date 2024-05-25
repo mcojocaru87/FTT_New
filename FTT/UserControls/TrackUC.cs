@@ -1,5 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
+using FTT.GraphScreen;
 using FTT.Services;
 using FTT.Services.Track;
 using FTT.ViewModels;
@@ -25,6 +26,7 @@ namespace FTT.UserControls
         private decimal _previousTotalVolume = 0;
         private decimal _currentWeightUsed = 0;
         private int _lastStrikeCount = 0;
+        private List<GraphViewModel> _dataPoints;
 
         public event EventHandler TriggerButtonEvent;
 
@@ -234,6 +236,7 @@ namespace FTT.UserControls
             lstTrack.DataSource = _trackList;
             dtWorkingDate.Value = DateTime.Today.AddDays(1).AddSeconds(-1);
             dtWorkingDate.Value = DateTime.Now;
+            _dataPoints.Clear();
         }
 
         private void SetMainFormButtonEnabled(bool enabled)
@@ -497,7 +500,47 @@ namespace FTT.UserControls
             var history = _trackService.GetWorkingExerciseHistory(_exerciseId);
             var dataTable = _trackService.ConvertToDataTable(history);
 
+            _dataPoints = ConvertFromDataTableToList(dataTable);
+
+            ViewGraphButton.Enabled = (_dataPoints != null && _dataPoints.Count > 0);
+
             dgvHistory.DataSource = dataTable;
+        }
+
+        private List<GraphViewModel> ConvertFromDataTableToList(DataTable dataTable)
+        {
+            List<GraphViewModel> graphViewModels = [];
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                GraphViewModel graphViewModel = new GraphViewModel
+                {
+                    Date = Convert.ToDateTime(row["Date"]),
+                    Volume = CleanVolumeData(row["Volume"]?.ToString() ?? "0")
+                };
+
+                graphViewModels.Add(graphViewModel);
+            }
+
+            return graphViewModels;
+        }
+
+        private decimal CleanVolumeData(string volData)
+        {
+            volData = volData.Replace("Kg", "");
+            volData = volData.Trim();
+
+            return Convert.ToDecimal(volData);
+        }
+
+        private void ViewGraphButton_Click(object sender, EventArgs e)
+        {
+            if (_dataPoints != null && _dataPoints.Count > 0)
+            {
+                WorkingExerciseGraph workingExerciseGraph = new(_dataPoints);
+
+                workingExerciseGraph.ShowDialog();
+            }
         }
     }
 }
