@@ -1,25 +1,19 @@
 ﻿using FTT.CustomControls;
+using FTT.Services;
 using FTT.UserControls.CustomCalendar;
-using FTT.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
     public partial class WorkoutsForm : Form
     {
+        private readonly IWorkoutService _workoutService;
 
         public WorkoutsForm()
         {
             InitializeComponent();
+
+            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
 
             DisplayDays();
         }
@@ -37,13 +31,15 @@ namespace FTT
         {
             daysContainer.Controls.Clear();
 
+            var workoutDates = _workoutService.GetAllWorkoutsDatesByMonth(month, year);
+
             DateTime startOfMonth = new DateTime(year, month, 1);
 
             var daysInMonth = DateTime.DaysInMonth(year, month);
 
             var dayOfTheWeek = int.Parse(startOfMonth.DayOfWeek.ToString("d"));
 
-            for (int i = 1; i <= dayOfTheWeek; i++)
+            for (int i = 1; i < dayOfTheWeek; i++)
             {
                 BlankDay blankDay = new();
                 daysContainer.Controls.Add(blankDay);
@@ -51,9 +47,18 @@ namespace FTT
 
             for (int i = 1; i <= daysInMonth; i++)
             {
-                CalendarDay calendarDay = new();
-                calendarDay.SetDays(i);
-                daysContainer.Controls.Add(calendarDay);
+                if (workoutDates.Any(date => date.Day == i))
+                {
+                    CalendarDay calendarDay = new();
+                    calendarDay.SetDays(i);
+                    daysContainer.Controls.Add(calendarDay);
+                }
+                else
+                {
+                    BlankCalendarDay blankCalendarDay = new();
+                    blankCalendarDay.SetDays(i);
+                    daysContainer.Controls.Add(blankCalendarDay);
+                }
             }
         }
 
@@ -67,6 +72,9 @@ namespace FTT
                 var month = picker.Value.Month;
 
                 SetCalendarDays(month, year);
+
+                var now = new DateTime(year, month, 1);
+                lblMonthYear.Text = now.ToString("MMMM yyyy");
             }
         }
     }

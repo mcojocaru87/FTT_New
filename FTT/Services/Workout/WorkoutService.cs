@@ -95,5 +95,13 @@ namespace FTT.Services
                 _workoutRepository.Commit();
             }
         }
+
+        public List<DateTime> GetAllWorkoutsDatesByMonth(int month, int year)
+        {
+            return [.. _workoutRepository
+                .Find(x => x.WorkoutDate.Month == month && x.WorkoutDate.Year == year)
+                .Select(x=>x.WorkoutDate)
+                .Distinct()];
+        }
     }
 }
