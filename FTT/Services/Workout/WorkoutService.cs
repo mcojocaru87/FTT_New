@@ -1,6 +1,7 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.Enums;
+using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT.Services
@@ -96,11 +97,11 @@ namespace FTT.Services
             }
         }
 
-        public List<DateTime> GetAllWorkoutsDatesByMonth(int month, int year)
+        public List<ViewWorkoutViewModel> GetAllWorkoutsDatesByMonth(int month, int year)
         {
             return [.. _workoutRepository
                 .Find(x => x.WorkoutDate.Month == month && x.WorkoutDate.Year == year)
-                .Select(x=>x.WorkoutDate)
+                .Select(x=> new ViewWorkoutViewModel{ WorkoutDate = x.WorkoutDate, WorkoutId = x.Id })
                 .Distinct()];
         }
     }

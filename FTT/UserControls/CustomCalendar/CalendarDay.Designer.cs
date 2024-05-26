@@ -28,18 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblWorkout = new Label();
             lblDay = new Label();
+            lblViewWorkout = new LinkLabel();
             SuspendLayout();
-            // 
-            // lblWorkout
-            // 
-            lblWorkout.Dock = DockStyle.Fill;
-            lblWorkout.Location = new Point(0, 23);
-            lblWorkout.Name = "lblWorkout";
-            lblWorkout.Size = new Size(116, 35);
-            lblWorkout.TabIndex = 4;
-            lblWorkout.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblDay
             // 
@@ -55,12 +46,24 @@
             lblDay.Text = "label8";
             lblDay.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // lblViewWorkout
+            // 
+            lblViewWorkout.Dock = DockStyle.Fill;
+            lblViewWorkout.Location = new Point(0, 23);
+            lblViewWorkout.Name = "lblViewWorkout";
+            lblViewWorkout.Size = new Size(116, 35);
+            lblViewWorkout.TabIndex = 4;
+            lblViewWorkout.TabStop = true;
+            lblViewWorkout.Text = "View Workout";
+            lblViewWorkout.TextAlign = ContentAlignment.MiddleCenter;
+            lblViewWorkout.LinkClicked += lblViewWorkout_LinkClicked;
+            // 
             // CalendarDay
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(lblWorkout);
+            Controls.Add(lblViewWorkout);
             Controls.Add(lblDay);
             Name = "CalendarDay";
             Size = new Size(116, 58);
@@ -68,8 +71,7 @@
         }
 
         #endregion
-
-        private Label lblWorkout;
         private Label lblDay;
+        private LinkLabel lblViewWorkout;
     }
 }

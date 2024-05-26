@@ -31,7 +31,7 @@ namespace FTT
         {
             daysContainer.Controls.Clear();
 
-            var workoutDates = _workoutService.GetAllWorkoutsDatesByMonth(month, year);
+            var viewWorkouts = _workoutService.GetAllWorkoutsDatesByMonth(month, year);
 
             DateTime startOfMonth = new DateTime(year, month, 1);
 
@@ -47,10 +47,13 @@ namespace FTT
 
             for (int i = 1; i <= daysInMonth; i++)
             {
-                if (workoutDates.Any(date => date.Day == i))
+                if (viewWorkouts.Any(date => date.WorkoutDate.Day == i))
                 {
+                    var viewWorkout = viewWorkouts.FirstOrDefault(date => date.WorkoutDate.Day == i);
+
                     CalendarDay calendarDay = new();
                     calendarDay.SetDays(i);
+                    calendarDay.SetWorkoutId(viewWorkout.WorkoutId);
                     daysContainer.Controls.Add(calendarDay);
                 }
                 else

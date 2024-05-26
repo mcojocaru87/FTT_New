@@ -1,4 +1,4 @@
-﻿using FTT.Enums;
+﻿using FTT.ViewModels;
 
 namespace FTT.Services
 {
@@ -9,6 +9,6 @@ namespace FTT.Services
         void AddWorkingExerciseToWorkout(int workoutId, int workingExerciseId);
         void RemoveWorkingExerciseFromWorkout(int workoutId, int workingExerciseId);
         void UpdateWorkoutDate(int workoutId, DateTime newWorkoutDate);
-        List<DateTime> GetAllWorkoutsDatesByMonth(int month, int year);
+        List<ViewWorkoutViewModel> GetAllWorkoutsDatesByMonth(int month, int year);
     }
 }
