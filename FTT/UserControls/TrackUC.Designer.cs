@@ -1,4 +1,6 @@
-﻿namespace FTT.UserControls
+﻿using FTT.CustomControls;
+
+namespace FTT.UserControls
 {
     partial class TrackUC
     {
@@ -28,18 +30,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             lblExercise = new Label();
             cbExercises = new ComboBox();
             label2 = new Label();
             dtWorkingDate = new DateTimePicker();
             MainPanel = new Panel();
+            RemoveFromTrackButton = new Button();
+            RepeatLastButton = new Button();
             UpdateWorkoutDateButton = new Button();
             RemoveFromButton = new Button();
             AddToButton = new Button();
             groupHistory = new GroupBox();
             ViewGraphButton = new Button();
             dgvHistory = new DataGridView();
-            lstTrack = new ListBox();
+            lstTrack = new CustomListBox();
             AddToTrackButton = new Button();
             txtVolume = new TextBox();
             label5 = new Label();
@@ -70,6 +75,8 @@
             txtNotes = new TextBox();
             lblStrikes = new Label();
             label10 = new Label();
+            tlpAddToTrack = new ToolTip(components);
+            tlpRemoveFromTrack = new ToolTip(components);
             MainPanel.SuspendLayout();
             groupHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvHistory).BeginInit();
@@ -118,6 +125,8 @@
             // MainPanel
             // 
             MainPanel.BackColor = SystemColors.ControlLight;
+            MainPanel.Controls.Add(RemoveFromTrackButton);
+            MainPanel.Controls.Add(RepeatLastButton);
             MainPanel.Controls.Add(UpdateWorkoutDateButton);
             MainPanel.Controls.Add(RemoveFromButton);
             MainPanel.Controls.Add(AddToButton);
@@ -138,6 +147,29 @@
             MainPanel.Size = new Size(527, 381);
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
+            // 
+            // RemoveFromTrackButton
+            // 
+            RemoveFromTrackButton.FlatAppearance.BorderSize = 0;
+            RemoveFromTrackButton.FlatStyle = FlatStyle.Flat;
+            RemoveFromTrackButton.Font = new Font("Segoe UI", 12F);
+            RemoveFromTrackButton.Location = new Point(214, 136);
+            RemoveFromTrackButton.Name = "RemoveFromTrackButton";
+            RemoveFromTrackButton.Size = new Size(28, 31);
+            RemoveFromTrackButton.TabIndex = 2;
+            RemoveFromTrackButton.Text = "✘";
+            RemoveFromTrackButton.UseVisualStyleBackColor = true;
+            RemoveFromTrackButton.Click += RemoveFromTrackButton_Click;
+            // 
+            // RepeatLastButton
+            // 
+            RepeatLastButton.Location = new Point(21, 139);
+            RepeatLastButton.Name = "RepeatLastButton";
+            RepeatLastButton.Size = new Size(145, 29);
+            RepeatLastButton.TabIndex = 15;
+            RepeatLastButton.Text = "Repeat Last";
+            RepeatLastButton.UseVisualStyleBackColor = true;
+            RepeatLastButton.Click += RepeatLastButton_Click;
             // 
             // UpdateWorkoutDateButton
             // 
@@ -194,9 +226,12 @@
             // 
             // dgvHistory
             // 
+            dgvHistory.AllowUserToAddRows = false;
+            dgvHistory.AllowUserToDeleteRows = false;
             dgvHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvHistory.Location = new Point(6, 55);
             dgvHistory.Name = "dgvHistory";
+            dgvHistory.ReadOnly = true;
             dgvHistory.RowHeadersWidth = 51;
             dgvHistory.Size = new Size(509, 147);
             dgvHistory.TabIndex = 0;
@@ -208,15 +243,19 @@
             lstTrack.Name = "lstTrack";
             lstTrack.Size = new Size(250, 104);
             lstTrack.TabIndex = 11;
+            lstTrack.ItemAdded += lstTrack_ItemAdded;
             // 
             // AddToTrackButton
             // 
-            AddToTrackButton.Location = new Point(21, 137);
+            AddToTrackButton.FlatAppearance.BorderSize = 0;
+            AddToTrackButton.FlatStyle = FlatStyle.Flat;
+            AddToTrackButton.Font = new Font("Segoe UI", 12F);
+            AddToTrackButton.Location = new Point(171, 137);
             AddToTrackButton.Margin = new Padding(0);
             AddToTrackButton.Name = "AddToTrackButton";
-            AddToTrackButton.Size = new Size(221, 31);
+            AddToTrackButton.Size = new Size(28, 31);
             AddToTrackButton.TabIndex = 10;
-            AddToTrackButton.Text = "Add";
+            AddToTrackButton.Text = "✔";
             AddToTrackButton.UseVisualStyleBackColor = true;
             AddToTrackButton.Click += AddToTrackButton_Click;
             // 
@@ -585,7 +624,7 @@
         private Label label3;
         private GroupBox groupLastTracking;
         private Button AddToTrackButton;
-        private ListBox lstTrack;
+        private CustomListBox lstTrack;
         private GroupBox groupHistory;
         private Button StartButton;
         private Button FinishButton;
@@ -614,5 +653,9 @@
         private Button AddToButton;
         private Button UpdateWorkoutDateButton;
         private Button ViewGraphButton;
+        private Button RepeatLastButton;
+        private Button RemoveFromTrackButton;
+        private ToolTip tlpAddToTrack;
+        private ToolTip tlpRemoveFromTrack;
     }
 }

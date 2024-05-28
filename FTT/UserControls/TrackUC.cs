@@ -45,6 +45,10 @@ namespace FTT.UserControls
             FinishButton.Enabled = false;
             dtWorkingDate.MaxDate = DateTime.Today.AddDays(1).AddSeconds(-1);
             AddToTrackButton.Enabled = false;
+            RepeatLastButton.Enabled = false;
+            RemoveFromTrackButton.Enabled = false;
+
+            SetButtonTooltip();
 
             lstTrack.DataSource = _trackList;
             lstTrack.DisplayMember = "Display";
@@ -492,6 +496,7 @@ namespace FTT.UserControls
                 Weight = _currentWeightUsed
             });
 
+
             txtReps.Clear();
         }
 
@@ -541,6 +546,51 @@ namespace FTT.UserControls
                 WorkingExerciseGraph workingExerciseGraph = new(_dataPoints);
 
                 workingExerciseGraph.ShowDialog();
+            }
+        }
+
+        private void lstTrack_ItemAdded(object sender, EventArgs e)
+        {
+            if (lstTrack.Items.Count > 0)
+            {
+                RepeatLastButton.Enabled = true;
+                RemoveFromTrackButton.Enabled = true;
+            }
+        }
+
+        private void SetButtonTooltip()
+        {
+            tlpAddToTrack.SetToolTip(AddToTrackButton, "Add To Track");
+            tlpAddToTrack.SetToolTip(RemoveFromTrackButton, "Remove From Track");
+        }
+
+        private void RemoveFromTrackButton_Click(object sender, EventArgs e)
+        {
+            if (lstTrack.SelectedItem != null)
+            {
+                _trackList.Remove((TrackListViewModel)lstTrack.SelectedItem);
+
+                if (lstTrack.Items.Count == 0)
+                {
+                    RepeatLastButton.Enabled = false;
+                    RemoveFromTrackButton.Enabled = false;
+                }
+            }
+        }
+
+        private void RepeatLastButton_Click(object sender, EventArgs e)
+        {
+            if (_trackList.Count > 0)
+            {
+                TrackListViewModel lastItem = _trackList[_trackList.Count - 1];
+
+                if (lastItem != null)
+                {
+                    txtReps.Text = lastItem.Reps.ToString();
+                    txtWeight.Text = lastItem.Weight.ToString();
+
+                    AddToTrackButton_Click(this, EventArgs.Empty);
+                }
             }
         }
     }
