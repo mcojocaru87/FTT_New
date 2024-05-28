@@ -4,5 +4,6 @@
     {
         public required string Name { get; set; }
         public int Multiplier { get; set; }
+        public string Category { get; set; } = string.Empty;
     }
 }

@@ -18,6 +18,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             _exerciseId = exerciseId;
 
             LoadMultiplierData();
+            LoadCategoryData();
             LoadData();
         }
 
@@ -38,6 +39,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
                     txtId.Text = exercise.Id.ToString();
                     txtName.Text = exercise.Name;
                     cbMultiplier.SelectedValue = exercise.Multiplier;
+                    cbCategory.Text = exercise.Category;
 
                     _exercise = exercise;
                 }
@@ -57,12 +59,28 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             cbMultiplier.DisplayMember = "DisplayMember";
         }
 
+        private void LoadCategoryData()
+        {
+            List<ComboBoxViewModel> multiplierData = [
+                new(0, "-- Select --"),
+                new(1, "Upper"),
+                new(2, "Middle"),
+                new(2, "Lower")
+            ];
+
+            cbCategory.DataSource = multiplierData;
+
+            cbCategory.ValueMember = "ValueMember";
+            cbCategory.DisplayMember = "DisplayMember";
+        }
+
         private void SaveButton_Click(object sender, EventArgs e)
         {
             if (_exerciseId > 0)
             {
                 _exercise.Multiplier = (int)cbMultiplier.SelectedValue;
                 _exercise.Name = txtName.Text;
+                _exercise.Category = cbCategory.Text;
 
                 _exerciseRepository.Update(_exercise);
                 _exerciseRepository.Commit();
@@ -71,7 +89,12 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             }
             else
             {
-                var newExercise = new Exercise { Name = txtName.Text, Multiplier = (int)cbMultiplier.SelectedValue };
+                var newExercise = new Exercise
+                {
+                    Name = txtName.Text,
+                    Multiplier = (int)cbMultiplier.SelectedValue,
+                    Category = cbCategory.SelectedText
+                };
 
                 _exerciseRepository.Add(newExercise);
                 _exerciseRepository.Commit();

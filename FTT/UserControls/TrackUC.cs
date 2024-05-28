@@ -55,12 +55,11 @@ namespace FTT.UserControls
         private void LoadExercises()
         {
             var exercises = _exerciseRepository.GetAll()
-                .Select(x => new ComboBoxViewModel(x.Id, x.Name))
+                .OrderByDescending(x => x.Category)
+                .Select(x => new ComboBoxViewModel(x.Id, $"{x.Category} - {x.Name}"))
                 .ToList();
 
             exercises.Add(new(null, ""));
-
-            exercises = exercises.OrderBy(x => x.ValueMember).ToList();
 
             cbExercises.DataSource = exercises;
 
@@ -502,6 +501,7 @@ namespace FTT.UserControls
             var dataTable = _trackService.ConvertToDataTable(history);
 
             _dataPoints = ConvertFromDataTableToList(dataTable);
+            _dataPoints = [.. _dataPoints.OrderBy(x => x.Date)];
 
             ViewGraphButton.Enabled = (_dataPoints != null && _dataPoints.Count > 0);
 

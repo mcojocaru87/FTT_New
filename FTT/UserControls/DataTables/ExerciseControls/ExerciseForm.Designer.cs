@@ -37,6 +37,8 @@
             label4 = new Label();
             txtName = new TextBox();
             cbMultiplier = new ComboBox();
+            cbCategory = new ComboBox();
+            label5 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -51,7 +53,7 @@
             // 
             // SaveButton
             // 
-            SaveButton.Location = new Point(16, 206);
+            SaveButton.Location = new Point(12, 240);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(94, 29);
             SaveButton.TabIndex = 1;
@@ -61,7 +63,7 @@
             // 
             // CancelButton
             // 
-            CancelButton.Location = new Point(179, 206);
+            CancelButton.Location = new Point(175, 240);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(94, 29);
             CancelButton.TabIndex = 2;
@@ -119,11 +121,30 @@
             cbMultiplier.Size = new Size(125, 28);
             cbMultiplier.TabIndex = 8;
             // 
+            // cbCategory
+            // 
+            cbCategory.FormattingEnabled = true;
+            cbCategory.Location = new Point(90, 186);
+            cbCategory.Name = "cbCategory";
+            cbCategory.Size = new Size(125, 28);
+            cbCategory.TabIndex = 10;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(12, 189);
+            label5.Name = "label5";
+            label5.Size = new Size(72, 20);
+            label5.TabIndex = 9;
+            label5.Text = "Category:";
+            // 
             // ExerciseForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(281, 247);
+            ClientSize = new Size(281, 290);
+            Controls.Add(cbCategory);
+            Controls.Add(label5);
             Controls.Add(cbMultiplier);
             Controls.Add(txtName);
             Controls.Add(label4);
@@ -152,5 +173,7 @@
         private Label label4;
         private TextBox txtName;
         private ComboBox cbMultiplier;
+        private ComboBox cbCategory;
+        private Label label5;
     }
 }

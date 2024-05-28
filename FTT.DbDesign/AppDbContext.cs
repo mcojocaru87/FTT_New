@@ -15,7 +15,14 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=C:\\FTT\\FTT.db");
+            var dataSource = string.Empty;
+
+#if DEBUG
+            dataSource = "Data Source=C:\\FTT\\FTT_Test.db";
+#else
+            dataSource = "Data Source=C:\\FTT\\FTT.db";
+#endif
+            optionsBuilder.UseSqlite(dataSource);
         }
     }
 }
