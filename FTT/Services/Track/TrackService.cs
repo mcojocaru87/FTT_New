@@ -125,7 +125,7 @@ namespace FTT.Services.Track
             _workingExerciseSetRepository.Commit();
         }
 
-        private Exercise GetExercise(int exerciseId)
+        public Exercise GetExercise(int exerciseId)
         {
             return _exerciseRepository.GetById(exerciseId);
         }
@@ -215,6 +215,16 @@ namespace FTT.Services.Track
                 dataTable.Rows.Add(row);
             }
             return dataTable;
+        }
+
+        public WorkingExercise GetWorkingExerciseById(int workingExerciseId)
+        {
+            return _workingExerciseRepository.GetById(workingExerciseId);
+        }
+
+        public List<WorkingExerciseSet> GetWorkingExerciseSets(int workingExerciseId)
+        {
+            return [.. _workingExerciseSetRepository.Find(x => x.WorkingExerciseId == workingExerciseId)];
         }
     }
 }

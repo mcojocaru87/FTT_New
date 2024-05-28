@@ -30,19 +30,20 @@
         {
             lblWorkoutDate = new Label();
             panel1 = new Panel();
-            flowLayoutPanel1 = new FlowLayoutPanel();
+            MainPanel = new FlowLayoutPanel();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // lblWorkoutDate
             // 
-            lblWorkoutDate.AutoSize = true;
+            lblWorkoutDate.Dock = DockStyle.Fill;
             lblWorkoutDate.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lblWorkoutDate.Location = new Point(68, 14);
+            lblWorkoutDate.Location = new Point(0, 0);
             lblWorkoutDate.Name = "lblWorkoutDate";
-            lblWorkoutDate.Size = new Size(109, 21);
+            lblWorkoutDate.Size = new Size(336, 63);
             lblWorkoutDate.TabIndex = 0;
             lblWorkoutDate.Text = "May 26, 2024";
+            lblWorkoutDate.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
@@ -50,33 +51,37 @@
             panel1.Controls.Add(lblWorkoutDate);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(245, 49);
+            panel1.Size = new Size(338, 65);
             panel1.TabIndex = 1;
             // 
-            // flowLayoutPanel1
+            // MainPanel
             // 
-            flowLayoutPanel1.AutoScroll = true;
-            flowLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
-            flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.Location = new Point(0, 49);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(245, 401);
-            flowLayoutPanel1.TabIndex = 2;
+            MainPanel.AutoScroll = true;
+            MainPanel.BorderStyle = BorderStyle.FixedSingle;
+            MainPanel.Dock = DockStyle.Fill;
+            MainPanel.Location = new Point(0, 65);
+            MainPanel.Margin = new Padding(3, 4, 3, 4);
+            MainPanel.Name = "MainPanel";
+            MainPanel.Size = new Size(338, 535);
+            MainPanel.TabIndex = 2;
+            MainPanel.Layout += MainPanel_Layout;
             // 
             // ViewWorkoutForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(245, 450);
-            Controls.Add(flowLayoutPanel1);
+            ClientSize = new Size(338, 600);
+            Controls.Add(MainPanel);
             Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             Name = "ViewWorkoutForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "View Workout";
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -84,6 +89,6 @@
 
         private Label lblWorkoutDate;
         private Panel panel1;
-        private FlowLayoutPanel flowLayoutPanel1;
+        private FlowLayoutPanel MainPanel;
     }
 }

@@ -104,5 +104,26 @@ namespace FTT.Services
                 .Select(x=> new ViewWorkoutViewModel{ WorkoutDate = x.WorkoutDate, WorkoutId = x.Id })
                 .Distinct()];
         }
+
+        public WorkoutAggregateViewModel GetWorkoutById(int workoutId)
+        {
+            var workout = _workoutRepository.GetById(workoutId);
+            var result = new WorkoutAggregateViewModel();
+
+            if (workout != null)
+            {
+                var workoutItems = _workoutItemRepository
+                    .Find(x => x.WorkoutId == workoutId)
+                    .ToList();
+
+                result = new()
+                {
+                    Workout = workout,
+                    WorkoutItems = workoutItems
+                };
+            }
+
+            return result;
+        }
     }
 }

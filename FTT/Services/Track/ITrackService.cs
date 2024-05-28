@@ -14,5 +14,8 @@ namespace FTT.Services.Track
         void FinishWorkingExercise(WorkingExercise workingExercise);
         List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId);
         DataTable ConvertToDataTable(List<HistoryViewModel> list);
+        WorkingExercise GetWorkingExerciseById(int workingExerciseId);
+        Exercise GetExercise(int exerciseId);
+        List<WorkingExerciseSet> GetWorkingExerciseSets(int workingExerciseId);
     }
 }

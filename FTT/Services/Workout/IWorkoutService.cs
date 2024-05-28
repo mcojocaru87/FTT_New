@@ -10,5 +10,6 @@ namespace FTT.Services
         void RemoveWorkingExerciseFromWorkout(int workoutId, int workingExerciseId);
         void UpdateWorkoutDate(int workoutId, DateTime newWorkoutDate);
         List<ViewWorkoutViewModel> GetAllWorkoutsDatesByMonth(int month, int year);
+        WorkoutAggregateViewModel GetWorkoutById(int workoutId);
     }
 }
