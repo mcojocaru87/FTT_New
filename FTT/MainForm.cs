@@ -13,6 +13,8 @@ namespace FTT
             InitializeComponent();
 
             _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
+
+            TrackButton.Enabled = false;
         }
 
         public Button BeginWorkoutBtn => BeginWorkoutButton;
@@ -80,6 +82,8 @@ namespace FTT
                 initiateWorkout.ShowDialog();
 
                 SetupWorkoutStatusPanel(true);
+
+                TrackButton.Enabled = true;
             }
             else
             {
@@ -91,6 +95,8 @@ namespace FTT
                 }
 
                 SetupWorkoutStatusPanel(false);
+
+                TrackButton.Enabled = false;
             }
         }
 

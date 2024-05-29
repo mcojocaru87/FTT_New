@@ -174,6 +174,9 @@ namespace FTT.UserControls
             groupLastTracking.Visible = false;
             MainPanel.Visible = false;
             cbExercises.SelectedValue = 0;
+            RepeatLastButton.Enabled = false;
+            RemoveFromTrackButton.Enabled = false;
+            SetupExerciseSetLables(6, false);
 
             SetMainFormButtonEnabled(true);
         }
@@ -305,10 +308,10 @@ namespace FTT.UserControls
                 var activeWorkoutId = Session.Instance.ActiveWorkoutId;
 
                 _workoutService.RemoveWorkingExerciseFromWorkout(activeWorkoutId ?? 0, _workingExerciseId);
-            }
 
-            RemoveFromButton.Visible = false;
-            AddToButton.Visible = true;
+                RemoveFromButton.Visible = false;
+                AddToButton.Visible = true;
+            }
         }
 
         private void AddToButton_Click(object sender, EventArgs e)
@@ -414,7 +417,7 @@ namespace FTT.UserControls
 
                 _previousTotalVolume = lastTracking.TotalVolume;
 
-                SetupExerciseSetLables(lastTracking.TotalSets);
+                SetupExerciseSetLables(lastTracking.TotalSets, true);
                 SetLabelsData(lastTracking.TotalSets, lastTracking.WorkingSets);
             }
             else
@@ -423,18 +426,18 @@ namespace FTT.UserControls
             }
         }
 
-        private void SetupExerciseSetLables(int numberOfSets)
+        private void SetupExerciseSetLables(int numberOfSets, bool isVisible)
         {
             for (int i = 1; i <= numberOfSets; i++)
             {
                 if (Controls.Find($"lblSet{i}Display", true).FirstOrDefault() is Label displayLabel)
                 {
-                    displayLabel.Visible = true;
+                    displayLabel.Visible = isVisible;
                 }
 
                 if (Controls.Find($"lblSet{i}Data", true).FirstOrDefault() is Label dataLabel)
                 {
-                    dataLabel.Visible = true;
+                    dataLabel.Visible = isVisible;
                 }
             }
         }
