@@ -221,7 +221,7 @@ namespace FTT.UserControls
             {
                 failAttempts = 0;
 
-                notes = (totalReps / maxReps == _trackList.Count) ?
+                notes = (totalReps / maxReps >= _trackList.Count) ?
                         $"Increase weight! - {currentWeightUsed} Kg" :
                         $"Getting there! - {currentWeightUsed} Kg";
             }
