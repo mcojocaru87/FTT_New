@@ -25,8 +25,7 @@ namespace FTT.UserControls
         {
             return [
                 new(0, "-- Please Select --"),
-                new(1, "Exercises"),
-                new(2, "Settings")
+                new(1, "Exercises")
                 ];
         }
 

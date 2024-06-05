@@ -184,16 +184,24 @@ namespace FTT.UserControls
         private void FinishWorkingExerciseSession()
         {
             var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
-            var settings = _settingRepository.GetAll().FirstOrDefault();
+            var exerciseSettings = _settingRepository.Find(x => x.ExerciseId == _exerciseId).FirstOrDefault();
             var currentWeightUsed = _trackList.First().Weight;
             var totalReps = _trackList.Sum(x => x.Reps);
 
-            var maxFailAttempts = settings?.FailAttempts ?? 4;
-            var maxReps = settings?.MaxReps ?? 12;
+            var maxFailAttempts = exerciseSettings?.FailAttempts;
+            var maxReps = exerciseSettings?.MaxReps;
+            var minReps = exerciseSettings?.MinReps;
             var notes = string.Empty;
             var failAttempts = 0;
 
-            if (currentTotalVolume <= _previousTotalVolume)
+            var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
+
+            if (anySetsUnderMinReps)
+            {
+                failAttempts = 0;
+                notes = $"Lower weight! - {currentWeightUsed} Kg";
+            }
+            else if (currentTotalVolume <= _previousTotalVolume)
             {
                 failAttempts = _lastStrikeCount == maxFailAttempts ? 0 : _lastStrikeCount + 1;
 
@@ -204,6 +212,8 @@ namespace FTT.UserControls
 
                 if (_lastStrikeCount == maxFailAttempts)
                 {
+                    failAttempts = 0;
+
                     notes = $"Lower weight! - {currentWeightUsed} Kg";
                 }
             }

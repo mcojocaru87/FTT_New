@@ -34,15 +34,25 @@
             txtMaxReps = new TextBox();
             SaveButton = new Button();
             CleanupButton = new Button();
+            txtMinReps = new TextBox();
+            label3 = new Label();
+            cbExercises = new ComboBox();
+            label4 = new Label();
+            MainPanel = new Panel();
+            CancelButton = new Button();
+            PreSetButton = new Button();
+            label5 = new Label();
+            lblMode = new Label();
+            MainPanel.SuspendLayout();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(326, 81);
+            label1.Location = new Point(164, 60);
             label1.Name = "label1";
-            label1.Size = new Size(104, 20);
+            label1.Size = new Size(81, 15);
             label1.TabIndex = 0;
             label1.Text = "Fail Attempts";
             // 
@@ -50,31 +60,34 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(326, 143);
+            label2.Location = new Point(164, 102);
             label2.Name = "label2";
-            label2.Size = new Size(77, 20);
+            label2.Size = new Size(61, 15);
             label2.TabIndex = 1;
             label2.Text = "Max Reps";
             // 
             // txtFailAttempts
             // 
-            txtFailAttempts.Location = new Point(326, 104);
+            txtFailAttempts.Location = new Point(164, 77);
+            txtFailAttempts.Margin = new Padding(3, 2, 3, 2);
             txtFailAttempts.Name = "txtFailAttempts";
-            txtFailAttempts.Size = new Size(125, 27);
+            txtFailAttempts.Size = new Size(110, 23);
             txtFailAttempts.TabIndex = 2;
             // 
             // txtMaxReps
             // 
-            txtMaxReps.Location = new Point(326, 166);
+            txtMaxReps.Location = new Point(163, 119);
+            txtMaxReps.Margin = new Padding(3, 2, 3, 2);
             txtMaxReps.Name = "txtMaxReps";
-            txtMaxReps.Size = new Size(125, 27);
+            txtMaxReps.Size = new Size(110, 23);
             txtMaxReps.TabIndex = 3;
             // 
             // SaveButton
             // 
-            SaveButton.Location = new Point(326, 199);
+            SaveButton.Location = new Point(165, 204);
+            SaveButton.Margin = new Padding(3, 2, 3, 2);
             SaveButton.Name = "SaveButton";
-            SaveButton.Size = new Size(125, 29);
+            SaveButton.Size = new Size(109, 22);
             SaveButton.TabIndex = 4;
             SaveButton.Text = "Update";
             SaveButton.UseVisualStyleBackColor = true;
@@ -82,27 +95,127 @@
             // 
             // CleanupButton
             // 
-            CleanupButton.Location = new Point(326, 302);
+            CleanupButton.Location = new Point(21, 251);
+            CleanupButton.Margin = new Padding(3, 2, 3, 2);
             CleanupButton.Name = "CleanupButton";
-            CleanupButton.Size = new Size(125, 29);
+            CleanupButton.Size = new Size(89, 22);
             CleanupButton.TabIndex = 5;
             CleanupButton.Text = "Clean Up";
             CleanupButton.UseVisualStyleBackColor = true;
             CleanupButton.Click += CleanupButton_Click;
             // 
+            // txtMinReps
+            // 
+            txtMinReps.Location = new Point(163, 161);
+            txtMinReps.Margin = new Padding(3, 2, 3, 2);
+            txtMinReps.Name = "txtMinReps";
+            txtMinReps.Size = new Size(110, 23);
+            txtMinReps.TabIndex = 7;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label3.Location = new Point(164, 144);
+            label3.Name = "label3";
+            label3.Size = new Size(58, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Min Reps";
+            // 
+            // cbExercises
+            // 
+            cbExercises.FormattingEnabled = true;
+            cbExercises.Location = new Point(21, 78);
+            cbExercises.Name = "cbExercises";
+            cbExercises.Size = new Size(216, 23);
+            cbExercises.TabIndex = 8;
+            cbExercises.SelectedIndexChanged += cbExercises_SelectedIndexChanged;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label4.Location = new Point(21, 60);
+            label4.Name = "label4";
+            label4.Size = new Size(99, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Choose Exercise:";
+            // 
+            // MainPanel
+            // 
+            MainPanel.Controls.Add(lblMode);
+            MainPanel.Controls.Add(label5);
+            MainPanel.Controls.Add(CancelButton);
+            MainPanel.Controls.Add(label1);
+            MainPanel.Controls.Add(label2);
+            MainPanel.Controls.Add(txtFailAttempts);
+            MainPanel.Controls.Add(txtMinReps);
+            MainPanel.Controls.Add(SaveButton);
+            MainPanel.Controls.Add(txtMaxReps);
+            MainPanel.Controls.Add(label3);
+            MainPanel.Dock = DockStyle.Right;
+            MainPanel.Location = new Point(243, 0);
+            MainPanel.Name = "MainPanel";
+            MainPanel.Size = new Size(436, 286);
+            MainPanel.TabIndex = 10;
+            MainPanel.Visible = false;
+            // 
+            // CancelButton
+            // 
+            CancelButton.Location = new Point(165, 230);
+            CancelButton.Margin = new Padding(3, 2, 3, 2);
+            CancelButton.Name = "CancelButton";
+            CancelButton.Size = new Size(109, 22);
+            CancelButton.TabIndex = 8;
+            CancelButton.Text = "Cancel";
+            CancelButton.UseVisualStyleBackColor = true;
+            CancelButton.Click += CancelButton_Click;
+            // 
+            // PreSetButton
+            // 
+            PreSetButton.Location = new Point(148, 251);
+            PreSetButton.Margin = new Padding(3, 2, 3, 2);
+            PreSetButton.Name = "PreSetButton";
+            PreSetButton.Size = new Size(89, 22);
+            PreSetButton.TabIndex = 11;
+            PreSetButton.Text = "Pre-Set";
+            PreSetButton.UseVisualStyleBackColor = true;
+            PreSetButton.Click += PreSetButton_Click;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label5.Location = new Point(290, 21);
+            label5.Name = "label5";
+            label5.Size = new Size(42, 15);
+            label5.TabIndex = 9;
+            label5.Text = "Mode:";
+            // 
+            // lblMode
+            // 
+            lblMode.AutoSize = true;
+            lblMode.ForeColor = Color.Green;
+            lblMode.Location = new Point(338, 21);
+            lblMode.Name = "lblMode";
+            lblMode.Size = new Size(0, 15);
+            lblMode.TabIndex = 10;
+            // 
             // SettingsUC
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
+            Controls.Add(PreSetButton);
+            Controls.Add(MainPanel);
+            Controls.Add(label4);
+            Controls.Add(cbExercises);
             Controls.Add(CleanupButton);
-            Controls.Add(SaveButton);
-            Controls.Add(txtMaxReps);
-            Controls.Add(txtFailAttempts);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "SettingsUC";
-            Size = new Size(776, 381);
+            Size = new Size(679, 286);
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -115,5 +228,14 @@
         private TextBox txtMaxReps;
         private Button SaveButton;
         private Button CleanupButton;
+        private TextBox txtMinReps;
+        private Label label3;
+        private ComboBox cbExercises;
+        private Label label4;
+        private Panel MainPanel;
+        private Button CancelButton;
+        private Button PreSetButton;
+        private Label lblMode;
+        private Label label5;
     }
 }

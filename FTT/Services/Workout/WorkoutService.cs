@@ -18,7 +18,12 @@ namespace FTT.Services
 
         public void CreateWorkout(DateTime workoutDate)
         {
-            var newWorkout = new Workout { Status = WorkoutStatus.InProgress, WorkoutDate = workoutDate };
+            var newWorkout = new Workout
+            {
+                Status = WorkoutStatus.InProgress,
+                WorkoutDate = workoutDate,
+                StartDate = DateTime.Now
+            };
 
             _workoutRepository.Add(newWorkout);
             _workoutRepository.Commit();
@@ -70,6 +75,7 @@ namespace FTT.Services
                 if (workoutItems.Count > 0)
                 {
                     workout.Status = WorkoutStatus.Finished;
+                    workout.EndDate = DateTime.Now;
 
                     _workoutRepository.Update(workout);
                     _workoutRepository.Commit();

@@ -108,5 +108,18 @@ namespace FTT
 
             workoutsForm.ShowDialog();
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
+            {
+                var result = MessageBox.Show("You have unsaved workout. Please finish the workout before exiting!", "Unsaved Changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.OK)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
     }
 }

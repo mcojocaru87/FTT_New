@@ -150,6 +150,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "FTT";
+            FormClosing += MainForm_FormClosing;
             WorkoutStatusPanel.ResumeLayout(false);
             WorkoutStatusPanel.PerformLayout();
             ResumeLayout(false);

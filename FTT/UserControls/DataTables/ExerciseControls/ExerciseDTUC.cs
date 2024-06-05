@@ -8,6 +8,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
     public partial class ExerciseDTUC : UserControl
     {
         private readonly IRepository<Exercise> _exerciseRepository;
+        private readonly IRepository<Setting> _settingsRepository;
 
         private int _selectedExerciseId;
 
@@ -16,6 +17,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             InitializeComponent();
 
             _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
+            _settingsRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
 
             EnableEditRemoveButtons(false, false);
 
@@ -31,7 +33,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
         }
 
         private void CustomizeDataGridView()
-        {            
+        {
             dgvExercise.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
@@ -91,11 +93,19 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             if (messageResponse == DialogResult.OK)
             {
                 var exercise = _exerciseRepository.GetById(_selectedExerciseId);
+                var exerciseSettings = _settingsRepository
+                    .Find(x => x.ExerciseId == _selectedExerciseId).FirstOrDefault();
 
                 if (exercise != null)
                 {
                     _exerciseRepository.Delete(exercise);
                     _exerciseRepository.Commit();
+
+                    if (exerciseSettings != null)
+                    {
+                        _settingsRepository.Delete(exerciseSettings);
+                        _settingsRepository.Commit();
+                    }
 
                     LoadData();
                 }
