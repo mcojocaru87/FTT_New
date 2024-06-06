@@ -1,13 +1,13 @@
 ﻿namespace FTT.DataAccesss
 {
     using FTT.DbDesign;
+    using FTT.DbEntity;
     using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
 
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : EntityIdentity
     {
         private readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -23,8 +23,20 @@
             return _dbSet;
         }
 
-        public T GetById(int id)
+        public T GetById(int id, bool includeChildren = false, params string[] children)
         {
+            IQueryable<T> query = _dbSet;
+
+            if (includeChildren)
+            {
+                foreach (var child in children)
+                {
+                    query = query.Include(child);
+                }
+
+                return query.SingleOrDefault(x => x.Id == id);
+            }
+
             return _dbSet.Find(id);
         }
 

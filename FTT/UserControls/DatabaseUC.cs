@@ -1,4 +1,5 @@
 ﻿using FTT.UserControls.DataTables;
+using FTT.UserControls.DataTables.EquipmentControls;
 using FTT.UserControls.DataTables.ExerciseControls;
 using FTT.UserControls.DataTables.ToolTimerControls;
 using FTT.ViewModels;
@@ -27,7 +28,8 @@ namespace FTT.UserControls
             return [
                 new(0, "-- Please Select --"),
                 new(1, "Exercises"),
-                new(2, "ToolTimers")
+                new(2, "ToolTimers"),
+                new(3, "Equipments")
                 ];
         }
 
@@ -51,6 +53,10 @@ namespace FTT.UserControls
                         LoadToolTimersDataTableUserControl();
                         ShowMainPanel(true);
                         break;
+                    case 3:
+                        LoadEquipmentsDataTableUserControl();
+                        ShowMainPanel(true);
+                        break;
                 }
             }
         }
@@ -67,6 +73,13 @@ namespace FTT.UserControls
             ToolTimerDTUC toolTimerDTUC = new();
 
             SetupUserControl(toolTimerDTUC);
+        }
+
+        private void LoadEquipmentsDataTableUserControl()
+        {
+            EquipmentDTUC equipmentDTUC = new();
+
+            SetupUserControl(equipmentDTUC);
         }
 
         private void SetupUserControl(UserControl userControl)

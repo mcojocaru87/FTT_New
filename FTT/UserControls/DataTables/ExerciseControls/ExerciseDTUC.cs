@@ -19,7 +19,6 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             _settingsRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
 
             EnableEditRemoveButtons(false, false);
-
             LoadData();
             CustomizeDataGridView();
         }

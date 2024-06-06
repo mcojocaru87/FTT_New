@@ -8,6 +8,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
     public partial class ExerciseForm : Form
     {
         private readonly IRepository<Exercise> _exerciseRepository;
+        private readonly IRepository<Equipment> _equipmentRepository;
         private readonly int _exerciseId;
 
         private Exercise _exercise = null!;
@@ -16,10 +17,12 @@ namespace FTT.UserControls.DataTables.ExerciseControls
             InitializeComponent();
 
             _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
+            _equipmentRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Equipment>>();
             _exerciseId = exerciseId;
 
             LoadMultiplierData();
             LoadCategoryData();
+            LoadEquipmentData();
             LoadData();
         }
 
@@ -73,6 +76,28 @@ namespace FTT.UserControls.DataTables.ExerciseControls
 
             cbCategory.ValueMember = "ValueMember";
             cbCategory.DisplayMember = "DisplayMember";
+        }
+
+        private void LoadEquipmentData()
+        {
+            List<ComboBoxViewModel> equipmentData = [];
+
+            var equipments = _equipmentRepository.GetAll().ToList();
+
+            if (equipments.Count > 0)
+            {
+                equipmentData.Add(new(0, "-- Select --"));
+
+                foreach (var item in equipments)
+                {
+                    equipmentData.Add(new(item.Id, item.Name));
+                }
+            }
+
+            cbEquipment.DataSource = equipmentData;
+
+            cbEquipment.ValueMember = "ValueMember";
+            cbEquipment.DisplayMember = "DisplayMember";
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
