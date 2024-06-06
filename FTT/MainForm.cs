@@ -97,6 +97,10 @@ namespace FTT
                 SetupWorkoutStatusPanel(false);
 
                 TrackButton.Enabled = false;
+
+                MainPanel.Controls.Clear();
+
+                MessageBox.Show("Workout successfully finished!", "Workout Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

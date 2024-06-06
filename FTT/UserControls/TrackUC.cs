@@ -151,6 +151,19 @@ namespace FTT.UserControls
 
             if (trackListItems > 0)
             {
+                var exerciseSettings = _settingRepository.Find(x => x.ExerciseId == _exerciseId).FirstOrDefault();
+                var minSets = exerciseSettings?.MinSets;
+
+                if (trackListItems < minSets)
+                {
+                    var messageResponse = MessageBox.Show($"There is minimum of {minSets} set(s) needed to finish. Are you sure?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (messageResponse == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
                 _trackService.AddSetsToWorkingExercise(_trackList.ToList(), _workingExerciseId);
 
                 FinishWorkingExerciseSession();
@@ -183,7 +196,26 @@ namespace FTT.UserControls
 
         private void FinishWorkingExerciseSession()
         {
+            var rulesResult = RulesOfProgression();
+
+            var workingExercise = new WorkingExercise
+            {
+                Id = _workingExerciseId,
+                ExerciseId = _exerciseId,
+                FailCount = rulesResult.FailCount,
+                Notes = rulesResult.Notes,
+                WorkingDate = dtWorkingDate.Value
+            };
+
+            _trackService.FinishWorkingExercise(workingExercise);
+
+            ResetControls();
+        }
+
+        private RulesResultViewModel RulesOfProgression()
+        {
             var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
+            var currentTotalSets = _trackList.Count;
             var exerciseSettings = _settingRepository.Find(x => x.ExerciseId == _exerciseId).FirstOrDefault();
             var currentWeightUsed = _trackList.First().Weight;
             var totalReps = _trackList.Sum(x => x.Reps);
@@ -191,12 +223,13 @@ namespace FTT.UserControls
             var maxFailAttempts = exerciseSettings?.FailAttempts;
             var maxReps = exerciseSettings?.MaxReps;
             var minReps = exerciseSettings?.MinReps;
+            var minSets = exerciseSettings?.MinSets;
             var notes = string.Empty;
             var failAttempts = 0;
 
             var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
 
-            if (anySetsUnderMinReps)
+            if (anySetsUnderMinReps || currentTotalSets < minSets)
             {
                 failAttempts = 0;
                 notes = $"Lower weight! - {currentWeightUsed} Kg";
@@ -213,8 +246,16 @@ namespace FTT.UserControls
                 if (_lastStrikeCount == maxFailAttempts)
                 {
                     failAttempts = 0;
-
                     notes = $"Lower weight! - {currentWeightUsed} Kg";
+                }
+
+                var progressiveTotalVolume = CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed);
+
+                if (currentTotalSets >= minSets &&
+                    currentTotalVolume >= progressiveTotalVolume)
+                {
+                    failAttempts = 0;
+                    notes = $"Increase weight! - {currentWeightUsed} Kg";
                 }
             }
             else
@@ -226,18 +267,23 @@ namespace FTT.UserControls
                         $"Getting there! - {currentWeightUsed} Kg";
             }
 
-            var workingExercise = new WorkingExercise
+            return new RulesResultViewModel
             {
-                Id = _workingExerciseId,
-                ExerciseId = _exerciseId,
                 FailCount = failAttempts,
-                Notes = notes,
-                WorkingDate = dtWorkingDate.Value
+                Notes = notes
             };
+        }
 
-            _trackService.FinishWorkingExercise(workingExercise);
+        private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight)
+        {
+            decimal totalVolume = 0;
 
-            ResetControls();
+            for (int i = 1; i <= minSets; i++)
+            {
+                totalVolume += maxReps * weight;
+            }
+
+            return totalVolume;
         }
 
         private void ResetControls()

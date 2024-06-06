@@ -39,10 +39,12 @@
             cbExercises = new ComboBox();
             label4 = new Label();
             MainPanel = new Panel();
+            lblMode = new Label();
+            label5 = new Label();
             CancelButton = new Button();
             PreSetButton = new Button();
-            label5 = new Label();
-            lblMode = new Label();
+            txtMinSets = new TextBox();
+            label6 = new Label();
             MainPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,7 +52,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(164, 60);
+            label1.Location = new Point(165, 21);
             label1.Name = "label1";
             label1.Size = new Size(81, 15);
             label1.TabIndex = 0;
@@ -60,7 +62,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(164, 102);
+            label2.Location = new Point(165, 63);
             label2.Name = "label2";
             label2.Size = new Size(61, 15);
             label2.TabIndex = 1;
@@ -68,7 +70,7 @@
             // 
             // txtFailAttempts
             // 
-            txtFailAttempts.Location = new Point(164, 77);
+            txtFailAttempts.Location = new Point(165, 38);
             txtFailAttempts.Margin = new Padding(3, 2, 3, 2);
             txtFailAttempts.Name = "txtFailAttempts";
             txtFailAttempts.Size = new Size(110, 23);
@@ -76,7 +78,7 @@
             // 
             // txtMaxReps
             // 
-            txtMaxReps.Location = new Point(163, 119);
+            txtMaxReps.Location = new Point(164, 80);
             txtMaxReps.Margin = new Padding(3, 2, 3, 2);
             txtMaxReps.Name = "txtMaxReps";
             txtMaxReps.Size = new Size(110, 23);
@@ -106,7 +108,7 @@
             // 
             // txtMinReps
             // 
-            txtMinReps.Location = new Point(163, 161);
+            txtMinReps.Location = new Point(164, 122);
             txtMinReps.Margin = new Padding(3, 2, 3, 2);
             txtMinReps.Name = "txtMinReps";
             txtMinReps.Size = new Size(110, 23);
@@ -116,7 +118,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(164, 144);
+            label3.Location = new Point(165, 105);
             label3.Name = "label3";
             label3.Size = new Size(58, 15);
             label3.TabIndex = 6;
@@ -143,6 +145,8 @@
             // 
             // MainPanel
             // 
+            MainPanel.Controls.Add(txtMinSets);
+            MainPanel.Controls.Add(label6);
             MainPanel.Controls.Add(lblMode);
             MainPanel.Controls.Add(label5);
             MainPanel.Controls.Add(CancelButton);
@@ -159,6 +163,25 @@
             MainPanel.Size = new Size(436, 286);
             MainPanel.TabIndex = 10;
             MainPanel.Visible = false;
+            // 
+            // lblMode
+            // 
+            lblMode.AutoSize = true;
+            lblMode.ForeColor = Color.Green;
+            lblMode.Location = new Point(338, 21);
+            lblMode.Name = "lblMode";
+            lblMode.Size = new Size(0, 15);
+            lblMode.TabIndex = 10;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label5.Location = new Point(291, 21);
+            label5.Name = "label5";
+            label5.Size = new Size(42, 15);
+            label5.TabIndex = 9;
+            label5.Text = "Mode:";
             // 
             // CancelButton
             // 
@@ -182,24 +205,23 @@
             PreSetButton.UseVisualStyleBackColor = true;
             PreSetButton.Click += PreSetButton_Click;
             // 
-            // label5
+            // txtMinSets
             // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label5.Location = new Point(290, 21);
-            label5.Name = "label5";
-            label5.Size = new Size(42, 15);
-            label5.TabIndex = 9;
-            label5.Text = "Mode:";
+            txtMinSets.Location = new Point(163, 164);
+            txtMinSets.Margin = new Padding(3, 2, 3, 2);
+            txtMinSets.Name = "txtMinSets";
+            txtMinSets.Size = new Size(110, 23);
+            txtMinSets.TabIndex = 12;
             // 
-            // lblMode
+            // label6
             // 
-            lblMode.AutoSize = true;
-            lblMode.ForeColor = Color.Green;
-            lblMode.Location = new Point(338, 21);
-            lblMode.Name = "lblMode";
-            lblMode.Size = new Size(0, 15);
-            lblMode.TabIndex = 10;
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label6.Location = new Point(164, 147);
+            label6.Name = "label6";
+            label6.Size = new Size(55, 15);
+            label6.TabIndex = 11;
+            label6.Text = "Min Sets";
             // 
             // SettingsUC
             // 
@@ -237,5 +259,7 @@
         private Button PreSetButton;
         private Label lblMode;
         private Label label5;
+        private TextBox txtMinSets;
+        private Label label6;
     }
 }

@@ -31,6 +31,7 @@ namespace FTT.UserControls
             txtFailAttempts.Text = "4";
             txtMaxReps.Text = "8";
             txtMinReps.Text = "5";
+            txtMinSets.Text = "3";
 
             SaveButton.Text = "Create";
             lblMode.Text = "New";
@@ -49,6 +50,7 @@ namespace FTT.UserControls
                 txtFailAttempts.Text = exerciseSettings.FailAttempts.ToString();
                 txtMaxReps.Text = exerciseSettings.MaxReps.ToString();
                 txtMinReps.Text = exerciseSettings.MinReps.ToString();
+                txtMinSets.Text = exerciseSettings.MinSets.ToString();
 
                 exerciseSettingsId = exerciseSettings.Id;
                 lblMode.Text = "Update";
@@ -79,10 +81,12 @@ namespace FTT.UserControls
             bool vaildFailAttemptsValue = int.TryParse(txtFailAttempts.Text, out int failAttempts);
             bool vaildMaxRepsValue = int.TryParse(txtMaxReps.Text, out int maxReps);
             bool validMinRepsValue = int.TryParse(txtMinReps.Text, out int minReps);
+            bool validMinSetsValue = int.TryParse(txtMinSets.Text, out int minSets);
 
             if (vaildFailAttemptsValue &&
                 vaildMaxRepsValue &&
-                validMinRepsValue)
+                validMinRepsValue &&
+                validMinSetsValue)
             {
                 if (isCreateInstance && exerciseId > 0)
                 {
@@ -91,6 +95,7 @@ namespace FTT.UserControls
                         FailAttempts = failAttempts,
                         MaxReps = maxReps,
                         MinReps = minReps,
+                        MinSets = minSets,
                         ExerciseId = exerciseId
                     };
 
@@ -121,6 +126,7 @@ namespace FTT.UserControls
                                     FailAttempts = failAttempts,
                                     MaxReps = maxReps,
                                     MinReps = minReps,
+                                    MinSets = minSets,
                                     ExerciseId = exerciseId
                                 };
 
@@ -136,6 +142,7 @@ namespace FTT.UserControls
                         {
                             item.MinReps = minReps;
                             item.MaxReps = maxReps;
+                            item.MinSets = minSets;
                             item.FailAttempts = failAttempts;
 
                             _settingsRepository.Update(item);
@@ -153,6 +160,7 @@ namespace FTT.UserControls
                         currentSettings.MaxReps = maxReps;
                         currentSettings.FailAttempts = failAttempts;
                         currentSettings.MinReps = minReps;
+                        currentSettings.MinSets = minSets;
 
                         _settingsRepository.Update(currentSettings);
                         _settingsRepository.Commit();
@@ -197,6 +205,7 @@ namespace FTT.UserControls
             txtFailAttempts.Clear();
             txtMaxReps.Clear();
             txtMinReps.Clear();
+            txtMinSets.Clear();
             cbExercises.SelectedValue = 0;
 
             MainPanel.Visible = false;
@@ -222,6 +231,7 @@ namespace FTT.UserControls
             txtFailAttempts.Clear();
             txtMaxReps.Clear();
             txtMinReps.Clear();
+            txtMinSets.Clear();
             lblMode.Text = "Pre-Set";
 
             MainPanel.Visible = true;

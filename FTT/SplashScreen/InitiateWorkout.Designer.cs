@@ -33,21 +33,24 @@
             // 
             // progressBar
             // 
-            progressBar.Location = new Point(25, 36);
+            progressBar.Location = new Point(271, 180);
+            progressBar.Margin = new Padding(3, 2, 3, 2);
             progressBar.Name = "progressBar";
-            progressBar.Size = new Size(200, 26);
+            progressBar.Size = new Size(175, 16);
             progressBar.TabIndex = 1;
             // 
             // InitiateWorkout
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(251, 98);
+            ClientSize = new Size(716, 377);
             ControlBox = false;
             Controls.Add(progressBar);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "InitiateWorkout";
+            Opacity = 0.5D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Initiating ...";
             Shown += InitiateWorkout_Shown;

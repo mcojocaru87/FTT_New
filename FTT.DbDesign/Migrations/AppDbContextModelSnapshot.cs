@@ -57,6 +57,9 @@ namespace FTT.DbDesign.Migrations
                     b.Property<int>("MinReps")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("MinSets")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Settings");

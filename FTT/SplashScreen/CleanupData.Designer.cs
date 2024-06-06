@@ -33,20 +33,23 @@
             // 
             // progressBar
             // 
-            progressBar.Location = new Point(48, 28);
+            progressBar.Location = new Point(177, 159);
+            progressBar.Margin = new Padding(3, 2, 3, 2);
             progressBar.Name = "progressBar";
-            progressBar.Size = new Size(205, 29);
+            progressBar.Size = new Size(346, 21);
             progressBar.TabIndex = 1;
             // 
             // CleanupData
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(301, 84);
+            ClientSize = new Size(700, 338);
             ControlBox = false;
             Controls.Add(progressBar);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "CleanupData";
+            Opacity = 0.75D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Cleanning up ... Please Wait!";
             Shown += CleanupData_Shown;
