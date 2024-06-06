@@ -1,5 +1,4 @@
-﻿using FTT.UserControls.DataTables;
-using FTT.UserControls.DataTables.EquipmentControls;
+﻿using FTT.UserControls.DataTables.EquipmentControls;
 using FTT.UserControls.DataTables.ExerciseControls;
 using FTT.UserControls.DataTables.ToolTimerControls;
 using FTT.ViewModels;

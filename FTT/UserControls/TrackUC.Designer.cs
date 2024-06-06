@@ -90,16 +90,17 @@ namespace FTT.UserControls
             lblExercise.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lblExercise.Location = new Point(0, 0);
             lblExercise.Name = "lblExercise";
-            lblExercise.Size = new Size(76, 20);
+            lblExercise.Size = new Size(61, 15);
             lblExercise.TabIndex = 0;
             lblExercise.Text = "Exercises:";
             // 
             // cbExercises
             // 
             cbExercises.FormattingEnabled = true;
-            cbExercises.Location = new Point(3, 23);
+            cbExercises.Location = new Point(3, 17);
+            cbExercises.Margin = new Padding(3, 2, 3, 2);
             cbExercises.Name = "cbExercises";
-            cbExercises.Size = new Size(239, 28);
+            cbExercises.Size = new Size(210, 23);
             cbExercises.TabIndex = 1;
             cbExercises.SelectedIndexChanged += cbExercises_SelectedIndexChanged;
             // 
@@ -108,17 +109,18 @@ namespace FTT.UserControls
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label2.ForeColor = Color.Black;
-            label2.Location = new Point(22, 0);
+            label2.Location = new Point(19, 0);
             label2.Name = "label2";
-            label2.Size = new Size(110, 20);
+            label2.Size = new Size(88, 15);
             label2.TabIndex = 2;
             label2.Text = "Working Date:";
             // 
             // dtWorkingDate
             // 
-            dtWorkingDate.Location = new Point(21, 24);
+            dtWorkingDate.Location = new Point(18, 18);
+            dtWorkingDate.Margin = new Padding(3, 2, 3, 2);
             dtWorkingDate.Name = "dtWorkingDate";
-            dtWorkingDate.Size = new Size(221, 27);
+            dtWorkingDate.Size = new Size(194, 23);
             dtWorkingDate.TabIndex = 3;
             dtWorkingDate.ValueChanged += dtWorkingDate_ValueChanged;
             // 
@@ -142,9 +144,10 @@ namespace FTT.UserControls
             MainPanel.Controls.Add(label2);
             MainPanel.Controls.Add(dtWorkingDate);
             MainPanel.Dock = DockStyle.Right;
-            MainPanel.Location = new Point(249, 0);
+            MainPanel.Location = new Point(218, 0);
+            MainPanel.Margin = new Padding(3, 2, 3, 2);
             MainPanel.Name = "MainPanel";
-            MainPanel.Size = new Size(527, 381);
+            MainPanel.Size = new Size(461, 286);
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
             // 
@@ -152,10 +155,11 @@ namespace FTT.UserControls
             // 
             RemoveFromTrackButton.FlatAppearance.BorderSize = 0;
             RemoveFromTrackButton.FlatStyle = FlatStyle.Flat;
-            RemoveFromTrackButton.Font = new Font("Segoe UI", 12F);
-            RemoveFromTrackButton.Location = new Point(214, 136);
+            RemoveFromTrackButton.Font = new Font("Segoe UI", 10F);
+            RemoveFromTrackButton.Location = new Point(187, 102);
+            RemoveFromTrackButton.Margin = new Padding(3, 2, 3, 2);
             RemoveFromTrackButton.Name = "RemoveFromTrackButton";
-            RemoveFromTrackButton.Size = new Size(28, 31);
+            RemoveFromTrackButton.Size = new Size(24, 23);
             RemoveFromTrackButton.TabIndex = 2;
             RemoveFromTrackButton.Text = "✘";
             RemoveFromTrackButton.UseVisualStyleBackColor = true;
@@ -163,9 +167,10 @@ namespace FTT.UserControls
             // 
             // RepeatLastButton
             // 
-            RepeatLastButton.Location = new Point(21, 139);
+            RepeatLastButton.Location = new Point(18, 104);
+            RepeatLastButton.Margin = new Padding(3, 2, 3, 2);
             RepeatLastButton.Name = "RepeatLastButton";
-            RepeatLastButton.Size = new Size(145, 29);
+            RepeatLastButton.Size = new Size(127, 22);
             RepeatLastButton.TabIndex = 15;
             RepeatLastButton.Text = "Repeat Last";
             RepeatLastButton.UseVisualStyleBackColor = true;
@@ -173,9 +178,10 @@ namespace FTT.UserControls
             // 
             // UpdateWorkoutDateButton
             // 
-            UpdateWorkoutDateButton.Location = new Point(21, 52);
+            UpdateWorkoutDateButton.Location = new Point(18, 39);
+            UpdateWorkoutDateButton.Margin = new Padding(3, 2, 3, 2);
             UpdateWorkoutDateButton.Name = "UpdateWorkoutDateButton";
-            UpdateWorkoutDateButton.Size = new Size(221, 29);
+            UpdateWorkoutDateButton.Size = new Size(193, 22);
             UpdateWorkoutDateButton.TabIndex = 14;
             UpdateWorkoutDateButton.Text = "Update Current Workout Date";
             UpdateWorkoutDateButton.UseVisualStyleBackColor = true;
@@ -183,9 +189,10 @@ namespace FTT.UserControls
             // 
             // RemoveFromButton
             // 
-            RemoveFromButton.Location = new Point(339, 137);
+            RemoveFromButton.Location = new Point(297, 103);
+            RemoveFromButton.Margin = new Padding(3, 2, 3, 2);
             RemoveFromButton.Name = "RemoveFromButton";
-            RemoveFromButton.Size = new Size(171, 31);
+            RemoveFromButton.Size = new Size(150, 23);
             RemoveFromButton.TabIndex = 13;
             RemoveFromButton.Text = "Remove From Workout";
             RemoveFromButton.UseVisualStyleBackColor = true;
@@ -193,9 +200,10 @@ namespace FTT.UserControls
             // 
             // AddToButton
             // 
-            AddToButton.Location = new Point(261, 137);
+            AddToButton.Location = new Point(228, 103);
+            AddToButton.Margin = new Padding(3, 2, 3, 2);
             AddToButton.Name = "AddToButton";
-            AddToButton.Size = new Size(171, 31);
+            AddToButton.Size = new Size(150, 23);
             AddToButton.TabIndex = 12;
             AddToButton.Text = "Add To Workout";
             AddToButton.UseVisualStyleBackColor = true;
@@ -206,19 +214,20 @@ namespace FTT.UserControls
             groupHistory.Controls.Add(ViewGraphButton);
             groupHistory.Controls.Add(dgvHistory);
             groupHistory.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            groupHistory.Location = new Point(3, 173);
+            groupHistory.Location = new Point(3, 130);
+            groupHistory.Margin = new Padding(3, 2, 3, 2);
             groupHistory.Name = "groupHistory";
-            groupHistory.Size = new Size(521, 204);
+            groupHistory.Padding = new Padding(3, 2, 3, 2);
+            groupHistory.Size = new Size(456, 153);
             groupHistory.TabIndex = 6;
             groupHistory.TabStop = false;
             groupHistory.Text = "History";
             // 
             // ViewGraphButton
             // 
-            ViewGraphButton.Location = new Point(429, 17);
-            ViewGraphButton.Margin = new Padding(3, 4, 3, 4);
+            ViewGraphButton.Location = new Point(375, 13);
             ViewGraphButton.Name = "ViewGraphButton";
-            ViewGraphButton.Size = new Size(86, 31);
+            ViewGraphButton.Size = new Size(75, 23);
             ViewGraphButton.TabIndex = 1;
             ViewGraphButton.Text = "Graph";
             ViewGraphButton.UseVisualStyleBackColor = true;
@@ -229,19 +238,22 @@ namespace FTT.UserControls
             dgvHistory.AllowUserToAddRows = false;
             dgvHistory.AllowUserToDeleteRows = false;
             dgvHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvHistory.Location = new Point(6, 55);
+            dgvHistory.Location = new Point(5, 41);
+            dgvHistory.Margin = new Padding(3, 2, 3, 2);
             dgvHistory.Name = "dgvHistory";
             dgvHistory.ReadOnly = true;
             dgvHistory.RowHeadersWidth = 51;
-            dgvHistory.Size = new Size(509, 147);
+            dgvHistory.Size = new Size(445, 110);
             dgvHistory.TabIndex = 0;
             // 
             // lstTrack
             // 
             lstTrack.FormattingEnabled = true;
-            lstTrack.Location = new Point(261, 24);
+            lstTrack.ItemHeight = 15;
+            lstTrack.Location = new Point(228, 18);
+            lstTrack.Margin = new Padding(3, 2, 3, 2);
             lstTrack.Name = "lstTrack";
-            lstTrack.Size = new Size(250, 104);
+            lstTrack.Size = new Size(219, 79);
             lstTrack.TabIndex = 11;
             lstTrack.ItemAdded += lstTrack_ItemAdded;
             // 
@@ -249,11 +261,11 @@ namespace FTT.UserControls
             // 
             AddToTrackButton.FlatAppearance.BorderSize = 0;
             AddToTrackButton.FlatStyle = FlatStyle.Flat;
-            AddToTrackButton.Font = new Font("Segoe UI", 12F);
-            AddToTrackButton.Location = new Point(171, 137);
+            AddToTrackButton.Font = new Font("Segoe UI", 10F);
+            AddToTrackButton.Location = new Point(150, 103);
             AddToTrackButton.Margin = new Padding(0);
             AddToTrackButton.Name = "AddToTrackButton";
-            AddToTrackButton.Size = new Size(28, 31);
+            AddToTrackButton.Size = new Size(24, 23);
             AddToTrackButton.TabIndex = 10;
             AddToTrackButton.Text = "✔";
             AddToTrackButton.UseVisualStyleBackColor = true;
@@ -261,10 +273,11 @@ namespace FTT.UserControls
             // 
             // txtVolume
             // 
-            txtVolume.Location = new Point(171, 107);
+            txtVolume.Location = new Point(150, 80);
+            txtVolume.Margin = new Padding(3, 2, 3, 2);
             txtVolume.Name = "txtVolume";
             txtVolume.ReadOnly = true;
-            txtVolume.Size = new Size(69, 27);
+            txtVolume.Size = new Size(61, 23);
             txtVolume.TabIndex = 9;
             // 
             // label5
@@ -272,25 +285,27 @@ namespace FTT.UserControls
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label5.ForeColor = Color.Black;
-            label5.Location = new Point(171, 84);
+            label5.Location = new Point(150, 63);
             label5.Name = "label5";
-            label5.Size = new Size(19, 20);
+            label5.Size = new Size(15, 15);
             label5.TabIndex = 8;
             label5.Text = "V";
             // 
             // txtWeight
             // 
-            txtWeight.Location = new Point(97, 107);
+            txtWeight.Location = new Point(85, 80);
+            txtWeight.Margin = new Padding(3, 2, 3, 2);
             txtWeight.Name = "txtWeight";
-            txtWeight.Size = new Size(69, 27);
+            txtWeight.Size = new Size(61, 23);
             txtWeight.TabIndex = 7;
             txtWeight.TextChanged += txtWeight_TextChanged;
             // 
             // txtReps
             // 
-            txtReps.Location = new Point(22, 107);
+            txtReps.Location = new Point(19, 80);
+            txtReps.Margin = new Padding(3, 2, 3, 2);
             txtReps.Name = "txtReps";
-            txtReps.Size = new Size(69, 27);
+            txtReps.Size = new Size(61, 23);
             txtReps.TabIndex = 6;
             txtReps.TextChanged += txtReps_TextChanged;
             // 
@@ -299,9 +314,9 @@ namespace FTT.UserControls
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label4.ForeColor = Color.Black;
-            label4.Location = new Point(97, 84);
+            label4.Location = new Point(85, 63);
             label4.Name = "label4";
-            label4.Size = new Size(24, 20);
+            label4.Size = new Size(19, 15);
             label4.TabIndex = 5;
             label4.Text = "W";
             // 
@@ -310,9 +325,9 @@ namespace FTT.UserControls
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label3.ForeColor = Color.Black;
-            label3.Location = new Point(22, 84);
+            label3.Location = new Point(19, 63);
             label3.Name = "label3";
-            label3.Size = new Size(19, 20);
+            label3.Size = new Size(15, 15);
             label3.TabIndex = 4;
             label3.Text = "R";
             // 
@@ -335,9 +350,11 @@ namespace FTT.UserControls
             groupLastTracking.Controls.Add(lblWorkingDate);
             groupLastTracking.Controls.Add(label6);
             groupLastTracking.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            groupLastTracking.Location = new Point(3, 189);
+            groupLastTracking.Location = new Point(3, 142);
+            groupLastTracking.Margin = new Padding(3, 2, 3, 2);
             groupLastTracking.Name = "groupLastTracking";
-            groupLastTracking.Size = new Size(240, 188);
+            groupLastTracking.Padding = new Padding(3, 2, 3, 2);
+            groupLastTracking.Size = new Size(210, 141);
             groupLastTracking.TabIndex = 5;
             groupLastTracking.TabStop = false;
             groupLastTracking.Text = "Last Tracking";
@@ -347,9 +364,9 @@ namespace FTT.UserControls
             // 
             lblSet6Data.AutoSize = true;
             lblSet6Data.Font = new Font("Segoe UI", 9F);
-            lblSet6Data.Location = new Point(97, 165);
+            lblSet6Data.Location = new Point(85, 124);
             lblSet6Data.Name = "lblSet6Data";
-            lblSet6Data.Size = new Size(106, 20);
+            lblSet6Data.Size = new Size(82, 15);
             lblSet6Data.TabIndex = 15;
             lblSet6Data.Text = "R12 x W55  x 2";
             lblSet6Data.Visible = false;
@@ -358,9 +375,9 @@ namespace FTT.UserControls
             // 
             lblSet5Data.AutoSize = true;
             lblSet5Data.Font = new Font("Segoe UI", 9F);
-            lblSet5Data.Location = new Point(97, 147);
+            lblSet5Data.Location = new Point(85, 110);
             lblSet5Data.Name = "lblSet5Data";
-            lblSet5Data.Size = new Size(106, 20);
+            lblSet5Data.Size = new Size(82, 15);
             lblSet5Data.TabIndex = 14;
             lblSet5Data.Text = "R12 x W55  x 2";
             lblSet5Data.Visible = false;
@@ -369,9 +386,9 @@ namespace FTT.UserControls
             // 
             lblSet4Data.AutoSize = true;
             lblSet4Data.Font = new Font("Segoe UI", 9F);
-            lblSet4Data.Location = new Point(97, 125);
+            lblSet4Data.Location = new Point(85, 94);
             lblSet4Data.Name = "lblSet4Data";
-            lblSet4Data.Size = new Size(106, 20);
+            lblSet4Data.Size = new Size(82, 15);
             lblSet4Data.TabIndex = 13;
             lblSet4Data.Text = "R12 x W55  x 2";
             lblSet4Data.Visible = false;
@@ -380,9 +397,9 @@ namespace FTT.UserControls
             // 
             lblSet3Data.AutoSize = true;
             lblSet3Data.Font = new Font("Segoe UI", 9F);
-            lblSet3Data.Location = new Point(97, 107);
+            lblSet3Data.Location = new Point(85, 80);
             lblSet3Data.Name = "lblSet3Data";
-            lblSet3Data.Size = new Size(106, 20);
+            lblSet3Data.Size = new Size(82, 15);
             lblSet3Data.TabIndex = 12;
             lblSet3Data.Text = "R12 x W55  x 2";
             lblSet3Data.Visible = false;
@@ -391,9 +408,9 @@ namespace FTT.UserControls
             // 
             lblSet2Data.AutoSize = true;
             lblSet2Data.Font = new Font("Segoe UI", 9F);
-            lblSet2Data.Location = new Point(97, 85);
+            lblSet2Data.Location = new Point(85, 64);
             lblSet2Data.Name = "lblSet2Data";
-            lblSet2Data.Size = new Size(106, 20);
+            lblSet2Data.Size = new Size(82, 15);
             lblSet2Data.TabIndex = 11;
             lblSet2Data.Text = "R12 x W55  x 2";
             lblSet2Data.Visible = false;
@@ -402,9 +419,9 @@ namespace FTT.UserControls
             // 
             lblSet6Display.AutoSize = true;
             lblSet6Display.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSet6Display.Location = new Point(38, 165);
+            lblSet6Display.Location = new Point(33, 124);
             lblSet6Display.Name = "lblSet6Display";
-            lblSet6Display.Size = new Size(53, 20);
+            lblSet6Display.Size = new Size(43, 15);
             lblSet6Display.TabIndex = 10;
             lblSet6Display.Text = "Set #6";
             lblSet6Display.Visible = false;
@@ -413,9 +430,9 @@ namespace FTT.UserControls
             // 
             lblSet5Display.AutoSize = true;
             lblSet5Display.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSet5Display.Location = new Point(38, 147);
+            lblSet5Display.Location = new Point(33, 110);
             lblSet5Display.Name = "lblSet5Display";
-            lblSet5Display.Size = new Size(53, 20);
+            lblSet5Display.Size = new Size(43, 15);
             lblSet5Display.TabIndex = 9;
             lblSet5Display.Text = "Set #5";
             lblSet5Display.Visible = false;
@@ -424,9 +441,9 @@ namespace FTT.UserControls
             // 
             lblSet4Display.AutoSize = true;
             lblSet4Display.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSet4Display.Location = new Point(38, 125);
+            lblSet4Display.Location = new Point(33, 94);
             lblSet4Display.Name = "lblSet4Display";
-            lblSet4Display.Size = new Size(53, 20);
+            lblSet4Display.Size = new Size(43, 15);
             lblSet4Display.TabIndex = 8;
             lblSet4Display.Text = "Set #4";
             lblSet4Display.Visible = false;
@@ -435,9 +452,9 @@ namespace FTT.UserControls
             // 
             lblSet1Data.AutoSize = true;
             lblSet1Data.Font = new Font("Segoe UI", 9F);
-            lblSet1Data.Location = new Point(97, 67);
+            lblSet1Data.Location = new Point(85, 50);
             lblSet1Data.Name = "lblSet1Data";
-            lblSet1Data.Size = new Size(106, 20);
+            lblSet1Data.Size = new Size(82, 15);
             lblSet1Data.TabIndex = 7;
             lblSet1Data.Text = "R12 x W55  x 2";
             lblSet1Data.Visible = false;
@@ -446,9 +463,9 @@ namespace FTT.UserControls
             // 
             lblSet3Display.AutoSize = true;
             lblSet3Display.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSet3Display.Location = new Point(38, 107);
+            lblSet3Display.Location = new Point(33, 80);
             lblSet3Display.Name = "lblSet3Display";
-            lblSet3Display.Size = new Size(53, 20);
+            lblSet3Display.Size = new Size(43, 15);
             lblSet3Display.TabIndex = 6;
             lblSet3Display.Text = "Set #3";
             lblSet3Display.Visible = false;
@@ -457,9 +474,9 @@ namespace FTT.UserControls
             // 
             lblSet2Display.AutoSize = true;
             lblSet2Display.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSet2Display.Location = new Point(38, 85);
+            lblSet2Display.Location = new Point(33, 64);
             lblSet2Display.Name = "lblSet2Display";
-            lblSet2Display.Size = new Size(53, 20);
+            lblSet2Display.Size = new Size(43, 15);
             lblSet2Display.TabIndex = 5;
             lblSet2Display.Text = "Set #2";
             lblSet2Display.Visible = false;
@@ -468,9 +485,9 @@ namespace FTT.UserControls
             // 
             lblSet1Display.AutoSize = true;
             lblSet1Display.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSet1Display.Location = new Point(38, 67);
+            lblSet1Display.Location = new Point(33, 50);
             lblSet1Display.Name = "lblSet1Display";
-            lblSet1Display.Size = new Size(53, 20);
+            lblSet1Display.Size = new Size(43, 15);
             lblSet1Display.TabIndex = 4;
             lblSet1Display.Text = "Set #1";
             lblSet1Display.Visible = false;
@@ -479,9 +496,9 @@ namespace FTT.UserControls
             // 
             lblTotalVolume.AutoSize = true;
             lblTotalVolume.Font = new Font("Segoe UI", 9F);
-            lblTotalVolume.Location = new Point(120, 43);
+            lblTotalVolume.Location = new Point(105, 32);
             lblTotalVolume.Name = "lblTotalVolume";
-            lblTotalVolume.Size = new Size(55, 20);
+            lblTotalVolume.Size = new Size(42, 15);
             lblTotalVolume.TabIndex = 3;
             lblTotalVolume.Text = "250 Kg";
             // 
@@ -489,9 +506,9 @@ namespace FTT.UserControls
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label9.Location = new Point(9, 43);
+            label9.Location = new Point(8, 32);
             label9.Name = "label9";
-            label9.Size = new Size(105, 20);
+            label9.Size = new Size(82, 15);
             label9.TabIndex = 2;
             label9.Text = "Total Volume:";
             // 
@@ -499,9 +516,9 @@ namespace FTT.UserControls
             // 
             lblWorkingDate.AutoSize = true;
             lblWorkingDate.Font = new Font("Segoe UI", 9F);
-            lblWorkingDate.Location = new Point(120, 23);
+            lblWorkingDate.Location = new Point(105, 17);
             lblWorkingDate.Name = "lblWorkingDate";
-            lblWorkingDate.Size = new Size(94, 20);
+            lblWorkingDate.Size = new Size(72, 15);
             lblWorkingDate.TabIndex = 1;
             lblWorkingDate.Text = "Dec 31, 2024";
             // 
@@ -509,17 +526,18 @@ namespace FTT.UserControls
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label6.Location = new Point(6, 23);
+            label6.Location = new Point(5, 17);
             label6.Name = "label6";
-            label6.Size = new Size(108, 20);
+            label6.Size = new Size(86, 15);
             label6.TabIndex = 0;
             label6.Text = "Working date:";
             // 
             // StartButton
             // 
-            StartButton.Location = new Point(3, 57);
+            StartButton.Location = new Point(3, 43);
+            StartButton.Margin = new Padding(3, 2, 3, 2);
             StartButton.Name = "StartButton";
-            StartButton.Size = new Size(94, 29);
+            StartButton.Size = new Size(82, 22);
             StartButton.TabIndex = 6;
             StartButton.Text = "Start";
             StartButton.UseVisualStyleBackColor = true;
@@ -528,9 +546,10 @@ namespace FTT.UserControls
             // 
             // FinishButton
             // 
-            FinishButton.Location = new Point(149, 57);
+            FinishButton.Location = new Point(130, 43);
+            FinishButton.Margin = new Padding(3, 2, 3, 2);
             FinishButton.Name = "FinishButton";
-            FinishButton.Size = new Size(94, 29);
+            FinishButton.Size = new Size(82, 22);
             FinishButton.TabIndex = 7;
             FinishButton.Text = "Finish";
             FinishButton.UseVisualStyleBackColor = true;
@@ -543,9 +562,11 @@ namespace FTT.UserControls
             groupNotes.Controls.Add(lblStrikes);
             groupNotes.Controls.Add(label10);
             groupNotes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            groupNotes.Location = new Point(3, 92);
+            groupNotes.Location = new Point(3, 69);
+            groupNotes.Margin = new Padding(3, 2, 3, 2);
             groupNotes.Name = "groupNotes";
-            groupNotes.Size = new Size(240, 88);
+            groupNotes.Padding = new Padding(3, 2, 3, 2);
+            groupNotes.Size = new Size(210, 66);
             groupNotes.TabIndex = 6;
             groupNotes.TabStop = false;
             groupNotes.Text = "Notes";
@@ -554,11 +575,12 @@ namespace FTT.UserControls
             // txtNotes
             // 
             txtNotes.ForeColor = SystemColors.InfoText;
-            txtNotes.Location = new Point(11, 49);
+            txtNotes.Location = new Point(10, 37);
+            txtNotes.Margin = new Padding(3, 2, 3, 2);
             txtNotes.Multiline = true;
             txtNotes.Name = "txtNotes";
             txtNotes.ReadOnly = true;
-            txtNotes.Size = new Size(223, 27);
+            txtNotes.Size = new Size(196, 21);
             txtNotes.TabIndex = 3;
             txtNotes.Text = "Increase";
             txtNotes.TextAlign = HorizontalAlignment.Center;
@@ -567,9 +589,9 @@ namespace FTT.UserControls
             // 
             lblStrikes.AutoSize = true;
             lblStrikes.ForeColor = Color.Red;
-            lblStrikes.Location = new Point(75, 23);
+            lblStrikes.Location = new Point(66, 17);
             lblStrikes.Name = "lblStrikes";
-            lblStrikes.Size = new Size(97, 20);
+            lblStrikes.Size = new Size(59, 15);
             lblStrikes.TabIndex = 2;
             lblStrikes.Text = "❌❌❌❌";
             // 
@@ -577,15 +599,15 @@ namespace FTT.UserControls
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label10.Location = new Point(9, 23);
+            label10.Location = new Point(8, 17);
             label10.Name = "label10";
-            label10.Size = new Size(60, 20);
+            label10.Size = new Size(49, 15);
             label10.TabIndex = 1;
             label10.Text = "Strikes:";
             // 
             // TrackUC
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
             Controls.Add(groupNotes);
@@ -595,8 +617,9 @@ namespace FTT.UserControls
             Controls.Add(MainPanel);
             Controls.Add(cbExercises);
             Controls.Add(lblExercise);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "TrackUC";
-            Size = new Size(776, 381);
+            Size = new Size(679, 286);
             MainPanel.ResumeLayout(false);
             MainPanel.PerformLayout();
             groupHistory.ResumeLayout(false);

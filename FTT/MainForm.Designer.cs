@@ -42,10 +42,10 @@
             // 
             // DatabaseButton
             // 
-            DatabaseButton.Location = new Point(607, 9);
+            DatabaseButton.Location = new Point(614, 8);
             DatabaseButton.Margin = new Padding(3, 2, 3, 2);
             DatabaseButton.Name = "DatabaseButton";
-            DatabaseButton.Size = new Size(82, 22);
+            DatabaseButton.Size = new Size(75, 23);
             DatabaseButton.TabIndex = 0;
             DatabaseButton.Text = "Database";
             DatabaseButton.UseVisualStyleBackColor = true;
@@ -53,10 +53,10 @@
             // 
             // SettingsButton
             // 
-            SettingsButton.Location = new Point(520, 9);
+            SettingsButton.Location = new Point(533, 8);
             SettingsButton.Margin = new Padding(3, 2, 3, 2);
             SettingsButton.Name = "SettingsButton";
-            SettingsButton.Size = new Size(82, 22);
+            SettingsButton.Size = new Size(75, 23);
             SettingsButton.TabIndex = 1;
             SettingsButton.Text = "Settings";
             SettingsButton.UseVisualStyleBackColor = true;
@@ -67,7 +67,7 @@
             TrackButton.Location = new Point(10, 9);
             TrackButton.Margin = new Padding(3, 2, 3, 2);
             TrackButton.Name = "TrackButton";
-            TrackButton.Size = new Size(82, 22);
+            TrackButton.Size = new Size(82, 23);
             TrackButton.TabIndex = 2;
             TrackButton.Text = "Track";
             TrackButton.UseVisualStyleBackColor = true;
@@ -86,7 +86,7 @@
             BeginWorkoutButton.Location = new Point(98, 9);
             BeginWorkoutButton.Margin = new Padding(3, 2, 3, 2);
             BeginWorkoutButton.Name = "BeginWorkoutButton";
-            BeginWorkoutButton.Size = new Size(108, 22);
+            BeginWorkoutButton.Size = new Size(108, 23);
             BeginWorkoutButton.TabIndex = 4;
             BeginWorkoutButton.Text = "Begin Workout";
             BeginWorkoutButton.UseVisualStyleBackColor = true;
@@ -125,7 +125,7 @@
             // 
             // WorkoutsButton
             // 
-            WorkoutsButton.Location = new Point(439, 9);
+            WorkoutsButton.Location = new Point(452, 8);
             WorkoutsButton.Name = "WorkoutsButton";
             WorkoutsButton.Size = new Size(75, 23);
             WorkoutsButton.TabIndex = 6;
