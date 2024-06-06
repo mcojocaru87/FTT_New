@@ -1,6 +1,7 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT.UserControls.DataTables.ExerciseControls
 {
@@ -9,12 +10,12 @@ namespace FTT.UserControls.DataTables.ExerciseControls
         private readonly IRepository<Exercise> _exerciseRepository;
         private readonly int _exerciseId;
 
-        private Exercise _exercise;
-        public ExerciseForm(IRepository<Exercise> exerciseRepository, int exerciseId)
+        private Exercise _exercise = null!;
+        public ExerciseForm(int exerciseId)
         {
             InitializeComponent();
 
-            _exerciseRepository = exerciseRepository;
+            _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
             _exerciseId = exerciseId;
 
             LoadMultiplierData();

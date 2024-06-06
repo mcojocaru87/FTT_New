@@ -12,6 +12,7 @@
         public DbSet<WorkingExerciseSet> WorkingExerciseSets { get; set; }
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<WorkoutItem> WorkoutItems { get; set; }
+        public DbSet<ToolTimer> ToolTimers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

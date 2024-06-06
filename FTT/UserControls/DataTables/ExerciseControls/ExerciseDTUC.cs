@@ -1,7 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace FTT.UserControls.DataTables.ExerciseControls
 {
@@ -74,14 +73,14 @@ namespace FTT.UserControls.DataTables.ExerciseControls
 
         private void AddNewButton_Click(object sender, EventArgs e)
         {
-            ExerciseForm exerciseForm = new(_exerciseRepository, 0);
+            ExerciseForm exerciseForm = new(0);
 
             exerciseForm.ShowDialog();
         }
 
         private void EditButton_Click(object sender, EventArgs e)
         {
-            ExerciseForm exerciseForm = new(_exerciseRepository, _selectedExerciseId);
+            ExerciseForm exerciseForm = new(_selectedExerciseId);
 
             exerciseForm.ShowDialog();
         }
