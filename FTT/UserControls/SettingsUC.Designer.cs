@@ -39,12 +39,13 @@
             cbExercises = new ComboBox();
             label4 = new Label();
             MainPanel = new Panel();
+            txtMinSets = new TextBox();
+            label6 = new Label();
             lblMode = new Label();
             label5 = new Label();
             CancelButton = new Button();
             PreSetButton = new Button();
-            txtMinSets = new TextBox();
-            label6 = new Label();
+            chkDisplayTimer = new CheckBox();
             MainPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -97,7 +98,7 @@
             // 
             // CleanupButton
             // 
-            CleanupButton.Location = new Point(21, 251);
+            CleanupButton.Location = new Point(21, 106);
             CleanupButton.Margin = new Padding(3, 2, 3, 2);
             CleanupButton.Name = "CleanupButton";
             CleanupButton.Size = new Size(89, 22);
@@ -164,6 +165,24 @@
             MainPanel.TabIndex = 10;
             MainPanel.Visible = false;
             // 
+            // txtMinSets
+            // 
+            txtMinSets.Location = new Point(163, 164);
+            txtMinSets.Margin = new Padding(3, 2, 3, 2);
+            txtMinSets.Name = "txtMinSets";
+            txtMinSets.Size = new Size(110, 23);
+            txtMinSets.TabIndex = 12;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label6.Location = new Point(164, 147);
+            label6.Name = "label6";
+            label6.Size = new Size(55, 15);
+            label6.TabIndex = 11;
+            label6.Text = "Min Sets";
+            // 
             // lblMode
             // 
             lblMode.AutoSize = true;
@@ -196,7 +215,7 @@
             // 
             // PreSetButton
             // 
-            PreSetButton.Location = new Point(148, 251);
+            PreSetButton.Location = new Point(148, 106);
             PreSetButton.Margin = new Padding(3, 2, 3, 2);
             PreSetButton.Name = "PreSetButton";
             PreSetButton.Size = new Size(89, 22);
@@ -205,29 +224,23 @@
             PreSetButton.UseVisualStyleBackColor = true;
             PreSetButton.Click += PreSetButton_Click;
             // 
-            // txtMinSets
+            // chkDisplayTimer
             // 
-            txtMinSets.Location = new Point(163, 164);
-            txtMinSets.Margin = new Padding(3, 2, 3, 2);
-            txtMinSets.Name = "txtMinSets";
-            txtMinSets.Size = new Size(110, 23);
-            txtMinSets.TabIndex = 12;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label6.Location = new Point(164, 147);
-            label6.Name = "label6";
-            label6.Size = new Size(55, 15);
-            label6.TabIndex = 11;
-            label6.Text = "Min Sets";
+            chkDisplayTimer.AutoSize = true;
+            chkDisplayTimer.Location = new Point(22, 233);
+            chkDisplayTimer.Name = "chkDisplayTimer";
+            chkDisplayTimer.Size = new Size(88, 19);
+            chkDisplayTimer.TabIndex = 12;
+            chkDisplayTimer.Text = "Show Timer";
+            chkDisplayTimer.UseVisualStyleBackColor = true;
+            chkDisplayTimer.CheckedChanged += chkDisplayTimer_CheckedChanged;
             // 
             // SettingsUC
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
+            Controls.Add(chkDisplayTimer);
             Controls.Add(PreSetButton);
             Controls.Add(MainPanel);
             Controls.Add(label4);
@@ -261,5 +274,6 @@
         private Label label5;
         private TextBox txtMinSets;
         private Label label6;
+        private CheckBox chkDisplayTimer;
     }
 }

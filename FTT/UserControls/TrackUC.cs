@@ -54,6 +54,8 @@ namespace FTT.UserControls
             lstTrack.DisplayMember = "Display";
 
             LoadExercises();
+
+            cbExercises.SelectedValue = 0;
         }
 
         private void LoadExercises()

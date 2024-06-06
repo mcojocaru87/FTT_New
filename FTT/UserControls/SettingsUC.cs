@@ -1,6 +1,7 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT.UserControls
@@ -9,11 +10,13 @@ namespace FTT.UserControls
     {
         private readonly IRepository<Setting> _settingsRepository;
         private readonly IRepository<Exercise> _exerciseRepository;
+        private readonly IRepository<ToolTimer> _toolTimerRepository;
 
         private bool isCreateInstance = false;
         private bool isPreSet = false;
         private int exerciseId = 0;
         private int exerciseSettingsId = 0;
+        private ToolTimer toolTimer = null!;
 
         public SettingsUC()
         {
@@ -21,8 +24,10 @@ namespace FTT.UserControls
 
             _settingsRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
             _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
+            _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
 
             LoadExercises();
+            LoadTimerSettings();
             ResetMainPanel();
         }
 
@@ -236,6 +241,31 @@ namespace FTT.UserControls
 
             MainPanel.Visible = true;
             PreSetButton.Enabled = false;
+        }
+
+        private void LoadTimerSettings()
+        {
+            var toolTimer = _toolTimerRepository.GetAll().FirstOrDefault();
+
+            this.toolTimer = toolTimer;
+
+            if (toolTimer != null)
+            {
+                chkDisplayTimer.Checked = toolTimer.IsDisplayed;
+            }
+            else
+            {
+                chkDisplayTimer.Enabled = false;
+                chkDisplayTimer.Checked = false;
+            }
+        }
+
+        private void chkDisplayTimer_CheckedChanged(object sender, EventArgs e)
+        {
+            toolTimer.IsDisplayed = chkDisplayTimer.Checked;
+
+            _toolTimerRepository.Update(toolTimer);
+            _toolTimerRepository.Commit();
         }
     }
 }
