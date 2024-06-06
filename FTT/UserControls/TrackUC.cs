@@ -14,6 +14,7 @@ namespace FTT.UserControls
     {
         private readonly IRepository<Exercise> _exerciseRepository;
         private readonly IRepository<Setting> _settingRepository;
+        private readonly IRepository<ToolTimer> _toolTimerRepository;
         private readonly ITrackService _trackService;
         private readonly IWorkoutService _workoutService;
         private readonly MainForm _mainForm;
@@ -38,6 +39,7 @@ namespace FTT.UserControls
             _trackService = Session.Instance.ServiceProvider.GetRequiredService<ITrackService>();
             _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
             _settingRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
+            _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
 
             _isWorkingExerciseInSession = false;
             _mainForm = mainForm;
@@ -557,8 +559,26 @@ namespace FTT.UserControls
                 Weight = _currentWeightUsed
             });
 
-
             txtReps.Clear();
+
+            LoadTimeRestForm();
+        }
+
+        private void LoadTimeRestForm()
+        {
+            var toolTimer = _toolTimerRepository.GetAll().FirstOrDefault();
+
+            if (toolTimer != null)
+            {
+                var showTimer = toolTimer.IsDisplayed;
+
+                if (showTimer)
+                {
+                    TimerForm timerForm = new();
+
+                    timerForm.ShowDialog();
+                }
+            }
         }
 
         private void LoadWorkingExerciseHistory()
