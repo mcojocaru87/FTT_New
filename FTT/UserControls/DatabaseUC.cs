@@ -1,5 +1,6 @@
 ﻿using FTT.UserControls.DataTables.EquipmentControls;
 using FTT.UserControls.DataTables.ExerciseControls;
+using FTT.UserControls.DataTables.RepRangeIntervalControls;
 using FTT.UserControls.DataTables.ToolTimerControls;
 using FTT.ViewModels;
 
@@ -28,7 +29,8 @@ namespace FTT.UserControls
                 new(0, "-- Please Select --"),
                 new(1, "Exercises"),
                 new(2, "ToolTimers"),
-                new(3, "Equipments")
+                new(3, "Equipments"),
+                new(4, "RepRangeIntervals")
                 ];
         }
 
@@ -45,40 +47,19 @@ namespace FTT.UserControls
                         ShowMainPanel(false);
                         break;
                     case 1:
-                        LoadExerciseDataTableUserControl();
-                        ShowMainPanel(true);
+                        SetupUserControl(new ExerciseDTUC());
                         break;
                     case 2:
-                        LoadToolTimersDataTableUserControl();
-                        ShowMainPanel(true);
+                        SetupUserControl(new ToolTimerDTUC());
                         break;
                     case 3:
-                        LoadEquipmentsDataTableUserControl();
-                        ShowMainPanel(true);
+                        SetupUserControl(new EquipmentDTUC());
+                        break;
+                    case 4:
+                        SetupUserControl(new RepRangeIntervalDTUC());
                         break;
                 }
             }
-        }
-
-        private void LoadExerciseDataTableUserControl()
-        {
-            ExerciseDTUC exerciseDTUC = new();
-
-            SetupUserControl(exerciseDTUC);
-        }
-
-        private void LoadToolTimersDataTableUserControl()
-        {
-            ToolTimerDTUC toolTimerDTUC = new();
-
-            SetupUserControl(toolTimerDTUC);
-        }
-
-        private void LoadEquipmentsDataTableUserControl()
-        {
-            EquipmentDTUC equipmentDTUC = new();
-
-            SetupUserControl(equipmentDTUC);
         }
 
         private void SetupUserControl(UserControl userControl)
@@ -87,6 +68,8 @@ namespace FTT.UserControls
 
             userControl.Dock = DockStyle.Fill;
             MainPanel.Controls.Add(userControl);
+
+            ShowMainPanel(true);
         }
 
         private void ShowMainPanel(bool visible)

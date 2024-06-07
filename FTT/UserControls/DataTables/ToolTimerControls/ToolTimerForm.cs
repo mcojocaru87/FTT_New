@@ -2,7 +2,6 @@
 using FTT.DbEntity;
 using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using System.Xml.Linq;
 
 namespace FTT.UserControls.DataTables.ToolTimerControls
 {

@@ -15,6 +15,7 @@
         public DbSet<ToolTimer> ToolTimers { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<EquipmentItem> EquipmentItems { get; set; }
+        public DbSet<RepRangeInterval> RepRangeIntervals { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
