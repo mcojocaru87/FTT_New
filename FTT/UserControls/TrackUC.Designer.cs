@@ -36,6 +36,10 @@ namespace FTT.UserControls
             label2 = new Label();
             dtWorkingDate = new DateTimePicker();
             MainPanel = new Panel();
+            lblTotalInWorkVolume = new Label();
+            label7 = new Label();
+            lblIntervalInUse = new Label();
+            label1 = new Label();
             RemoveFromTrackButton = new Button();
             RepeatLastButton = new Button();
             UpdateWorkoutDateButton = new Button();
@@ -127,6 +131,10 @@ namespace FTT.UserControls
             // MainPanel
             // 
             MainPanel.BackColor = SystemColors.ControlLight;
+            MainPanel.Controls.Add(lblTotalInWorkVolume);
+            MainPanel.Controls.Add(label7);
+            MainPanel.Controls.Add(lblIntervalInUse);
+            MainPanel.Controls.Add(label1);
             MainPanel.Controls.Add(RemoveFromTrackButton);
             MainPanel.Controls.Add(RepeatLastButton);
             MainPanel.Controls.Add(UpdateWorkoutDateButton);
@@ -150,6 +158,44 @@ namespace FTT.UserControls
             MainPanel.Size = new Size(461, 286);
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
+            // 
+            // lblTotalInWorkVolume
+            // 
+            lblTotalInWorkVolume.AutoSize = true;
+            lblTotalInWorkVolume.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblTotalInWorkVolume.Location = new Point(312, 83);
+            lblTotalInWorkVolume.Name = "lblTotalInWorkVolume";
+            lblTotalInWorkVolume.Size = new Size(32, 15);
+            lblTotalInWorkVolume.TabIndex = 19;
+            lblTotalInWorkVolume.Text = "0 Kg";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(228, 84);
+            label7.Name = "label7";
+            label7.Size = new Size(78, 15);
+            label7.TabIndex = 18;
+            label7.Text = "Total Volume:";
+            // 
+            // lblIntervalInUse
+            // 
+            lblIntervalInUse.AutoSize = true;
+            lblIntervalInUse.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblIntervalInUse.ForeColor = Color.Blue;
+            lblIntervalInUse.Location = new Point(342, 1);
+            lblIntervalInUse.Name = "lblIntervalInUse";
+            lblIntervalInUse.Size = new Size(0, 15);
+            lblIntervalInUse.TabIndex = 17;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(228, 1);
+            label1.Name = "label1";
+            label1.Size = new Size(108, 15);
+            label1.TabIndex = 16;
+            label1.Text = "Rep Range Interval:";
             // 
             // RemoveFromTrackButton
             // 
@@ -253,7 +299,7 @@ namespace FTT.UserControls
             lstTrack.Location = new Point(228, 18);
             lstTrack.Margin = new Padding(3, 2, 3, 2);
             lstTrack.Name = "lstTrack";
-            lstTrack.Size = new Size(219, 79);
+            lstTrack.Size = new Size(219, 64);
             lstTrack.TabIndex = 11;
             lstTrack.ItemAdded += lstTrack_ItemAdded;
             // 
@@ -680,5 +726,9 @@ namespace FTT.UserControls
         private Button RemoveFromTrackButton;
         private ToolTip tlpAddToTrack;
         private ToolTip tlpRemoveFromTrack;
+        private Label lblIntervalInUse;
+        private Label label1;
+        private Label lblTotalInWorkVolume;
+        private Label label7;
     }
 }

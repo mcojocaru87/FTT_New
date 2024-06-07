@@ -3,6 +3,7 @@ using System;
 using FTT.DbDesign;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FTT.DbDesign.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240607113157_AddProgressiveOverloadsTbl")]
+    partial class AddProgressiveOverloadsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -95,14 +98,8 @@ namespace FTT.DbDesign.Migrations
                     b.Property<int>("ExerciseId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("LogDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("RepRangeIntervalId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Weight")
                         .HasColumnType("TEXT");

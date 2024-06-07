@@ -28,12 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            cbExercises = new ComboBox();
-            cbIsSelected = new ComboBox();
-            label6 = new Label();
             label5 = new Label();
             label4 = new Label();
-            label3 = new Label();
             txtId = new TextBox();
             label2 = new Label();
             CancelButton = new Button();
@@ -43,37 +39,10 @@
             txtMaxReps = new TextBox();
             SuspendLayout();
             // 
-            // cbExercises
-            // 
-            cbExercises.FormattingEnabled = true;
-            cbExercises.Location = new Point(73, 72);
-            cbExercises.Margin = new Padding(3, 2, 3, 2);
-            cbExercises.Name = "cbExercises";
-            cbExercises.Size = new Size(110, 23);
-            cbExercises.TabIndex = 37;
-            // 
-            // cbIsSelected
-            // 
-            cbIsSelected.FormattingEnabled = true;
-            cbIsSelected.Location = new Point(73, 153);
-            cbIsSelected.Margin = new Padding(3, 2, 3, 2);
-            cbIsSelected.Name = "cbIsSelected";
-            cbIsSelected.Size = new Size(110, 23);
-            cbIsSelected.TabIndex = 36;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(2, 156);
-            label6.Name = "label6";
-            label6.Size = new Size(65, 15);
-            label6.TabIndex = 35;
-            label6.Text = "Is Selected:";
-            // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(6, 129);
+            label5.Location = new Point(6, 103);
             label5.Name = "label5";
             label5.Size = new Size(61, 15);
             label5.TabIndex = 33;
@@ -82,20 +51,11 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(8, 102);
+            label4.Location = new Point(8, 76);
             label4.Name = "label4";
             label4.Size = new Size(59, 15);
             label4.TabIndex = 31;
             label4.Text = "Min Reps:";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(15, 75);
-            label3.Name = "label3";
-            label3.Size = new Size(52, 15);
-            label3.TabIndex = 30;
-            label3.Text = "Exercise:";
             // 
             // txtId
             // 
@@ -117,7 +77,7 @@
             // 
             // CancelButton
             // 
-            CancelButton.Location = new Point(146, 199);
+            CancelButton.Location = new Point(146, 141);
             CancelButton.Margin = new Padding(3, 2, 3, 2);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(82, 22);
@@ -128,7 +88,7 @@
             // 
             // SaveButton
             // 
-            SaveButton.Location = new Point(3, 199);
+            SaveButton.Location = new Point(3, 141);
             SaveButton.Margin = new Padding(3, 2, 3, 2);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(82, 22);
@@ -149,14 +109,14 @@
             // 
             // txtMinReps
             // 
-            txtMinReps.Location = new Point(73, 99);
+            txtMinReps.Location = new Point(73, 73);
             txtMinReps.Name = "txtMinReps";
             txtMinReps.Size = new Size(110, 23);
             txtMinReps.TabIndex = 38;
             // 
             // txtMaxReps
             // 
-            txtMaxReps.Location = new Point(73, 126);
+            txtMaxReps.Location = new Point(73, 100);
             txtMaxReps.Name = "txtMaxReps";
             txtMaxReps.Size = new Size(110, 23);
             txtMaxReps.TabIndex = 39;
@@ -165,15 +125,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(230, 228);
+            ClientSize = new Size(230, 180);
             Controls.Add(txtMaxReps);
             Controls.Add(txtMinReps);
-            Controls.Add(cbExercises);
-            Controls.Add(cbIsSelected);
-            Controls.Add(label6);
             Controls.Add(label5);
             Controls.Add(label4);
-            Controls.Add(label3);
             Controls.Add(txtId);
             Controls.Add(label2);
             Controls.Add(CancelButton);
@@ -188,13 +144,8 @@
         }
 
         #endregion
-
-        private ComboBox cbExercises;
-        private ComboBox cbIsSelected;
-        private Label label6;
         private Label label5;
         private Label label4;
-        private Label label3;
         private TextBox txtId;
         private Label label2;
         private Button CancelButton;

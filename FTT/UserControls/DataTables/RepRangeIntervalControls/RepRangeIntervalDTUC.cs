@@ -1,16 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
-using FTT.UserControls.DataTables.ToolTimerControls;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace FTT.UserControls.DataTables.RepRangeIntervalControls
 {
@@ -36,12 +26,7 @@ namespace FTT.UserControls.DataTables.RepRangeIntervalControls
         private void LoadData()
         {
             List<RepRangeInterval> repRangeIntervals = [.. _repRangeIntervalRepository.GetAll()];
-
-            foreach (var item in repRangeIntervals)
-            {
-                item.ExerciseName = ExerciseName(item.ExerciseId);
-            }
-
+                        
             dgvExercise.DataSource = repRangeIntervals;
         }
 
@@ -119,20 +104,6 @@ namespace FTT.UserControls.DataTables.RepRangeIntervalControls
             {
                 EnableEditRemoveButtons(false, false);
             }
-        }
-
-        private string ExerciseName(int exerciseId)
-        {
-            string exerciseName = string.Empty;
-
-            var exercise = _exerciseRepository.GetById(exerciseId);
-
-            if (exercise != null)
-            {
-                exerciseName = exercise.Name;
-            }
-
-            return exerciseName;
-        }
+        }        
     }
 }

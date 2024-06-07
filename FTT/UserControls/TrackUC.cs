@@ -15,6 +15,7 @@ namespace FTT.UserControls
         private readonly IRepository<Exercise> _exerciseRepository;
         private readonly IRepository<Setting> _settingRepository;
         private readonly IRepository<ToolTimer> _toolTimerRepository;
+        private readonly IRepository<ProgressiveOverload> _progressiveOverloadRepository;
         private readonly ITrackService _trackService;
         private readonly IWorkoutService _workoutService;
         private readonly MainForm _mainForm;
@@ -28,6 +29,7 @@ namespace FTT.UserControls
         private decimal _currentWeightUsed = 0;
         private int _lastStrikeCount = 0;
         private List<GraphViewModel> _dataPoints;
+        private Setting exerciseSettings = null!;
 
         public event EventHandler TriggerButtonEvent;
 
@@ -40,6 +42,7 @@ namespace FTT.UserControls
             _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
             _settingRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
+            _progressiveOverloadRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverload>>();
 
             _isWorkingExerciseInSession = false;
             _mainForm = mainForm;
@@ -86,6 +89,8 @@ namespace FTT.UserControls
                     _exerciseId = (int)selectedExercise.ValueMember;
                     _exerciseMultiplier = _exerciseRepository.GetById(_exerciseId)?.Multiplier ?? 1;
 
+                    exerciseSettings = LoadExerciseSettings(_exerciseId);
+
                     StartButton.Visible = true;
                     FinishButton.Visible = true;
 
@@ -111,6 +116,13 @@ namespace FTT.UserControls
             }
         }
 
+        private Setting LoadExerciseSettings(int exerciseId)
+        {
+            return _settingRepository
+                .Find(x => x.ExerciseId == exerciseId)
+                .FirstOrDefault();
+        }
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             _isWorkingExerciseInSession = true;
@@ -127,12 +139,24 @@ namespace FTT.UserControls
                 AddWorkingExerciseToWorkout(newWorkingExerciseId);
             }
 
+            SetRepRangeIntervalLabel();
             SetUpdateWorkoutDateButton();
             LoadWorkingExerciseHistory();
 
             MainPanel.Visible = true;
 
             SetMainFormButtonEnabled(false);
+        }
+
+        private void SetRepRangeIntervalLabel()
+        {
+            if (exerciseSettings != null)
+            {
+                var minReps = exerciseSettings.MinReps;
+                var maxReps = exerciseSettings.MaxReps;
+
+                lblIntervalInUse.Text = $"{minReps} - {maxReps}";
+            }
         }
 
         private void SetUpdateWorkoutDateButton()
@@ -155,7 +179,7 @@ namespace FTT.UserControls
 
             if (trackListItems > 0)
             {
-                var exerciseSettings = _settingRepository.Find(x => x.ExerciseId == _exerciseId).FirstOrDefault();
+                var exerciseSettings = this.exerciseSettings;
                 var minSets = exerciseSettings?.MinSets;
 
                 if (trackListItems < minSets)
@@ -220,8 +244,8 @@ namespace FTT.UserControls
         {
             var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
             var currentTotalSets = _trackList.Count;
-            var exerciseSettings = _settingRepository.Find(x => x.ExerciseId == _exerciseId).FirstOrDefault();
-            var currentWeightUsed = _trackList.First().Weight;
+            var exerciseSettings = this.exerciseSettings;
+            var currentWeightUsed = _trackList.Min().Weight;
             var totalReps = _trackList.Sum(x => x.Reps);
 
             var maxFailAttempts = exerciseSettings?.FailAttempts;
@@ -231,11 +255,12 @@ namespace FTT.UserControls
             var notes = string.Empty;
             var failAttempts = 0;
 
+            var anySetsUnderMaxReps = _trackList.Any(x => x.Reps < maxReps);
             var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
 
             if (anySetsUnderMinReps || currentTotalSets < minSets)
             {
-                failAttempts = 0;
+                failAttempts++;
                 notes = $"Lower weight! - {currentWeightUsed} Kg";
             }
             else if (currentTotalVolume <= _previousTotalVolume)
@@ -256,7 +281,8 @@ namespace FTT.UserControls
                 var progressiveTotalVolume = CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed);
 
                 if (currentTotalSets >= minSets &&
-                    currentTotalVolume >= progressiveTotalVolume)
+                    currentTotalVolume >= progressiveTotalVolume &&
+                    !anySetsUnderMaxReps)
                 {
                     failAttempts = 0;
                     notes = $"Increase weight! - {currentWeightUsed} Kg";
@@ -266,16 +292,63 @@ namespace FTT.UserControls
             {
                 failAttempts = 0;
 
-                notes = (totalReps / maxReps >= _trackList.Count) ?
-                        $"Increase weight! - {currentWeightUsed} Kg" :
-                        $"Getting there! - {currentWeightUsed} Kg";
+                if (totalReps / maxReps >= _trackList.Count)
+                {
+                    if (!anySetsUnderMaxReps)
+                    {
+                        notes = $"Increase weight! - {currentWeightUsed} Kg";
+                    }
+                    else
+                    {
+                        failAttempts++;
+                        notes = $"Getting there! - {currentWeightUsed} Kg";
+                    }
+                }
+                else
+                {
+                    notes = $"Getting there! - {currentWeightUsed} Kg";
+                }
             }
+
+
 
             return new RulesResultViewModel
             {
                 FailCount = failAttempts,
                 Notes = notes
             };
+        }
+
+        private bool IsProgress(int exerciseId, decimal weight)
+        {
+            var item = _progressiveOverloadRepository
+                .Find(x => x.ExerciseId == exerciseId && weight == x.Weight && x.IsActive == true)
+                .FirstOrDefault();
+
+            if (item != null)
+            {
+                var counter = item.Counter;
+                
+            }
+
+            return false;
+        }
+
+        private void SaveProgressiveOverload(int counter, int exerciseId,
+            int intervalId, decimal weight, bool isActive)
+        {
+            ProgressiveOverload po = new()
+            {
+                Counter = counter,
+                ExerciseId = exerciseId,
+                LogDate = DateTime.Now,
+                RepRangeIntervalId = intervalId,
+                Weight = weight,
+                IsActive = isActive
+            };
+
+            _progressiveOverloadRepository.Add(po);
+            _progressiveOverloadRepository.Commit();
         }
 
         private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight)
@@ -295,6 +368,7 @@ namespace FTT.UserControls
             _workingExerciseId = 0;
             _exerciseId = 0;
             _exerciseMultiplier = 0;
+            exerciseSettings = null!;
             _trackList.Clear();
             txtNotes.Clear();
             txtReps.Clear();
@@ -558,6 +632,9 @@ namespace FTT.UserControls
                 SetNumber = trackListItemCount + 1,
                 Weight = _currentWeightUsed
             });
+
+            var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
+            lblTotalInWorkVolume.Text = $"{currentTotalVolume} Kg";
 
             txtReps.Clear();
 

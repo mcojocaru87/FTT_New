@@ -1,7 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT.UserControls
@@ -11,6 +10,7 @@ namespace FTT.UserControls
         private readonly IRepository<Setting> _settingsRepository;
         private readonly IRepository<Exercise> _exerciseRepository;
         private readonly IRepository<ToolTimer> _toolTimerRepository;
+        private readonly IRepository<RepRangeInterval> _repRangeIntervalRepository;
 
         private bool isCreateInstance = false;
         private bool isPreSet = false;
@@ -25,6 +25,7 @@ namespace FTT.UserControls
             _settingsRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
             _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
+            _repRangeIntervalRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<RepRangeInterval>>();
 
             LoadExercises();
             LoadTimerSettings();
@@ -57,12 +58,30 @@ namespace FTT.UserControls
                 txtMinReps.Text = exerciseSettings.MinReps.ToString();
                 txtMinSets.Text = exerciseSettings.MinSets.ToString();
 
+                if (exerciseSettings.RepRangeIntervalId > 0)
+                {
+                    cbIntervals.SelectedValue = exerciseSettings.RepRangeIntervalId;
+                    IntervalsPanel.Visible = true;
+                }
+                else
+                {
+                    IntervalsPanel.Visible = false;
+
+                    txtMaxReps.ReadOnly = false;
+                    txtMinReps.ReadOnly = false;
+                }
+
                 exerciseSettingsId = exerciseSettings.Id;
                 lblMode.Text = "Update";
             }
             else
             {
                 SetSettingsDefaults();
+
+                IntervalsPanel.Visible = false;
+
+                txtMaxReps.ReadOnly = false;
+                txtMinReps.ReadOnly = false;
             }
         }
 
@@ -79,6 +98,77 @@ namespace FTT.UserControls
 
             cbExercises.ValueMember = "ValueMember";
             cbExercises.DisplayMember = "DisplayMember";
+        }
+
+        private bool CheckIfRepRangeIntervalExists(int minReps, int maxReps)
+        {
+            var interval = _repRangeIntervalRepository
+                .Find(x => x.MinReps == minReps && x.MaxReps == maxReps)
+                .FirstOrDefault();
+
+            return interval != null;
+        }
+
+        private RepRangeInterval GetIntervalByRange(int minReps, int maxReps)
+        {
+            return _repRangeIntervalRepository
+                 .Find(x => x.MinReps == minReps && x.MaxReps == maxReps)
+                 .FirstOrDefault();
+        }
+
+        private void UpdateExerciseSettingsInterval(int exerciseId, int minReps, int maxReps)
+        {
+            var exerciseSettings = _settingsRepository
+                  .Find(x => x.ExerciseId == exerciseId)
+                  .FirstOrDefault();
+
+            var intervalId = CreateNewRepRangeInterval(minReps, maxReps);
+
+            if (intervalId > 0)
+            {
+                if (exerciseSettings != null)
+                {
+                    exerciseSettings.RepRangeIntervalId = intervalId;
+
+                    _settingsRepository.Update(exerciseSettings);
+                    _settingsRepository.Commit();
+                }
+            }
+
+            if (exerciseId > 0)
+            {
+                var interval = GetIntervalByRange(minReps, maxReps);
+
+                if (interval != null)
+                {
+                    if (exerciseSettings != null)
+                    {
+                        exerciseSettings.RepRangeIntervalId = interval.Id;
+
+                        _settingsRepository.Update(exerciseSettings);
+                        _settingsRepository.Commit();
+                    }
+                }
+            }
+        }
+
+        private int CreateNewRepRangeInterval(int minReps, int maxReps)
+        {
+            if (!CheckIfRepRangeIntervalExists(minReps, maxReps))
+            {
+                var newInterval = new RepRangeInterval
+                {
+                    MinReps = minReps,
+                    MaxReps = maxReps
+                };
+
+                _repRangeIntervalRepository.Add(newInterval);
+                _repRangeIntervalRepository.Commit();
+
+                return newInterval.Id;
+            }
+
+            return 0;
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -106,6 +196,8 @@ namespace FTT.UserControls
 
                     _settingsRepository.Add(newSettings);
                     _settingsRepository.Commit();
+
+                    UpdateExerciseSettingsInterval(newSettings.ExerciseId, newSettings.MinReps, newSettings.MaxReps);
                 }
                 else if (isPreSet)
                 {
@@ -137,6 +229,8 @@ namespace FTT.UserControls
 
                                 _settingsRepository.Add(newSettings);
                                 _settingsRepository.Commit();
+
+                                UpdateExerciseSettingsInterval(newSettings.ExerciseId, newSettings.MinReps, newSettings.MaxReps);
                             }
                         }
                     }
@@ -151,9 +245,11 @@ namespace FTT.UserControls
                             item.FailAttempts = failAttempts;
 
                             _settingsRepository.Update(item);
+
+                            UpdateExerciseSettingsInterval(item.ExerciseId, item.MinReps, item.MaxReps);
                         }
 
-                        _settingsRepository.Commit();
+                        _settingsRepository.Commit();                        
                     }
                 }
                 else
@@ -169,6 +265,8 @@ namespace FTT.UserControls
 
                         _settingsRepository.Update(currentSettings);
                         _settingsRepository.Commit();
+
+                        UpdateExerciseSettingsInterval(currentSettings.ExerciseId, currentSettings.MinReps, currentSettings.MaxReps);
                     }
                 }
 
@@ -194,6 +292,7 @@ namespace FTT.UserControls
             {
                 exerciseId = (int)selectedExercise.ValueMember;
 
+                LoadIntervals(exerciseId);
                 LoadSettingsForExercise(exerciseId);
 
                 PreSetButton.Enabled = false;
@@ -222,6 +321,10 @@ namespace FTT.UserControls
             exerciseSettingsId = 0;
             PreSetButton.Enabled = true;
             lblMode.Text = string.Empty;
+
+            lblCancel.Visible = false;
+            cbIntervals.Enabled = true;
+            lblCustom.Visible = true;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -266,6 +369,73 @@ namespace FTT.UserControls
 
             _toolTimerRepository.Update(toolTimer);
             _toolTimerRepository.Commit();
+        }
+
+        private void lblCustom_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            lblCancel.Visible = true;
+            txtMaxReps.ReadOnly = false;
+            txtMinReps.ReadOnly = false;
+            cbIntervals.Enabled = false;
+            lblCustom.Visible = false;
+        }
+
+        private void lblCancel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            lblCancel.Visible = false;
+            txtMaxReps.ReadOnly = true;
+            txtMinReps.ReadOnly = true;
+            cbIntervals.Enabled = true;
+            lblCustom.Visible = true;
+        }
+
+        private void LoadIntervals(int exerciseId)
+        {
+            var intervals = _repRangeIntervalRepository
+                .GetAll().ToList();
+
+            if (intervals.Count > 0)
+            {
+                var intervalsDataSource = intervals
+                    .Select(x => new ComboBoxViewModel(x.Id, $"{x.MinReps} - {x.MaxReps}"))
+                    .ToList();
+
+                cbIntervals.DataSource = intervalsDataSource;
+
+                cbIntervals.DisplayMember = "DisplayMember";
+                cbIntervals.ValueMember = "ValueMember";
+
+                IntervalsPanel.Visible = true;
+
+                txtMinReps.ReadOnly = true;
+                txtMaxReps.ReadOnly = true;
+            }
+            else
+            {
+                IntervalsPanel.Visible = false;
+                cbIntervals.DataSource = null;
+            }
+        }
+
+        private void cbIntervals_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbIntervals.SelectedItem is ComboBoxViewModel selectedInterval && selectedInterval.ValueMember != null)
+            {
+                var intervalId = (int)selectedInterval.ValueMember;
+
+                LoadIntervalData(intervalId);
+            }
+        }
+
+        private void LoadIntervalData(int intervalId)
+        {
+            var interval = _repRangeIntervalRepository.GetById(intervalId);
+
+            if (interval != null)
+            {
+                txtMinReps.Text = interval.MinReps.ToString();
+                txtMaxReps.Text = interval.MaxReps.ToString();
+            }
         }
     }
 }

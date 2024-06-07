@@ -39,6 +39,11 @@
             cbExercises = new ComboBox();
             label4 = new Label();
             MainPanel = new Panel();
+            IntervalsPanel = new Panel();
+            label7 = new Label();
+            lblCancel = new LinkLabel();
+            cbIntervals = new ComboBox();
+            lblCustom = new LinkLabel();
             txtMinSets = new TextBox();
             label6 = new Label();
             lblMode = new Label();
@@ -47,6 +52,7 @@
             PreSetButton = new Button();
             chkDisplayTimer = new CheckBox();
             MainPanel.SuspendLayout();
+            IntervalsPanel.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -146,6 +152,7 @@
             // 
             // MainPanel
             // 
+            MainPanel.Controls.Add(IntervalsPanel);
             MainPanel.Controls.Add(txtMinSets);
             MainPanel.Controls.Add(label6);
             MainPanel.Controls.Add(lblMode);
@@ -164,6 +171,60 @@
             MainPanel.Size = new Size(436, 286);
             MainPanel.TabIndex = 10;
             MainPanel.Visible = false;
+            // 
+            // IntervalsPanel
+            // 
+            IntervalsPanel.Controls.Add(label7);
+            IntervalsPanel.Controls.Add(lblCancel);
+            IntervalsPanel.Controls.Add(cbIntervals);
+            IntervalsPanel.Controls.Add(lblCustom);
+            IntervalsPanel.Location = new Point(0, 9);
+            IntervalsPanel.Name = "IntervalsPanel";
+            IntervalsPanel.Size = new Size(154, 83);
+            IntervalsPanel.TabIndex = 17;
+            IntervalsPanel.Visible = false;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label7.Location = new Point(13, 11);
+            label7.Name = "label7";
+            label7.Size = new Size(56, 15);
+            label7.TabIndex = 13;
+            label7.Text = "Intervals";
+            // 
+            // lblCancel
+            // 
+            lblCancel.AutoSize = true;
+            lblCancel.Location = new Point(91, 55);
+            lblCancel.Name = "lblCancel";
+            lblCancel.Size = new Size(43, 15);
+            lblCancel.TabIndex = 16;
+            lblCancel.TabStop = true;
+            lblCancel.Text = "Cancel";
+            lblCancel.Visible = false;
+            lblCancel.LinkClicked += lblCancel_LinkClicked;
+            // 
+            // cbIntervals
+            // 
+            cbIntervals.FormattingEnabled = true;
+            cbIntervals.Location = new Point(13, 29);
+            cbIntervals.Name = "cbIntervals";
+            cbIntervals.Size = new Size(121, 23);
+            cbIntervals.TabIndex = 14;
+            cbIntervals.SelectedIndexChanged += cbIntervals_SelectedIndexChanged;
+            // 
+            // lblCustom
+            // 
+            lblCustom.AutoSize = true;
+            lblCustom.Location = new Point(13, 55);
+            lblCustom.Name = "lblCustom";
+            lblCustom.Size = new Size(49, 15);
+            lblCustom.TabIndex = 15;
+            lblCustom.TabStop = true;
+            lblCustom.Text = "Custom";
+            lblCustom.LinkClicked += lblCustom_LinkClicked;
             // 
             // txtMinSets
             // 
@@ -251,6 +312,8 @@
             Size = new Size(679, 286);
             MainPanel.ResumeLayout(false);
             MainPanel.PerformLayout();
+            IntervalsPanel.ResumeLayout(false);
+            IntervalsPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -275,5 +338,10 @@
         private TextBox txtMinSets;
         private Label label6;
         private CheckBox chkDisplayTimer;
+        private Label label7;
+        private LinkLabel lblCancel;
+        private LinkLabel lblCustom;
+        private ComboBox cbIntervals;
+        private Panel IntervalsPanel;
     }
 }
