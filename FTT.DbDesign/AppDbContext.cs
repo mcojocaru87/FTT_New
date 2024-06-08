@@ -17,6 +17,7 @@
         public DbSet<EquipmentItem> EquipmentItems { get; set; }
         public DbSet<RepRangeInterval> RepRangeIntervals { get; set; }
         public DbSet<ProgressiveOverload> ProgressiveOverloads { get; set; }
+        public DbSet<ProgressiveOverloadAudit> ProgressiveOverloadAudits { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

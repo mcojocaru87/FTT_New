@@ -16,6 +16,7 @@ namespace FTT.UserControls
         private readonly IRepository<Setting> _settingRepository;
         private readonly IRepository<ToolTimer> _toolTimerRepository;
         private readonly IRepository<ProgressiveOverload> _progressiveOverloadRepository;
+        private readonly IRepository<ProgressiveOverloadAudit> _poAuditRepository;
         private readonly ITrackService _trackService;
         private readonly IWorkoutService _workoutService;
         private readonly MainForm _mainForm;
@@ -43,6 +44,7 @@ namespace FTT.UserControls
             _settingRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
             _progressiveOverloadRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverload>>();
+            _poAuditRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverloadAudit>>();
 
             _isWorkingExerciseInSession = false;
             _mainForm = mainForm;
@@ -382,6 +384,19 @@ namespace FTT.UserControls
 
                 _progressiveOverloadRepository.Update(progress);
                 _progressiveOverloadRepository.Commit();
+
+                var newPoAudit = new ProgressiveOverloadAudit
+                {
+                    Counter = progress.Counter,
+                    ExerciseId = progress.ExerciseId,
+                    IsActive = progress.IsActive,
+                    SetsInfo = progress.SetsInfo,
+                    LogDate = progress.LogDate,
+                    RepRangeIntervalId = progress.RepRangeIntervalId,
+                    Weight = progress.Weight
+                };
+
+                CapturePOAudit(newPoAudit);
             }
             else
             {
@@ -400,7 +415,26 @@ namespace FTT.UserControls
 
                 _progressiveOverloadRepository.Add(po);
                 _progressiveOverloadRepository.Commit();
+
+                var newPoAudit = new ProgressiveOverloadAudit
+                {
+                    Counter = po.Counter,
+                    ExerciseId = po.ExerciseId,
+                    IsActive = po.IsActive,
+                    SetsInfo = po.SetsInfo,
+                    LogDate = po.LogDate,
+                    RepRangeIntervalId = po.RepRangeIntervalId,
+                    Weight = po.Weight
+                };
+
+                CapturePOAudit(newPoAudit);
             }
+        }
+
+        private void CapturePOAudit(ProgressiveOverloadAudit record)
+        {
+            _poAuditRepository.Add(record);
+            _poAuditRepository.Commit();
         }
 
         private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight)
