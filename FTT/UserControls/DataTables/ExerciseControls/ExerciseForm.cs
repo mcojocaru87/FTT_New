@@ -119,7 +119,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
                 {
                     Name = txtName.Text,
                     Multiplier = (int)cbMultiplier.SelectedValue,
-                    Category = cbCategory.SelectedText
+                    Category = cbCategory.Text
                 };
 
                 _exerciseRepository.Add(newExercise);

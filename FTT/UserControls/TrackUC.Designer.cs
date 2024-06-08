@@ -202,7 +202,7 @@ namespace FTT.UserControls
             RemoveFromTrackButton.FlatAppearance.BorderSize = 0;
             RemoveFromTrackButton.FlatStyle = FlatStyle.Flat;
             RemoveFromTrackButton.Font = new Font("Segoe UI", 10F);
-            RemoveFromTrackButton.Location = new Point(187, 102);
+            RemoveFromTrackButton.Location = new Point(187, 103);
             RemoveFromTrackButton.Margin = new Padding(3, 2, 3, 2);
             RemoveFromTrackButton.Name = "RemoveFromTrackButton";
             RemoveFromTrackButton.Size = new Size(24, 23);

@@ -8,5 +8,6 @@
         public int RepRangeIntervalId { get; set; }
         public DateTime LogDate { get; set; }
         public bool IsActive { get; set; }
+        public string SetsInfo { get; set; } = string.Empty;
     }
 }

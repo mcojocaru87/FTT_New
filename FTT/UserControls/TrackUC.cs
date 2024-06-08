@@ -245,18 +245,26 @@ namespace FTT.UserControls
             var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
             var currentTotalSets = _trackList.Count;
             var exerciseSettings = this.exerciseSettings;
-            var currentWeightUsed = _trackList.Min().Weight;
+            var currentWeightUsed = _trackList.Min(x => x.Weight);
             var totalReps = _trackList.Sum(x => x.Reps);
 
             var maxFailAttempts = exerciseSettings?.FailAttempts;
             var maxReps = exerciseSettings?.MaxReps;
             var minReps = exerciseSettings?.MinReps;
             var minSets = exerciseSettings?.MinSets;
+            var intervalId = exerciseSettings?.RepRangeIntervalId;
             var notes = string.Empty;
             var failAttempts = 0;
 
             var anySetsUnderMaxReps = _trackList.Any(x => x.Reps < maxReps);
             var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
+            var progressiveTotalVolume = CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed);
+
+            var isProgress = !anySetsUnderMinReps && !anySetsUnderMaxReps &&
+                currentTotalSets >= minSets && currentTotalVolume >= progressiveTotalVolume;
+            var counter = isProgress ? 1 : 0;
+
+            SaveProgressiveOverload(counter, _exerciseId, (int)intervalId, currentWeightUsed, string.Join(',', _trackList.Select(x => x.Reps)));
 
             if (anySetsUnderMinReps || currentTotalSets < minSets)
             {
@@ -278,11 +286,9 @@ namespace FTT.UserControls
                     notes = $"Lower weight! - {currentWeightUsed} Kg";
                 }
 
-                var progressiveTotalVolume = CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed);
-
                 if (currentTotalSets >= minSets &&
                     currentTotalVolume >= progressiveTotalVolume &&
-                    !anySetsUnderMaxReps)
+                    !anySetsUnderMaxReps && IsProgress(_exerciseId, (int)intervalId, currentWeightUsed))
                 {
                     failAttempts = 0;
                     notes = $"Increase weight! - {currentWeightUsed} Kg";
@@ -296,7 +302,14 @@ namespace FTT.UserControls
                 {
                     if (!anySetsUnderMaxReps)
                     {
-                        notes = $"Increase weight! - {currentWeightUsed} Kg";
+                        if (IsProgress(_exerciseId, (int)intervalId, currentWeightUsed))
+                        {
+                            notes = $"Increase weight! - {currentWeightUsed} Kg";
+                        }
+                        else
+                        {
+                            notes = $"One more time! - {currentWeightUsed} Kg";
+                        }
                     }
                     else
                     {
@@ -306,11 +319,10 @@ namespace FTT.UserControls
                 }
                 else
                 {
+                    // TODO: Maybe suggest to change the Rep Range Interval if stuck for long time
                     notes = $"Getting there! - {currentWeightUsed} Kg";
                 }
             }
-
-
 
             return new RulesResultViewModel
             {
@@ -319,36 +331,76 @@ namespace FTT.UserControls
             };
         }
 
-        private bool IsProgress(int exerciseId, decimal weight)
+        private bool IsProgress(int exerciseId, int intervalId, decimal weight)
         {
-            var item = _progressiveOverloadRepository
-                .Find(x => x.ExerciseId == exerciseId && weight == x.Weight && x.IsActive == true)
+            var progress = _progressiveOverloadRepository
+                .Find(x => x.ExerciseId == exerciseId &&
+                    x.Weight == weight &&
+                    x.RepRangeIntervalId == intervalId)
                 .FirstOrDefault();
 
-            if (item != null)
+            if (progress != null)
             {
-                var counter = item.Counter;
-                
+                if (progress.Counter > 1 && !progress.IsActive)
+                {
+                    _progressiveOverloadRepository.Delete(progress);
+                    _progressiveOverloadRepository.Commit();
+
+                    return true;
+                }
             }
 
             return false;
         }
 
         private void SaveProgressiveOverload(int counter, int exerciseId,
-            int intervalId, decimal weight, bool isActive)
+            int intervalId, decimal weight, string setsInfo)
         {
-            ProgressiveOverload po = new()
-            {
-                Counter = counter,
-                ExerciseId = exerciseId,
-                LogDate = DateTime.Now,
-                RepRangeIntervalId = intervalId,
-                Weight = weight,
-                IsActive = isActive
-            };
+            var progress = _progressiveOverloadRepository
+                .Find(x => x.ExerciseId == exerciseId &&
+                    x.Weight == weight &&
+                    x.RepRangeIntervalId == intervalId)
+                .FirstOrDefault();
 
-            _progressiveOverloadRepository.Add(po);
-            _progressiveOverloadRepository.Commit();
+            var isActive = true;
+
+            if (progress != null)
+            {
+                isActive = progress.IsActive;
+            }
+
+            if (progress != null && isActive)
+            {
+                // update record
+
+                var progressCounter = progress.Counter;
+
+                progress.Counter = progressCounter + counter;
+                progress.IsActive = progress.Counter < 2;
+                progress.LogDate = DateTime.Now;
+                progress.SetsInfo = setsInfo;
+
+                _progressiveOverloadRepository.Update(progress);
+                _progressiveOverloadRepository.Commit();
+            }
+            else
+            {
+                // create record
+
+                ProgressiveOverload po = new()
+                {
+                    Counter = counter,
+                    ExerciseId = exerciseId,
+                    LogDate = DateTime.Now,
+                    RepRangeIntervalId = intervalId,
+                    Weight = weight,
+                    IsActive = isActive,
+                    SetsInfo = setsInfo
+                };
+
+                _progressiveOverloadRepository.Add(po);
+                _progressiveOverloadRepository.Commit();
+            }
         }
 
         private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight)
@@ -373,6 +425,8 @@ namespace FTT.UserControls
             txtNotes.Clear();
             txtReps.Clear();
             txtWeight.Clear();
+            lblTotalInWorkVolume.Text = "0";
+            lblIntervalInUse.Text = string.Empty;
             lstTrack.DataSource = _trackList;
             dtWorkingDate.Value = DateTime.Today.AddDays(1).AddSeconds(-1);
             dtWorkingDate.Value = DateTime.Now;
@@ -637,6 +691,7 @@ namespace FTT.UserControls
             lblTotalInWorkVolume.Text = $"{currentTotalVolume} Kg";
 
             txtReps.Clear();
+            txtReps.Focus();
 
             LoadTimeRestForm();
         }
