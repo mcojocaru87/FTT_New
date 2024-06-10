@@ -32,9 +32,9 @@
             RemoveButton = new Button();
             EditButton = new Button();
             AddNewButton = new Button();
-            dgvExercise = new DataGridView();
+            dgvEquipment = new DataGridView();
             ViewDetailsButton = new Button();
-            ((System.ComponentModel.ISupportInitialize)dgvExercise).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvEquipment).BeginInit();
             SuspendLayout();
             // 
             // RefreshButton
@@ -84,20 +84,20 @@
             AddNewButton.UseVisualStyleBackColor = true;
             AddNewButton.Click += AddNewButton_Click;
             // 
-            // dgvExercise
+            // dgvEquipment
             // 
-            dgvExercise.AllowUserToAddRows = false;
-            dgvExercise.AllowUserToDeleteRows = false;
-            dgvExercise.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvExercise.Location = new Point(3, 28);
-            dgvExercise.Margin = new Padding(3, 2, 3, 2);
-            dgvExercise.MultiSelect = false;
-            dgvExercise.Name = "dgvExercise";
-            dgvExercise.ReadOnly = true;
-            dgvExercise.RowHeadersWidth = 51;
-            dgvExercise.Size = new Size(668, 210);
-            dgvExercise.TabIndex = 5;
-            dgvExercise.SelectionChanged += dgvExercise_SelectionChanged;
+            dgvEquipment.AllowUserToAddRows = false;
+            dgvEquipment.AllowUserToDeleteRows = false;
+            dgvEquipment.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvEquipment.Location = new Point(3, 28);
+            dgvEquipment.Margin = new Padding(3, 2, 3, 2);
+            dgvEquipment.MultiSelect = false;
+            dgvEquipment.Name = "dgvEquipment";
+            dgvEquipment.ReadOnly = true;
+            dgvEquipment.RowHeadersWidth = 51;
+            dgvEquipment.Size = new Size(668, 210);
+            dgvEquipment.TabIndex = 5;
+            dgvEquipment.SelectionChanged += dgvEquipment_SelectionChanged;
             // 
             // ViewDetailsButton
             // 
@@ -119,10 +119,10 @@
             Controls.Add(RemoveButton);
             Controls.Add(EditButton);
             Controls.Add(AddNewButton);
-            Controls.Add(dgvExercise);
+            Controls.Add(dgvEquipment);
             Name = "EquipmentDTUC";
             Size = new Size(674, 241);
-            ((System.ComponentModel.ISupportInitialize)dgvExercise).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvEquipment).EndInit();
             ResumeLayout(false);
         }
 
@@ -132,7 +132,7 @@
         private Button RemoveButton;
         private Button EditButton;
         private Button AddNewButton;
-        private DataGridView dgvExercise;
+        private DataGridView dgvEquipment;
         private Button ViewDetailsButton;
     }
 }

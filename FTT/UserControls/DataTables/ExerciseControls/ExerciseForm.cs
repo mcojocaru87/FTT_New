@@ -44,6 +44,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
                     txtName.Text = exercise.Name;
                     cbMultiplier.SelectedValue = exercise.Multiplier;
                     cbCategory.Text = exercise.Category;
+                    cbEquipment.SelectedValue = exercise.EquipmentId;
 
                     _exercise = exercise;
                 }
@@ -107,6 +108,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
                 _exercise.Multiplier = (int)cbMultiplier.SelectedValue;
                 _exercise.Name = txtName.Text;
                 _exercise.Category = cbCategory.Text;
+                _exercise.EquipmentId = (int)cbEquipment.SelectedValue;
 
                 _exerciseRepository.Update(_exercise);
                 _exerciseRepository.Commit();
@@ -119,7 +121,8 @@ namespace FTT.UserControls.DataTables.ExerciseControls
                 {
                     Name = txtName.Text,
                     Multiplier = (int)cbMultiplier.SelectedValue,
-                    Category = cbCategory.Text
+                    Category = cbCategory.Text,
+                    EquipmentId = (int)cbEquipment.SelectedValue
                 };
 
                 _exerciseRepository.Add(newExercise);

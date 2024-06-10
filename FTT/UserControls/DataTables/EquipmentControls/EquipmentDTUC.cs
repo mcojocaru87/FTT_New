@@ -23,24 +23,28 @@ namespace FTT.UserControls.DataTables.EquipmentControls
 
         private void AddNewButton_Click(object sender, EventArgs e)
         {
+            EquipmentForm equipmentForm = new(0);
 
+            equipmentForm.ShowDialog();
         }
 
         private void EditButton_Click(object sender, EventArgs e)
         {
+            EquipmentForm equipmentForm = new(selectedEquipmentId);
 
+            equipmentForm.ShowDialog();
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
-            dgvExercise.DataSource = null;
+            dgvEquipment.DataSource = null;
 
             LoadData();
         }
 
         private void ViewDetailsButton_Click(object sender, EventArgs e)
         {
-            EquipmentItemsViewForm viewForm = new();
+            EquipmentItemsViewForm viewForm = new(selectedEquipmentId);
 
             viewForm.ShowDialog();
         }
@@ -68,7 +72,26 @@ namespace FTT.UserControls.DataTables.EquipmentControls
             }
         }
 
-        private void dgvExercise_SelectionChanged(object sender, EventArgs e)
+        private void EnableEditRemoveViewButtons(bool isEdit, bool isRemove, bool isView)
+        {
+            EditButton.Enabled = isEdit;
+            RemoveButton.Enabled = isRemove;
+            ViewDetailsButton.Enabled = isView;
+        }
+
+        private void CustomizeDataGridView()
+        {
+            dgvEquipment.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
+
+        private void LoadData()
+        {
+            List<Equipment> equipments = [.. _equipmentRepository.GetAll()];
+
+            dgvEquipment.DataSource = equipments;
+        }
+
+        private void dgvEquipment_SelectionChanged(object sender, EventArgs e)
         {
             DataGridView dataGridView = sender as DataGridView;
             if (dataGridView.SelectedRows.Count > 0)
@@ -87,25 +110,6 @@ namespace FTT.UserControls.DataTables.EquipmentControls
             {
                 EnableEditRemoveViewButtons(false, false, false);
             }
-        }
-
-        private void EnableEditRemoveViewButtons(bool isEdit, bool isRemove, bool isView)
-        {
-            EditButton.Enabled = isEdit;
-            RemoveButton.Enabled = isRemove;
-            ViewDetailsButton.Enabled = isView;
-        }
-
-        private void CustomizeDataGridView()
-        {
-            dgvExercise.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        }
-
-        private void LoadData()
-        {
-            List<Equipment> equipments = [.. _equipmentRepository.GetAll()];
-
-            dgvExercise.DataSource = equipments;
         }
     }
 }

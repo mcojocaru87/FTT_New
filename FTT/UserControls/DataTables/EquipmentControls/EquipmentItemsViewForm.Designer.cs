@@ -36,16 +36,16 @@
             EditButton = new Button();
             DeleteButton = new Button();
             MainPanel = new Panel();
-            label2 = new Label();
-            cbEquipment = new ComboBox();
-            cbUnits = new ComboBox();
-            label3 = new Label();
-            label4 = new Label();
-            cbWeight = new TextBox();
+            CancelButton = new Button();
+            SaveButton = new Button();
             cbUoM = new ComboBox();
             label5 = new Label();
-            SaveButton = new Button();
-            CancelButton = new Button();
+            txtWeight = new TextBox();
+            label4 = new Label();
+            cbUnits = new ComboBox();
+            label3 = new Label();
+            cbEquipment = new ComboBox();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgItems).BeginInit();
             MainPanel.SuspendLayout();
             SuspendLayout();
@@ -95,6 +95,7 @@
             AddButton.TabIndex = 4;
             AddButton.Text = "Add";
             AddButton.UseVisualStyleBackColor = true;
+            AddButton.Click += AddButton_Click;
             // 
             // EditButton
             // 
@@ -105,13 +106,14 @@
             EditButton.TabIndex = 5;
             EditButton.Text = "Edit";
             EditButton.UseVisualStyleBackColor = true;
+            EditButton.Click += EditButton_Click;
             // 
             // DeleteButton
             // 
             DeleteButton.ForeColor = Color.Red;
             DeleteButton.Location = new Point(422, 5);
             DeleteButton.Name = "DeleteButton";
-            DeleteButton.Size = new Size(50, 23);
+            DeleteButton.Size = new Size(57, 23);
             DeleteButton.TabIndex = 6;
             DeleteButton.Text = "Delete";
             DeleteButton.UseVisualStyleBackColor = true;
@@ -122,7 +124,7 @@
             MainPanel.Controls.Add(SaveButton);
             MainPanel.Controls.Add(cbUoM);
             MainPanel.Controls.Add(label5);
-            MainPanel.Controls.Add(cbWeight);
+            MainPanel.Controls.Add(txtWeight);
             MainPanel.Controls.Add(label4);
             MainPanel.Controls.Add(cbUnits);
             MainPanel.Controls.Add(label3);
@@ -134,57 +136,25 @@
             MainPanel.TabIndex = 7;
             MainPanel.Visible = false;
             // 
-            // label2
+            // CancelButton
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(41, 19);
-            label2.Name = "label2";
-            label2.Size = new Size(68, 15);
-            label2.TabIndex = 8;
-            label2.Text = "Equipment:";
+            CancelButton.Location = new Point(218, 119);
+            CancelButton.Name = "CancelButton";
+            CancelButton.Size = new Size(75, 23);
+            CancelButton.TabIndex = 17;
+            CancelButton.Text = "Cancel";
+            CancelButton.UseVisualStyleBackColor = true;
+            CancelButton.Click += CancelButton_Click;
             // 
-            // cbEquipment
+            // SaveButton
             // 
-            cbEquipment.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbEquipment.Enabled = false;
-            cbEquipment.FormattingEnabled = true;
-            cbEquipment.Location = new Point(41, 37);
-            cbEquipment.Name = "cbEquipment";
-            cbEquipment.Size = new Size(121, 23);
-            cbEquipment.TabIndex = 9;
-            // 
-            // cbUnits
-            // 
-            cbUnits.FormattingEnabled = true;
-            cbUnits.Location = new Point(173, 37);
-            cbUnits.Name = "cbUnits";
-            cbUnits.Size = new Size(121, 23);
-            cbUnits.TabIndex = 11;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(173, 19);
-            label3.Name = "label3";
-            label3.Size = new Size(37, 15);
-            label3.TabIndex = 10;
-            label3.Text = "Units:";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(41, 63);
-            label4.Name = "label4";
-            label4.Size = new Size(48, 15);
-            label4.TabIndex = 12;
-            label4.Text = "Weight:";
-            // 
-            // cbWeight
-            // 
-            cbWeight.Location = new Point(41, 81);
-            cbWeight.Name = "cbWeight";
-            cbWeight.Size = new Size(120, 23);
-            cbWeight.TabIndex = 13;
+            SaveButton.Location = new Point(41, 119);
+            SaveButton.Name = "SaveButton";
+            SaveButton.Size = new Size(75, 23);
+            SaveButton.TabIndex = 16;
+            SaveButton.Text = "Save";
+            SaveButton.UseVisualStyleBackColor = true;
+            SaveButton.Click += SaveButton_Click;
             // 
             // cbUoM
             // 
@@ -203,23 +173,57 @@
             label5.TabIndex = 14;
             label5.Text = "Unit of Measure:";
             // 
-            // SaveButton
+            // txtWeight
             // 
-            SaveButton.Location = new Point(41, 119);
-            SaveButton.Name = "SaveButton";
-            SaveButton.Size = new Size(75, 23);
-            SaveButton.TabIndex = 16;
-            SaveButton.Text = "Save";
-            SaveButton.UseVisualStyleBackColor = true;
+            txtWeight.Location = new Point(41, 81);
+            txtWeight.Name = "txtWeight";
+            txtWeight.Size = new Size(120, 23);
+            txtWeight.TabIndex = 13;
             // 
-            // CancelButton
+            // label4
             // 
-            CancelButton.Location = new Point(218, 119);
-            CancelButton.Name = "CancelButton";
-            CancelButton.Size = new Size(75, 23);
-            CancelButton.TabIndex = 17;
-            CancelButton.Text = "Cancel";
-            CancelButton.UseVisualStyleBackColor = true;
+            label4.AutoSize = true;
+            label4.Location = new Point(41, 63);
+            label4.Name = "label4";
+            label4.Size = new Size(48, 15);
+            label4.TabIndex = 12;
+            label4.Text = "Weight:";
+            // 
+            // cbUnits
+            // 
+            cbUnits.FormattingEnabled = true;
+            cbUnits.Location = new Point(173, 37);
+            cbUnits.Name = "cbUnits";
+            cbUnits.Size = new Size(121, 23);
+            cbUnits.TabIndex = 11;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(173, 19);
+            label3.Name = "label3";
+            label3.Size = new Size(37, 15);
+            label3.TabIndex = 10;
+            label3.Text = "Units:";
+            // 
+            // cbEquipment
+            // 
+            cbEquipment.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbEquipment.Enabled = false;
+            cbEquipment.FormattingEnabled = true;
+            cbEquipment.Location = new Point(41, 37);
+            cbEquipment.Name = "cbEquipment";
+            cbEquipment.Size = new Size(121, 23);
+            cbEquipment.TabIndex = 9;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(41, 19);
+            label2.Name = "label2";
+            label2.Size = new Size(68, 15);
+            label2.TabIndex = 8;
+            label2.Text = "Equipment:";
             // 
             // EquipmentItemsViewForm
             // 
@@ -264,6 +268,6 @@
         private Button SaveButton;
         private ComboBox cbUoM;
         private Label label5;
-        private TextBox cbWeight;
+        private TextBox txtWeight;
     }
 }
