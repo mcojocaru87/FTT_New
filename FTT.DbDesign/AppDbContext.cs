@@ -18,6 +18,7 @@
         public DbSet<RepRangeInterval> RepRangeIntervals { get; set; }
         public DbSet<ProgressiveOverload> ProgressiveOverloads { get; set; }
         public DbSet<ProgressiveOverloadAudit> ProgressiveOverloadAudits { get; set; }
+        public DbSet<ExerciseLoad> ExerciseLoads { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

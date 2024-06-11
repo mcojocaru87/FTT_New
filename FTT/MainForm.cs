@@ -125,5 +125,12 @@ namespace FTT
                 }
             }
         }
+
+        private void CalculatorButton_Click(object sender, EventArgs e)
+        {
+            CalculatorForm calculatorForm = new();
+
+            calculatorForm.ShowDialog();
+        }
     }
 }

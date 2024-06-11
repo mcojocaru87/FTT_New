@@ -36,6 +36,7 @@ namespace FTT.UserControls
             label2 = new Label();
             dtWorkingDate = new DateTimePicker();
             MainPanel = new Panel();
+            lblSwitchRange = new LinkLabel();
             lblTotalInWorkVolume = new Label();
             label7 = new Label();
             lblIntervalInUse = new Label();
@@ -81,6 +82,7 @@ namespace FTT.UserControls
             label10 = new Label();
             tlpAddToTrack = new ToolTip(components);
             tlpRemoveFromTrack = new ToolTip(components);
+            CancelButton = new Button();
             MainPanel.SuspendLayout();
             groupHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvHistory).BeginInit();
@@ -131,6 +133,7 @@ namespace FTT.UserControls
             // MainPanel
             // 
             MainPanel.BackColor = SystemColors.ControlLight;
+            MainPanel.Controls.Add(lblSwitchRange);
             MainPanel.Controls.Add(lblTotalInWorkVolume);
             MainPanel.Controls.Add(label7);
             MainPanel.Controls.Add(lblIntervalInUse);
@@ -159,11 +162,22 @@ namespace FTT.UserControls
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
             // 
+            // lblSwitchRange
+            // 
+            lblSwitchRange.AutoSize = true;
+            lblSwitchRange.Location = new Point(405, 1);
+            lblSwitchRange.Name = "lblSwitchRange";
+            lblSwitchRange.Size = new Size(42, 15);
+            lblSwitchRange.TabIndex = 20;
+            lblSwitchRange.TabStop = true;
+            lblSwitchRange.Text = "Switch";
+            lblSwitchRange.LinkClicked += lblSwitchRange_LinkClicked;
+            // 
             // lblTotalInWorkVolume
             // 
             lblTotalInWorkVolume.AutoSize = true;
             lblTotalInWorkVolume.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblTotalInWorkVolume.Location = new Point(312, 83);
+            lblTotalInWorkVolume.Location = new Point(310, 84);
             lblTotalInWorkVolume.Name = "lblTotalInWorkVolume";
             lblTotalInWorkVolume.Size = new Size(32, 15);
             lblTotalInWorkVolume.TabIndex = 19;
@@ -345,6 +359,7 @@ namespace FTT.UserControls
             txtWeight.Size = new Size(61, 23);
             txtWeight.TabIndex = 7;
             txtWeight.TextChanged += txtWeight_TextChanged;
+            txtWeight.KeyDown += txtWeight_KeyDown;
             // 
             // txtReps
             // 
@@ -354,6 +369,7 @@ namespace FTT.UserControls
             txtReps.Size = new Size(61, 23);
             txtReps.TabIndex = 6;
             txtReps.TextChanged += txtReps_TextChanged;
+            txtReps.KeyDown += txtReps_KeyDown;
             // 
             // label4
             // 
@@ -583,7 +599,7 @@ namespace FTT.UserControls
             StartButton.Location = new Point(3, 43);
             StartButton.Margin = new Padding(3, 2, 3, 2);
             StartButton.Name = "StartButton";
-            StartButton.Size = new Size(82, 22);
+            StartButton.Size = new Size(82, 23);
             StartButton.TabIndex = 6;
             StartButton.Text = "Start";
             StartButton.UseVisualStyleBackColor = true;
@@ -595,7 +611,7 @@ namespace FTT.UserControls
             FinishButton.Location = new Point(130, 43);
             FinishButton.Margin = new Padding(3, 2, 3, 2);
             FinishButton.Name = "FinishButton";
-            FinishButton.Size = new Size(82, 22);
+            FinishButton.Size = new Size(82, 23);
             FinishButton.TabIndex = 7;
             FinishButton.Text = "Finish";
             FinishButton.UseVisualStyleBackColor = true;
@@ -651,11 +667,24 @@ namespace FTT.UserControls
             label10.TabIndex = 1;
             label10.Text = "Strikes:";
             // 
+            // CancelButton
+            // 
+            CancelButton.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            CancelButton.ForeColor = Color.Red;
+            CancelButton.Location = new Point(88, 43);
+            CancelButton.Name = "CancelButton";
+            CancelButton.Size = new Size(40, 23);
+            CancelButton.TabIndex = 4;
+            CancelButton.Text = "❌";
+            CancelButton.UseVisualStyleBackColor = true;
+            CancelButton.Click += CancelButton_Click;
+            // 
             // TrackUC
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
+            Controls.Add(CancelButton);
             Controls.Add(groupNotes);
             Controls.Add(FinishButton);
             Controls.Add(StartButton);
@@ -730,5 +759,7 @@ namespace FTT.UserControls
         private Label label1;
         private Label lblTotalInWorkVolume;
         private Label label7;
+        private LinkLabel lblSwitchRange;
+        private Button CancelButton;
     }
 }

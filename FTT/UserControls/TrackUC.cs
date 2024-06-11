@@ -2,6 +2,7 @@
 using FTT.DbEntity;
 using FTT.GraphScreen;
 using FTT.Services;
+using FTT.Services.ExerciseWLoad;
 using FTT.Services.Track;
 using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +18,10 @@ namespace FTT.UserControls
         private readonly IRepository<ToolTimer> _toolTimerRepository;
         private readonly IRepository<ProgressiveOverload> _progressiveOverloadRepository;
         private readonly IRepository<ProgressiveOverloadAudit> _poAuditRepository;
+        private readonly IRepository<Equipment> _equipmentRepository;
         private readonly ITrackService _trackService;
         private readonly IWorkoutService _workoutService;
+        private readonly IExerciseLoadService _exerciseLoadService;
         private readonly MainForm _mainForm;
 
         private bool _isWorkingExerciseInSession;
@@ -31,6 +34,8 @@ namespace FTT.UserControls
         private int _lastStrikeCount = 0;
         private List<GraphViewModel> _dataPoints;
         private Setting exerciseSettings = null!;
+        private bool isDumbbellUsed = false;
+        private decimal todayUsedWeight = 0;
 
         public event EventHandler TriggerButtonEvent;
 
@@ -41,15 +46,18 @@ namespace FTT.UserControls
             _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
             _trackService = Session.Instance.ServiceProvider.GetRequiredService<ITrackService>();
             _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
+            _exerciseLoadService = Session.Instance.ServiceProvider.GetRequiredService<IExerciseLoadService>();
             _settingRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
             _progressiveOverloadRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverload>>();
             _poAuditRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverloadAudit>>();
+            _equipmentRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Equipment>>();
 
             _isWorkingExerciseInSession = false;
             _mainForm = mainForm;
 
             FinishButton.Enabled = false;
+            CancelButton.Enabled = false;
             dtWorkingDate.MaxDate = DateTime.Today.AddDays(1).AddSeconds(-1);
             AddToTrackButton.Enabled = false;
             RepeatLastButton.Enabled = false;
@@ -89,12 +97,27 @@ namespace FTT.UserControls
                 if (selectedExercise != null && selectedExercise.ValueMember != null)
                 {
                     _exerciseId = (int)selectedExercise.ValueMember;
-                    _exerciseMultiplier = _exerciseRepository.GetById(_exerciseId)?.Multiplier ?? 1;
+
+                    var exercise = _exerciseRepository.GetById(_exerciseId);
+
+                    if (exercise != null)
+                    {
+                        _exerciseMultiplier = exercise.Multiplier;
+
+                        var equipmentUsed = _equipmentRepository
+                            .GetById(exercise.EquipmentId);
+
+                        if (equipmentUsed != null)
+                        {
+                            isDumbbellUsed = equipmentUsed.IsDumbbell;
+                        }
+                    }
 
                     exerciseSettings = LoadExerciseSettings(_exerciseId);
 
                     StartButton.Visible = true;
                     FinishButton.Visible = true;
+                    CancelButton.Visible = true;
 
                     if (_trackService.LastExerciseTrackingExists((int)selectedExercise.ValueMember))
                     {
@@ -111,6 +134,7 @@ namespace FTT.UserControls
                 {
                     StartButton.Visible = false;
                     FinishButton.Visible = false;
+                    CancelButton.Visible = false;
                     groupNotes.Visible = false;
                     groupLastTracking.Visible = false;
                     MainPanel.Visible = false;
@@ -131,6 +155,7 @@ namespace FTT.UserControls
 
             StartButton.Enabled = false;
             FinishButton.Enabled = true;
+            CancelButton.Enabled = true;
             cbExercises.Enabled = false;
 
             SetupWorkoutButtons();
@@ -146,6 +171,7 @@ namespace FTT.UserControls
             LoadWorkingExerciseHistory();
 
             MainPanel.Visible = true;
+            txtReps.Focus();
 
             SetMainFormButtonEnabled(false);
         }
@@ -211,6 +237,7 @@ namespace FTT.UserControls
             _isWorkingExerciseInSession = false;
 
             FinishButton.Enabled = false;
+            CancelButton.Enabled = false;
             cbExercises.Enabled = true;
             StartButton.Enabled = true;
             groupNotes.Visible = false;
@@ -248,6 +275,7 @@ namespace FTT.UserControls
             var currentTotalSets = _trackList.Count;
             var exerciseSettings = this.exerciseSettings;
             var currentWeightUsed = _trackList.Min(x => x.Weight);
+            decimal loggedWeight = 0;
             var totalReps = _trackList.Sum(x => x.Reps);
 
             var maxFailAttempts = exerciseSettings?.FailAttempts;
@@ -272,6 +300,17 @@ namespace FTT.UserControls
             {
                 failAttempts++;
                 notes = $"Lower weight! - {currentWeightUsed} Kg";
+
+                var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, false);
+
+                if (nextLoad != null)
+                {
+                    notes = (nextLoad.IsMin) ?
+                        $"Min reached - {nextLoad.Weight} Kg" :
+                        $"Lower weight to - {nextLoad.Weight} Kg";
+
+                    loggedWeight = nextLoad.Weight;
+                }
             }
             else if (currentTotalVolume <= _previousTotalVolume)
             {
@@ -286,6 +325,17 @@ namespace FTT.UserControls
                 {
                     failAttempts = 0;
                     notes = $"Lower weight! - {currentWeightUsed} Kg";
+
+                    var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, false);
+
+                    if (nextLoad != null)
+                    {
+                        notes = (nextLoad.IsMin) ?
+                            $"Min reached - {nextLoad.Weight} Kg" :
+                            $"Lower weight to - {nextLoad.Weight} Kg";
+
+                        loggedWeight = nextLoad.Weight;
+                    }
                 }
 
                 if (currentTotalSets >= minSets &&
@@ -294,6 +344,17 @@ namespace FTT.UserControls
                 {
                     failAttempts = 0;
                     notes = $"Increase weight! - {currentWeightUsed} Kg";
+
+                    var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, true);
+
+                    if (nextLoad != null)
+                    {
+                        notes = (nextLoad.IsMax) ?
+                            $"Max reached - {nextLoad.Weight} Kg" :
+                            $"Increase weight to - {nextLoad.Weight} Kg";
+
+                        loggedWeight = nextLoad.Weight;
+                    }
                 }
             }
             else
@@ -307,6 +368,17 @@ namespace FTT.UserControls
                         if (IsProgress(_exerciseId, (int)intervalId, currentWeightUsed))
                         {
                             notes = $"Increase weight! - {currentWeightUsed} Kg";
+
+                            var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, true);
+
+                            if (nextLoad != null)
+                            {
+                                notes = (nextLoad.IsMax) ?
+                                    $"Max reached - {nextLoad.Weight} Kg" :
+                                    $"Increase weight to - {nextLoad.Weight} Kg";
+
+                                loggedWeight = nextLoad.Weight;
+                            }
                         }
                         else
                         {
@@ -325,6 +397,13 @@ namespace FTT.UserControls
                     notes = $"Getting there! - {currentWeightUsed} Kg";
                 }
             }
+
+            if (loggedWeight == 0)
+            {
+                loggedWeight = currentWeightUsed;
+            }
+
+            _exerciseLoadService.UpdateExerciseLoad(_exerciseId, loggedWeight, notes);
 
             return new RulesResultViewModel
             {
@@ -455,6 +534,8 @@ namespace FTT.UserControls
             _exerciseId = 0;
             _exerciseMultiplier = 0;
             exerciseSettings = null!;
+            isDumbbellUsed = false;
+            todayUsedWeight = 0;
             _trackList.Clear();
             txtNotes.Clear();
             txtReps.Clear();
@@ -629,6 +710,7 @@ namespace FTT.UserControls
         private void LoadLastTracking()
         {
             var lastTracking = _trackService.GetLastTracking(_exerciseId);
+            decimal lastTrackedWeight = 0;
 
             if (lastTracking != null)
             {
@@ -641,10 +723,39 @@ namespace FTT.UserControls
 
                 SetupExerciseSetLables(lastTracking.TotalSets, true);
                 SetLabelsData(lastTracking.TotalSets, lastTracking.WorkingSets);
+
+                if (lastTracking.WorkingSets != null && lastTracking.WorkingSets.Count > 0)
+                {
+                    lastTrackedWeight = lastTracking.WorkingSets.Min(x => x.Weight);
+                }
             }
             else
             {
                 groupLastTracking.Visible = false;
+            }
+
+            LoadTodayWeightUsed(_exerciseId, lastTrackedWeight);
+        }
+
+        private void LoadTodayWeightUsed(int exerciseId, decimal lastTrackedWeight)
+        {
+            var exerciseLoad = _exerciseLoadService.GetExerciseLoadByExerciseId(exerciseId);
+
+            if (exerciseLoad != null)
+            {
+                todayUsedWeight = exerciseLoad.CurrentLoad;
+                txtWeight.Text = exerciseLoad.CurrentLoad.ToString();
+            }
+            else
+            {
+                if (lastTrackedWeight == 0)
+                {
+                    txtWeight.Clear();
+                }
+                else
+                {
+                    txtWeight.Text = lastTrackedWeight.ToString();
+                }
             }
         }
 
@@ -839,6 +950,68 @@ namespace FTT.UserControls
                     AddToTrackButton_Click(this, EventArgs.Empty);
                 }
             }
+        }
+
+        private void txtReps_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Prevent the beep sound
+                e.SuppressKeyPress = true;
+
+                if (txtReps.Text.Length > 0 &&
+                    txtWeight.Text.Length > 0 &&
+                    txtVolume.Text.Length > 0)
+                {
+                    // Trigger your event here
+                    AddToTrackButton_Click(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        private void txtWeight_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Prevent the beep sound
+                e.SuppressKeyPress = true;
+
+                if (txtReps.Text.Length > 0 &&
+                    txtWeight.Text.Length > 0 &&
+                    txtVolume.Text.Length > 0)
+                {
+                    // Trigger your event here
+                    AddToTrackButton_Click(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        private void lblSwitchRange_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SwitchIntervalRangeForm switchIntervalRangeForm = new(_exerciseId, this);
+
+            switchIntervalRangeForm.ShowDialog();
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            _isWorkingExerciseInSession = false;
+
+            FinishButton.Enabled = false;
+            CancelButton.Enabled = false;
+            cbExercises.Enabled = true;
+            StartButton.Enabled = true;
+            groupNotes.Visible = false;
+            groupLastTracking.Visible = false;
+            MainPanel.Visible = false;
+            cbExercises.SelectedValue = 0;
+            RepeatLastButton.Enabled = false;
+            RemoveFromTrackButton.Enabled = false;
+            SetupExerciseSetLables(6, false);
+
+            SetMainFormButtonEnabled(true);
+
+            ResetControls();
         }
     }
 }

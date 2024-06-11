@@ -37,6 +37,8 @@
             txtShortName = new TextBox();
             CancelButton = new Button();
             SaveButton = new Button();
+            rbIsPlate = new RadioButton();
+            rbIsDumbbell = new RadioButton();
             SuspendLayout();
             // 
             // txtName
@@ -102,7 +104,7 @@
             // 
             // CancelButton
             // 
-            CancelButton.Location = new Point(180, 159);
+            CancelButton.Location = new Point(180, 202);
             CancelButton.Margin = new Padding(3, 2, 3, 2);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(82, 22);
@@ -113,7 +115,7 @@
             // 
             // SaveButton
             // 
-            SaveButton.Location = new Point(37, 159);
+            SaveButton.Location = new Point(37, 202);
             SaveButton.Margin = new Padding(3, 2, 3, 2);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(82, 22);
@@ -122,11 +124,35 @@
             SaveButton.UseVisualStyleBackColor = true;
             SaveButton.Click += SaveButton_Click;
             // 
+            // rbIsPlate
+            // 
+            rbIsPlate.AutoSize = true;
+            rbIsPlate.Location = new Point(127, 168);
+            rbIsPlate.Name = "rbIsPlate";
+            rbIsPlate.Size = new Size(67, 19);
+            rbIsPlate.TabIndex = 19;
+            rbIsPlate.TabStop = true;
+            rbIsPlate.Text = "Is Plate?";
+            rbIsPlate.UseVisualStyleBackColor = true;
+            // 
+            // rbIsDumbbell
+            // 
+            rbIsDumbbell.AutoSize = true;
+            rbIsDumbbell.Location = new Point(127, 147);
+            rbIsDumbbell.Name = "rbIsDumbbell";
+            rbIsDumbbell.Size = new Size(86, 19);
+            rbIsDumbbell.TabIndex = 18;
+            rbIsDumbbell.TabStop = true;
+            rbIsDumbbell.Text = "Is Dumbell?";
+            rbIsDumbbell.UseVisualStyleBackColor = true;
+            // 
             // EquipmentForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(306, 211);
+            ClientSize = new Size(306, 238);
+            Controls.Add(rbIsPlate);
+            Controls.Add(rbIsDumbbell);
             Controls.Add(CancelButton);
             Controls.Add(SaveButton);
             Controls.Add(txtShortName);
@@ -154,5 +180,7 @@
         private TextBox txtShortName;
         private Button CancelButton;
         private Button SaveButton;
+        private RadioButton rbIsPlate;
+        private RadioButton rbIsDumbbell;
     }
 }

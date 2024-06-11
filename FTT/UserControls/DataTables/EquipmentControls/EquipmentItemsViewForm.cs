@@ -138,8 +138,8 @@ namespace FTT.UserControls.DataTables.EquipmentControls
         private void LoadUnits()
         {
             List<ComboBoxViewModel> dataSource = new() {
-                new ComboBoxViewModel(0, "1"),
-                new ComboBoxViewModel(1, "2"),
+                new ComboBoxViewModel(1, "1"),
+                new ComboBoxViewModel(2, "2"),
                 new ComboBoxViewModel(3, "3"),
                 new ComboBoxViewModel(4, "4"),
                 new ComboBoxViewModel(5, "5")
@@ -150,7 +150,7 @@ namespace FTT.UserControls.DataTables.EquipmentControls
             cbUnits.DisplayMember = "DisplayMember";
             cbUnits.ValueMember = "ValueMember";
 
-            cbUnits.SelectedValue = 0;
+            cbUnits.SelectedValue = 1;
         }
 
         private void SaveButton_Click(object sender, EventArgs e)

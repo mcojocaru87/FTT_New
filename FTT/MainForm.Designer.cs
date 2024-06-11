@@ -37,6 +37,7 @@
             WorkoutStatusPanel = new Panel();
             lblWorkoutStatus = new Label();
             WorkoutsButton = new Button();
+            CalculatorButton = new Button();
             WorkoutStatusPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -106,10 +107,10 @@
             // 
             WorkoutStatusPanel.Controls.Add(lblWorkoutStatus);
             WorkoutStatusPanel.Controls.Add(label1);
-            WorkoutStatusPanel.Location = new Point(211, 2);
+            WorkoutStatusPanel.Location = new Point(212, 2);
             WorkoutStatusPanel.Margin = new Padding(3, 2, 3, 2);
             WorkoutStatusPanel.Name = "WorkoutStatusPanel";
-            WorkoutStatusPanel.Size = new Size(169, 37);
+            WorkoutStatusPanel.Size = new Size(155, 37);
             WorkoutStatusPanel.TabIndex = 5;
             WorkoutStatusPanel.Visible = false;
             // 
@@ -133,11 +134,23 @@
             WorkoutsButton.UseVisualStyleBackColor = true;
             WorkoutsButton.Click += WorkoutsButton_Click;
             // 
+            // CalculatorButton
+            // 
+            CalculatorButton.Font = new Font("Segoe UI", 9F);
+            CalculatorButton.Location = new Point(371, 8);
+            CalculatorButton.Name = "CalculatorButton";
+            CalculatorButton.Size = new Size(75, 23);
+            CalculatorButton.TabIndex = 7;
+            CalculatorButton.Text = "Calculator";
+            CalculatorButton.UseVisualStyleBackColor = true;
+            CalculatorButton.Click += CalculatorButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(CalculatorButton);
             Controls.Add(WorkoutsButton);
             Controls.Add(WorkoutStatusPanel);
             Controls.Add(BeginWorkoutButton);
@@ -167,5 +180,6 @@
         private Panel WorkoutStatusPanel;
         private Label lblWorkoutStatus;
         private Button WorkoutsButton;
+        private Button CalculatorButton;
     }
 }

@@ -38,6 +38,8 @@ namespace FTT.UserControls.DataTables.EquipmentControls
                     txtId.Text = equipment.Id.ToString();
                     txtName.Text = equipment.Name;
                     txtShortName.Text = equipment.ShortName;
+                    rbIsDumbbell.Checked = equipment.IsDumbbell;
+                    rbIsPlate.Checked = equipment.IsPlate;
 
                     _equipment = equipment;
                 }
@@ -50,6 +52,8 @@ namespace FTT.UserControls.DataTables.EquipmentControls
             {
                 _equipment.ShortName = txtShortName.Text;
                 _equipment.Name = txtName.Text;
+                _equipment.IsDumbbell = rbIsDumbbell.Checked;
+                _equipment.IsPlate = rbIsPlate.Checked;
 
                 _equipmentRepository.Update(_equipment);
                 _equipmentRepository.Commit();
@@ -61,7 +65,9 @@ namespace FTT.UserControls.DataTables.EquipmentControls
                 var newExercise = new Equipment
                 {
                     Name = txtName.Text,
-                    ShortName = txtShortName.Text
+                    ShortName = txtShortName.Text,
+                    IsDumbbell = rbIsDumbbell.Checked,
+                    IsPlate = rbIsPlate.Checked
                 };
 
                 _equipmentRepository.Add(newExercise);
