@@ -143,7 +143,7 @@
             rbIsDumbbell.Size = new Size(86, 19);
             rbIsDumbbell.TabIndex = 18;
             rbIsDumbbell.TabStop = true;
-            rbIsDumbbell.Text = "Is Dumbell?";
+            rbIsDumbbell.Text = "Is Dumbbell?";
             rbIsDumbbell.UseVisualStyleBackColor = true;
             // 
             // EquipmentForm
