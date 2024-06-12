@@ -316,6 +316,13 @@ namespace FTT.UserControls
             {
                 failAttempts = _lastStrikeCount == maxFailAttempts ? 0 : _lastStrikeCount + 1;
 
+                if (currentTotalSets >= minSets &&
+                    currentTotalVolume >= progressiveTotalVolume &&
+                    !anySetsUnderMaxReps)
+                {
+                    failAttempts = 0;
+                }
+
                 if (failAttempts <= maxFailAttempts)
                 {
                     notes = $"Keep going! - {currentWeightUsed} Kg";
