@@ -8,6 +8,7 @@ using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Metrics;
 
 namespace FTT.UserControls
 {
@@ -19,6 +20,7 @@ namespace FTT.UserControls
         private readonly IRepository<ProgressiveOverload> _progressiveOverloadRepository;
         private readonly IRepository<ProgressiveOverloadAudit> _poAuditRepository;
         private readonly IRepository<Equipment> _equipmentRepository;
+        private readonly IRepository<SlowProgressTrack> _slowProgressTrackRepository;
         private readonly ITrackService _trackService;
         private readonly IWorkoutService _workoutService;
         private readonly IExerciseLoadService _exerciseLoadService;
@@ -52,6 +54,7 @@ namespace FTT.UserControls
             _progressiveOverloadRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverload>>();
             _poAuditRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ProgressiveOverloadAudit>>();
             _equipmentRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Equipment>>();
+            _slowProgressTrackRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<SlowProgressTrack>>();
 
             _isWorkingExerciseInSession = false;
             _mainForm = mainForm;
@@ -301,6 +304,35 @@ namespace FTT.UserControls
 
             _trackService.FinishWorkingExercise(workingExercise);
 
+            if (exerciseSettings != null)
+            {
+                var maxReps = exerciseSettings.MaxReps;
+                var minReps = exerciseSettings.MinReps;
+
+                var deltaReps = maxReps - minReps;
+
+                var slowProgressTrack = GetSlowProgressTrack();
+
+                if (slowProgressTrack != null)
+                {
+                    var counter = slowProgressTrack.Counter;
+
+                    if (counter >= deltaReps)
+                    {
+                        var messageResponse =
+                            MessageBox.Show("We see some slow progress. Would you consider chaning the Reps Interval / Sets Number?", "Notice", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+
+                        if (messageResponse == DialogResult.Yes)
+                        {
+                            SwitchIntervalRangeForm switchIntervalRangeForm = new(_exerciseId, this);
+                            switchIntervalRangeForm.ShowDialog();
+                        }
+
+                        ClearSlowProgressTrackForExercise(slowProgressTrack);
+                    }
+                }
+            }
+
             ResetControls();
         }
 
@@ -323,7 +355,8 @@ namespace FTT.UserControls
 
             var anySetsUnderMaxReps = _trackList.Any(x => x.Reps < maxReps);
             var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
-            var progressiveTotalVolume = CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed);
+            var progressiveTotalVolume = 
+                CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed, _exerciseMultiplier);
 
             var isProgress = !anySetsUnderMinReps && !anySetsUnderMaxReps &&
                 currentTotalSets >= minSets && currentTotalVolume >= progressiveTotalVolume;
@@ -429,14 +462,16 @@ namespace FTT.UserControls
                     }
                     else
                     {
-                        failAttempts++;
                         notes = $"Getting there! - {currentWeightUsed} Kg";
+
+                        SaveSlowProgress();
                     }
                 }
                 else
                 {
-                    // TODO: Maybe suggest to change the Rep Range Interval if stuck for long time
                     notes = $"Getting there! - {currentWeightUsed} Kg";
+
+                    SaveSlowProgress();
                 }
             }
 
@@ -452,6 +487,45 @@ namespace FTT.UserControls
                 FailCount = failAttempts,
                 Notes = notes
             };
+        }
+
+        private void ClearSlowProgressTrackForExercise(SlowProgressTrack slowProgressTrack)
+        {
+            if (slowProgressTrack != null)
+            {
+                _slowProgressTrackRepository.Delete(slowProgressTrack);
+                _slowProgressTrackRepository.Commit();
+            }
+        }
+
+        private SlowProgressTrack GetSlowProgressTrack()
+        {
+            return _slowProgressTrackRepository
+                .Find(x => x.ExerciseId == _exerciseId)
+                .FirstOrDefault();
+        }
+
+        private void SaveSlowProgress()
+        {
+            var slowProgressTrack = GetSlowProgressTrack();
+
+            if (slowProgressTrack != null)
+            {
+                var counter = slowProgressTrack.Counter;
+
+                counter++;
+
+                slowProgressTrack.Counter = counter;
+
+                _slowProgressTrackRepository.Update(slowProgressTrack);
+                _slowProgressTrackRepository.Commit();
+            }
+            else
+            {
+                _slowProgressTrackRepository
+                    .Add(new SlowProgressTrack { Counter = 1, ExerciseId = _exerciseId });
+                _slowProgressTrackRepository.Commit();
+            }
         }
 
         private bool IsProgress(int exerciseId, int intervalId, decimal weight)
@@ -558,13 +632,13 @@ namespace FTT.UserControls
             _poAuditRepository.Commit();
         }
 
-        private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight)
+        private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight, int multiplier)
         {
             decimal totalVolume = 0;
 
             for (int i = 1; i <= minSets; i++)
             {
-                totalVolume += maxReps * weight;
+                totalVolume += maxReps * weight * multiplier;
             }
 
             return totalVolume;

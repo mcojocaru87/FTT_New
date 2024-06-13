@@ -19,6 +19,7 @@
         public DbSet<ProgressiveOverload> ProgressiveOverloads { get; set; }
         public DbSet<ProgressiveOverloadAudit> ProgressiveOverloadAudits { get; set; }
         public DbSet<ExerciseLoad> ExerciseLoads { get; set; }
+        public DbSet<SlowProgressTrack> SlowProgressTracks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
