@@ -36,6 +36,7 @@ namespace FTT.UserControls
             label2 = new Label();
             dtWorkingDate = new DateTimePicker();
             MainPanel = new Panel();
+            cbWeight = new ComboBox();
             lblSwitchRange = new LinkLabel();
             lblTotalInWorkVolume = new Label();
             label7 = new Label();
@@ -83,6 +84,8 @@ namespace FTT.UserControls
             tlpAddToTrack = new ToolTip(components);
             tlpRemoveFromTrack = new ToolTip(components);
             CancelButton = new Button();
+            lblMinSets = new Label();
+            label11 = new Label();
             MainPanel.SuspendLayout();
             groupHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvHistory).BeginInit();
@@ -133,6 +136,9 @@ namespace FTT.UserControls
             // MainPanel
             // 
             MainPanel.BackColor = SystemColors.ControlLight;
+            MainPanel.Controls.Add(lblMinSets);
+            MainPanel.Controls.Add(label11);
+            MainPanel.Controls.Add(cbWeight);
             MainPanel.Controls.Add(lblSwitchRange);
             MainPanel.Controls.Add(lblTotalInWorkVolume);
             MainPanel.Controls.Add(label7);
@@ -161,6 +167,17 @@ namespace FTT.UserControls
             MainPanel.Size = new Size(461, 286);
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
+            // 
+            // cbWeight
+            // 
+            cbWeight.FormattingEnabled = true;
+            cbWeight.Location = new Point(85, 80);
+            cbWeight.Name = "cbWeight";
+            cbWeight.Size = new Size(61, 23);
+            cbWeight.TabIndex = 21;
+            cbWeight.Visible = false;
+            cbWeight.SelectedValueChanged += cbWeight_SelectedValueChanged;
+            cbWeight.KeyDown += cbWeight_KeyDown;
             // 
             // lblSwitchRange
             // 
@@ -197,19 +214,20 @@ namespace FTT.UserControls
             lblIntervalInUse.AutoSize = true;
             lblIntervalInUse.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lblIntervalInUse.ForeColor = Color.Blue;
-            lblIntervalInUse.Location = new Point(342, 1);
+            lblIntervalInUse.Location = new Point(275, 1);
             lblIntervalInUse.Name = "lblIntervalInUse";
-            lblIntervalInUse.Size = new Size(0, 15);
+            lblIntervalInUse.Size = new Size(39, 15);
             lblIntervalInUse.TabIndex = 17;
+            lblIntervalInUse.Text = "8 - 12";
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Location = new Point(228, 1);
             label1.Name = "label1";
-            label1.Size = new Size(108, 15);
+            label1.Size = new Size(49, 15);
             label1.TabIndex = 16;
-            label1.Text = "Rep Range Interval:";
+            label1.Text = "Interval:";
             // 
             // RemoveFromTrackButton
             // 
@@ -679,6 +697,26 @@ namespace FTT.UserControls
             CancelButton.UseVisualStyleBackColor = true;
             CancelButton.Click += CancelButton_Click;
             // 
+            // lblMinSets
+            // 
+            lblMinSets.AutoSize = true;
+            lblMinSets.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblMinSets.ForeColor = Color.Blue;
+            lblMinSets.Location = new Point(373, 1);
+            lblMinSets.Name = "lblMinSets";
+            lblMinSets.Size = new Size(14, 15);
+            lblMinSets.TabIndex = 23;
+            lblMinSets.Text = "4";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(320, 1);
+            label11.Name = "label11";
+            label11.Size = new Size(55, 15);
+            label11.TabIndex = 22;
+            label11.Text = "Min Sets:";
+            // 
             // TrackUC
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -761,5 +799,8 @@ namespace FTT.UserControls
         private Label label7;
         private LinkLabel lblSwitchRange;
         private Button CancelButton;
+        private ComboBox cbWeight;
+        private Label lblMinSets;
+        private Label label11;
     }
 }

@@ -28,8 +28,9 @@ namespace FTT
             _trackForm = trackForm;
 
             LoadExerciseData();
+            LoadMinSets();
             LoadIntervalData();
-            SetIntervalData();
+            SetExerciseSettingsData();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -54,7 +55,8 @@ namespace FTT
                 {
                     var interval = _repRangeIntervalRepository.GetById((int)selectedIntervalId);
 
-                    UpdateExerciseSettings(exerciseSettings, (int)selectedIntervalId, interval.MaxReps, interval.MinReps);
+                    UpdateExerciseSettings(exerciseSettings, (int)selectedIntervalId,
+                        interval.MaxReps, interval.MinReps, (int)cbMinSets.SelectedValue);
 
                     selectedInterval = cbInterval.Text;
                 }
@@ -69,16 +71,23 @@ namespace FTT
                     _repRangeIntervalRepository.Add(newInterval);
                     _repRangeIntervalRepository.Commit();
 
-                    UpdateExerciseSettings(exerciseSettings, newInterval.Id, newInterval.MaxReps, newInterval.MaxReps);
+                    UpdateExerciseSettings(exerciseSettings, newInterval.Id,
+                        newInterval.MaxReps, newInterval.MaxReps, (int)cbMinSets.SelectedValue);
 
                     selectedInterval = $"{txtMinReps.Text} - {txtMaxReps.Text}";
                 }
 
                 Label lbl = (Label)_trackForm.Controls.Find("lblIntervalInUse", true).FirstOrDefault();
+                Label lblMinSets = (Label)_trackForm.Controls.Find("lblMinSets", true).FirstOrDefault();
 
                 if (lbl != null)
                 {
                     lbl.Text = selectedInterval;
+                }
+
+                if (lblMinSets != null)
+                {
+                    lblMinSets.Text = cbMinSets.Text;
                 }
 
                 MessageBox.Show("Exercise interval has been updated!");
@@ -87,13 +96,14 @@ namespace FTT
             }
         }
 
-        private void UpdateExerciseSettings(Setting exerciseSettings, int intervalId, int maxReps, int minReps)
+        private void UpdateExerciseSettings(Setting exerciseSettings, int intervalId, int maxReps, int minReps, int minSets)
         {
             if (exerciseSettings != null)
             {
                 exerciseSettings.RepRangeIntervalId = intervalId;
                 exerciseSettings.MaxReps = maxReps;
                 exerciseSettings.MinReps = minReps;
+                exerciseSettings.MinSets = minSets;
 
                 _settingsRepository.Update(exerciseSettings);
                 _settingsRepository.Commit();
@@ -125,7 +135,21 @@ namespace FTT
             cbInterval.ValueMember = "ValueMember";
         }
 
-        private void SetIntervalData()
+        private void LoadMinSets()
+        {
+            List<ComboBoxViewModel> dataSource = [];
+
+            for (int i = 1; i <= 6; i++)
+            {
+                dataSource.Add(new(i, i.ToString()));
+            }
+
+            cbMinSets.DataSource = dataSource;
+            cbMinSets.ValueMember = "ValueMember";
+            cbMinSets.DisplayMember = "DisplayMember";
+        }
+
+        private void SetExerciseSettingsData()
         {
             var exerciseSettings = _settingsRepository
                 .Find(x => x.ExerciseId == _exerciseId)
@@ -135,12 +159,14 @@ namespace FTT
             {
                 cbInterval.SelectedValue = exerciseSettings.RepRangeIntervalId;
                 currentIntervalId = exerciseSettings.RepRangeIntervalId;
+                cbMinSets.SelectedValue = exerciseSettings.MinSets;
             }
         }
 
         private void ResetForm()
         {
             cbInterval.DataSource = null!;
+            cbMinSets.DataSource = null!;
             txtExerciseName.Clear();
             txtMinReps.Clear();
             txtMaxReps.Clear();
@@ -157,7 +183,7 @@ namespace FTT
             {
                 selectedIntervalId = (int)selectedInterval.ValueMember;
 
-                if (selectedInterval.ValueMember == 0)
+                if ((int)selectedInterval.ValueMember == 0)
                 {
                     txtMinReps.Clear();
                     txtMaxReps.Clear();

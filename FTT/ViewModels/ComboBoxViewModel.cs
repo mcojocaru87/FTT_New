@@ -1,8 +1,8 @@
 ﻿namespace FTT.ViewModels
 {
-    public class ComboBoxViewModel(int? valueMember, string displayMember)
+    public class ComboBoxViewModel(object? valueMember, string displayMember)
     {
-        public int? ValueMember { get; set; } = valueMember;
+        public object? ValueMember { get; set; } = valueMember;
         public string DisplayMember { get; set; } = displayMember;
     }
 }

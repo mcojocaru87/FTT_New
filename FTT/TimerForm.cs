@@ -22,6 +22,18 @@ namespace FTT
             AutoStartTimer();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                lblSkip_LinkClicked(this, null!);
+
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         private void AutoStartTimer()
         {
             var timerSettings = LoadTimerSettings();

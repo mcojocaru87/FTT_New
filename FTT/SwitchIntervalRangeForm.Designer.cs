@@ -40,13 +40,15 @@
             label4 = new Label();
             MainPanel = new GroupBox();
             lblCancelCustom = new LinkLabel();
+            label5 = new Label();
+            cbMinSets = new ComboBox();
             MainPanel.SuspendLayout();
             SuspendLayout();
             // 
             // cbInterval
             // 
             cbInterval.FormattingEnabled = true;
-            cbInterval.Location = new Point(237, 102);
+            cbInterval.Location = new Point(237, 93);
             cbInterval.Name = "cbInterval";
             cbInterval.Size = new Size(231, 23);
             cbInterval.TabIndex = 0;
@@ -55,7 +57,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(237, 84);
+            label1.Location = new Point(237, 75);
             label1.Name = "label1";
             label1.Size = new Size(49, 15);
             label1.TabIndex = 1;
@@ -136,9 +138,9 @@
             MainPanel.Controls.Add(label3);
             MainPanel.Controls.Add(label4);
             MainPanel.Controls.Add(txtMinReps);
-            MainPanel.Location = new Point(210, 146);
+            MainPanel.Location = new Point(210, 178);
             MainPanel.Name = "MainPanel";
-            MainPanel.Size = new Size(280, 161);
+            MainPanel.Size = new Size(280, 148);
             MainPanel.TabIndex = 8;
             MainPanel.TabStop = false;
             MainPanel.Text = "Custom";
@@ -148,7 +150,7 @@
             // 
             lblCancelCustom.AutoSize = true;
             lblCancelCustom.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lblCancelCustom.Location = new Point(474, 102);
+            lblCancelCustom.Location = new Point(474, 93);
             lblCancelCustom.Name = "lblCancelCustom";
             lblCancelCustom.Size = new Size(20, 21);
             lblCancelCustom.TabIndex = 9;
@@ -157,11 +159,30 @@
             lblCancelCustom.Visible = false;
             lblCancelCustom.LinkClicked += lblCancelCustom_LinkClicked;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(237, 119);
+            label5.Name = "label5";
+            label5.Size = new Size(55, 15);
+            label5.TabIndex = 11;
+            label5.Text = "Min Sets:";
+            // 
+            // cbMinSets
+            // 
+            cbMinSets.FormattingEnabled = true;
+            cbMinSets.Location = new Point(237, 137);
+            cbMinSets.Name = "cbMinSets";
+            cbMinSets.Size = new Size(231, 23);
+            cbMinSets.TabIndex = 10;
+            // 
             // SwitchIntervalRangeForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(label5);
+            Controls.Add(cbMinSets);
             Controls.Add(lblCancelCustom);
             Controls.Add(MainPanel);
             Controls.Add(CancelButton);
@@ -195,5 +216,7 @@
         private Label label3;
         private GroupBox MainPanel;
         private LinkLabel lblCancelCustom;
+        private Label label5;
+        private ComboBox cbMinSets;
     }
 }

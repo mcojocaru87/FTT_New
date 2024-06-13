@@ -27,6 +27,7 @@ namespace FTT.UserControls
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
             _repRangeIntervalRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<RepRangeInterval>>();
 
+            LoadMinSets();
             LoadExercises();
             LoadTimerSettings();
             ResetMainPanel();
@@ -37,7 +38,7 @@ namespace FTT.UserControls
             txtFailAttempts.Text = "4";
             txtMaxReps.Text = "8";
             txtMinReps.Text = "5";
-            txtMinSets.Text = "3";
+            cbMinSets.SelectedValue = 3;
 
             SaveButton.Text = "Create";
             lblMode.Text = "New";
@@ -56,7 +57,7 @@ namespace FTT.UserControls
                 txtFailAttempts.Text = exerciseSettings.FailAttempts.ToString();
                 txtMaxReps.Text = exerciseSettings.MaxReps.ToString();
                 txtMinReps.Text = exerciseSettings.MinReps.ToString();
-                txtMinSets.Text = exerciseSettings.MinSets.ToString();
+                cbMinSets.SelectedValue = exerciseSettings.MinSets;
 
                 if (exerciseSettings.RepRangeIntervalId > 0)
                 {
@@ -98,6 +99,20 @@ namespace FTT.UserControls
 
             cbExercises.ValueMember = "ValueMember";
             cbExercises.DisplayMember = "DisplayMember";
+        }
+
+        private void LoadMinSets()
+        {
+            List<ComboBoxViewModel> dataSource = [];
+
+            for (int i = 1; i <= 6; i++)
+            {
+                dataSource.Add(new(i, i.ToString()));
+            }
+
+            cbMinSets.DataSource = dataSource;
+            cbMinSets.ValueMember = "ValueMember";
+            cbMinSets.DisplayMember = "DisplayMember";
         }
 
         private bool CheckIfRepRangeIntervalExists(int minReps, int maxReps)
@@ -176,12 +191,12 @@ namespace FTT.UserControls
             bool vaildFailAttemptsValue = int.TryParse(txtFailAttempts.Text, out int failAttempts);
             bool vaildMaxRepsValue = int.TryParse(txtMaxReps.Text, out int maxReps);
             bool validMinRepsValue = int.TryParse(txtMinReps.Text, out int minReps);
-            bool validMinSetsValue = int.TryParse(txtMinSets.Text, out int minSets);
+
+            int minSets = (int)cbMinSets.SelectedValue;
 
             if (vaildFailAttemptsValue &&
                 vaildMaxRepsValue &&
-                validMinRepsValue &&
-                validMinSetsValue)
+                validMinRepsValue)
             {
                 if (isCreateInstance && exerciseId > 0)
                 {
@@ -249,7 +264,7 @@ namespace FTT.UserControls
                             UpdateExerciseSettingsInterval(item.ExerciseId, item.MinReps, item.MaxReps);
                         }
 
-                        _settingsRepository.Commit();                        
+                        _settingsRepository.Commit();
                     }
                 }
                 else
@@ -309,7 +324,7 @@ namespace FTT.UserControls
             txtFailAttempts.Clear();
             txtMaxReps.Clear();
             txtMinReps.Clear();
-            txtMinSets.Clear();
+            cbMinSets.SelectedValue = 1;
             cbExercises.SelectedValue = 0;
 
             MainPanel.Visible = false;
@@ -339,7 +354,7 @@ namespace FTT.UserControls
             txtFailAttempts.Clear();
             txtMaxReps.Clear();
             txtMinReps.Clear();
-            txtMinSets.Clear();
+            cbMinSets.SelectedValue = 1;
             lblMode.Text = "Pre-Set";
 
             MainPanel.Visible = true;

@@ -44,13 +44,13 @@
             lblCancel = new LinkLabel();
             cbIntervals = new ComboBox();
             lblCustom = new LinkLabel();
-            txtMinSets = new TextBox();
             label6 = new Label();
             lblMode = new Label();
             label5 = new Label();
             CancelButton = new Button();
             PreSetButton = new Button();
             chkDisplayTimer = new CheckBox();
+            cbMinSets = new ComboBox();
             MainPanel.SuspendLayout();
             IntervalsPanel.SuspendLayout();
             SuspendLayout();
@@ -152,8 +152,8 @@
             // 
             // MainPanel
             // 
+            MainPanel.Controls.Add(cbMinSets);
             MainPanel.Controls.Add(IntervalsPanel);
-            MainPanel.Controls.Add(txtMinSets);
             MainPanel.Controls.Add(label6);
             MainPanel.Controls.Add(lblMode);
             MainPanel.Controls.Add(label5);
@@ -226,14 +226,6 @@
             lblCustom.Text = "Custom";
             lblCustom.LinkClicked += lblCustom_LinkClicked;
             // 
-            // txtMinSets
-            // 
-            txtMinSets.Location = new Point(163, 164);
-            txtMinSets.Margin = new Padding(3, 2, 3, 2);
-            txtMinSets.Name = "txtMinSets";
-            txtMinSets.Size = new Size(110, 23);
-            txtMinSets.TabIndex = 12;
-            // 
             // label6
             // 
             label6.AutoSize = true;
@@ -296,6 +288,14 @@
             chkDisplayTimer.UseVisualStyleBackColor = true;
             chkDisplayTimer.CheckedChanged += chkDisplayTimer_CheckedChanged;
             // 
+            // cbMinSets
+            // 
+            cbMinSets.FormattingEnabled = true;
+            cbMinSets.Location = new Point(165, 165);
+            cbMinSets.Name = "cbMinSets";
+            cbMinSets.Size = new Size(109, 23);
+            cbMinSets.TabIndex = 17;
+            // 
             // SettingsUC
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -335,7 +335,6 @@
         private Button PreSetButton;
         private Label lblMode;
         private Label label5;
-        private TextBox txtMinSets;
         private Label label6;
         private CheckBox chkDisplayTimer;
         private Label label7;
@@ -343,5 +342,6 @@
         private LinkLabel lblCustom;
         private ComboBox cbIntervals;
         private Panel IntervalsPanel;
+        private ComboBox cbMinSets;
     }
 }

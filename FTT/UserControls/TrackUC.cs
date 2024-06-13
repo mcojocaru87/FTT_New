@@ -88,8 +88,40 @@ namespace FTT.UserControls
             cbExercises.DisplayMember = "DisplayMember";
         }
 
+        private void LoadEquipmentItems(int equipmentId)
+        {
+            cbWeight.DataSource = null;
+
+            var equipment = _equipmentRepository
+                .GetById(equipmentId, true, "Items");
+
+            if (equipment != null &&
+                equipment.Items != null &&
+                equipment.Items.Count > 0)
+            {
+                var dataSource = equipment.Items
+                    .Select(x => new ComboBoxViewModel(x.Weight, x.Weight.ToString()))
+                    .ToList();
+
+                dataSource.Add(new(0M, 0.ToString()));
+
+                dataSource = [.. dataSource.OrderBy(x => x.ValueMember)];
+
+                cbWeight.DataSource = dataSource;
+                cbWeight.DisplayMember = "DisplayMember";
+                cbWeight.ValueMember = "ValueMember";
+                cbWeight.Visible = true;
+            }
+            else
+            {
+                cbWeight.Visible = false;
+            }
+        }
+
         private void cbExercises_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ResetExerciseSetLabels();
+
             if (!_isWorkingExerciseInSession)
             {
                 ComboBoxViewModel selectedExercise = cbExercises.SelectedItem as ComboBoxViewModel;
@@ -109,6 +141,8 @@ namespace FTT.UserControls
 
                         if (equipmentUsed != null)
                         {
+                            LoadEquipmentItems(exercise.EquipmentId);
+
                             isDumbbellUsed = equipmentUsed.IsDumbbell;
                         }
                     }
@@ -184,6 +218,7 @@ namespace FTT.UserControls
                 var maxReps = exerciseSettings.MaxReps;
 
                 lblIntervalInUse.Text = $"{minReps} - {maxReps}";
+                lblMinSets.Text = exerciseSettings.MinSets.ToString();
             }
         }
 
@@ -307,7 +342,7 @@ namespace FTT.UserControls
                 {
                     notes = (nextLoad.IsMin) ?
                         $"Min reached - {nextLoad.Weight} Kg" :
-                        $"Lower weight to - {nextLoad.Weight} Kg";
+                        $"Lower weight to : {nextLoad.Weight} Kg";
 
                     loggedWeight = nextLoad.Weight;
                 }
@@ -339,7 +374,7 @@ namespace FTT.UserControls
                     {
                         notes = (nextLoad.IsMin) ?
                             $"Min reached - {nextLoad.Weight} Kg" :
-                            $"Lower weight to - {nextLoad.Weight} Kg";
+                            $"Lower weight to : {nextLoad.Weight} Kg";
 
                         loggedWeight = nextLoad.Weight;
                     }
@@ -358,7 +393,7 @@ namespace FTT.UserControls
                     {
                         notes = (nextLoad.IsMax) ?
                             $"Max reached - {nextLoad.Weight} Kg" :
-                            $"Increase weight to - {nextLoad.Weight} Kg";
+                            $"Increase weight to : {nextLoad.Weight} Kg";
 
                         loggedWeight = nextLoad.Weight;
                     }
@@ -382,7 +417,7 @@ namespace FTT.UserControls
                             {
                                 notes = (nextLoad.IsMax) ?
                                     $"Max reached - {nextLoad.Weight} Kg" :
-                                    $"Increase weight to - {nextLoad.Weight} Kg";
+                                    $"Increase weight to : {nextLoad.Weight} Kg";
 
                                 loggedWeight = nextLoad.Weight;
                             }
@@ -547,8 +582,11 @@ namespace FTT.UserControls
             txtNotes.Clear();
             txtReps.Clear();
             txtWeight.Clear();
+            cbWeight.Visible = false;
+            cbWeight.DataSource = null;
             lblTotalInWorkVolume.Text = "0";
             lblIntervalInUse.Text = string.Empty;
+            lblMinSets.Text = string.Empty;
             lstTrack.DataSource = _trackList;
             dtWorkingDate.Value = DateTime.Today.AddDays(1).AddSeconds(-1);
             dtWorkingDate.Value = DateTime.Now;
@@ -752,16 +790,36 @@ namespace FTT.UserControls
             {
                 todayUsedWeight = exerciseLoad.CurrentLoad;
                 txtWeight.Text = exerciseLoad.CurrentLoad.ToString();
+                cbWeight.SelectedValue = exerciseLoad.CurrentLoad;
             }
             else
             {
                 if (lastTrackedWeight == 0)
                 {
                     txtWeight.Clear();
+                    cbWeight.SelectedValue = 0;
                 }
                 else
                 {
                     txtWeight.Text = lastTrackedWeight.ToString();
+                    cbWeight.SelectedValue = lastTrackedWeight;
+                }
+            }
+        }
+
+        private void ResetExerciseSetLabels()
+        {
+            for (int i = 1; i <= 6; i++)
+            {
+                if (Controls.Find($"lblSet{i}Display", true).FirstOrDefault() is Label displayLabel)
+                {
+                    displayLabel.Visible = false;
+                }
+
+                if (Controls.Find($"lblSet{i}Data", true).FirstOrDefault() is Label dataLabel)
+                {
+                    dataLabel.Visible = false;
+                    dataLabel.Text = string.Empty;
                 }
             }
         }
@@ -805,10 +863,31 @@ namespace FTT.UserControls
             CalculateVolume();
         }
 
+        private void cbWeight_SelectedValueChanged(object sender, EventArgs e)
+        {
+            var isCbWeightVisible = cbWeight.Visible == true;
+
+            if (isCbWeightVisible)
+            {
+                CalculateVolume();
+            }
+        }
+
         private void CalculateVolume()
         {
             var validRepsValue = int.TryParse(txtReps.Text, out int reps);
-            var validWeightValue = decimal.TryParse(txtWeight.Text, out decimal weight);
+            bool validWeightValue;
+            decimal weight;
+
+            if (cbWeight.Visible == true)
+            {
+                weight = (decimal)cbWeight.SelectedValue;
+                validWeightValue = weight > 0;
+            }
+            else
+            {
+                validWeightValue = decimal.TryParse(txtWeight.Text, out weight);
+            }
 
             if (validRepsValue && validWeightValue)
             {
@@ -829,11 +908,13 @@ namespace FTT.UserControls
         {
             var trackListItemCount = lstTrack.Items.Count;
 
-            _currentWeightUsed = decimal.Parse(txtWeight.Text);
+            _currentWeightUsed = (cbWeight.Visible == true) ?
+                (decimal)cbWeight.SelectedValue :
+                decimal.Parse(txtWeight.Text);
 
             _trackList.Add(new TrackListViewModel
             {
-                Display = string.Format("{0} x {1} Kg {2}", txtReps.Text, txtWeight.Text, _exerciseMultiplier > 1 ? "x 2" : string.Empty),
+                Display = string.Format("{0} x {1} Kg {2}", txtReps.Text, _currentWeightUsed, _exerciseMultiplier > 1 ? "x 2" : string.Empty),
                 Reps = int.Parse(txtReps.Text),
                 SetNumber = trackListItemCount + 1,
                 Weight = _currentWeightUsed
@@ -953,6 +1034,7 @@ namespace FTT.UserControls
                 {
                     txtReps.Text = lastItem.Reps.ToString();
                     txtWeight.Text = lastItem.Weight.ToString();
+                    cbWeight.SelectedValue = lastItem.Weight;
 
                     AddToTrackButton_Click(this, EventArgs.Empty);
                 }
@@ -967,7 +1049,7 @@ namespace FTT.UserControls
                 e.SuppressKeyPress = true;
 
                 if (txtReps.Text.Length > 0 &&
-                    txtWeight.Text.Length > 0 &&
+                    (txtWeight.Text.Length > 0 || (decimal)cbWeight.SelectedValue > 0) &&
                     txtVolume.Text.Length > 0)
                 {
                     // Trigger your event here
@@ -1002,6 +1084,16 @@ namespace FTT.UserControls
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
+            if (_trackList.Count > 0)
+            {
+                var messageResponse = MessageBox.Show("Are you sure you want to cancel? There are some sets being tracked.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (messageResponse == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
             _isWorkingExerciseInSession = false;
 
             FinishButton.Enabled = false;
@@ -1020,5 +1112,24 @@ namespace FTT.UserControls
 
             ResetControls();
         }
+
+        private void cbWeight_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Prevent the beep sound
+                e.SuppressKeyPress = true;
+
+                if (txtReps.Text.Length > 0 &&
+                    (txtWeight.Text.Length > 0 || (decimal)cbWeight.SelectedValue > 0) &&
+                    txtVolume.Text.Length > 0)
+                {
+                    // Trigger your event here
+                    AddToTrackButton_Click(this, EventArgs.Empty);
+                }
+            }
+        }
+
+
     }
 }
