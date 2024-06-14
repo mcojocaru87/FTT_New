@@ -1,5 +1,7 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
+using FTT.Services.Track;
+using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
@@ -7,19 +9,22 @@ namespace FTT
     public partial class TimerForm : Form
     {
         private readonly IRepository<ToolTimer> _toolTimerRepository;
+        private readonly bool _showExercises;
 
         private TimeSpan timeLeft;
         private ToolTimer toolTimer;
 
-        public TimerForm()
+        public TimerForm(bool showExercises = false)
         {
             InitializeComponent();
 
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
+            _showExercises = showExercises;
 
             timer.Interval = 1000;
-
+            
             AutoStartTimer();
+            SetupExercises();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -99,6 +104,58 @@ namespace FTT
                     _toolTimerRepository.Update(toolTimer);
                     _toolTimerRepository.Commit();
                 }
+            }
+        }
+
+        private void SetupExercises()
+        {
+            if (_showExercises)
+            {
+                var exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
+
+                if (exerciseRepository != null)
+                {
+                    var exercises = exerciseRepository.GetAll()
+                        .OrderBy(x => x.Category)
+                        .Select(x => new ComboBoxViewModel(x.Id, $"{x.Category} - {x.Name}"))
+                        .ToList();
+
+                    exercises.Add(new(0, string.Empty));
+
+                    cbExercises.DataSource = exercises;
+                    cbExercises.DisplayMember = "DisplayMember";
+                    cbExercises.ValueMember = "ValueMember";
+                    cbExercises.SelectedValue = 0;
+                    cbExercises.Visible = true;
+                }
+            }
+        }
+
+        private void cbExercises_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbExercises.SelectedItem is ComboBoxViewModel selectedExercise && selectedExercise.ValueMember != null)
+            {
+                if ((int)selectedExercise.ValueMember > 0)
+                {
+                    var trackService = Session.Instance.ServiceProvider.GetRequiredService<ITrackService>();
+                    var exerciseNotes = trackService.GetTrackingNotes((int)selectedExercise.ValueMember);
+
+                    if (exerciseNotes != null)
+                    {
+                        txtNotes.Text = exerciseNotes.Notes;
+                        txtNotes.Visible = true;
+                    }
+                }
+                else
+                {
+                    txtNotes.Clear();
+                    txtNotes.Visible = false;
+                }
+            }
+            else
+            {
+                txtNotes.Clear();
+                txtNotes.Visible = false;
             }
         }
     }

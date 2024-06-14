@@ -73,7 +73,7 @@
             // 
             // CloseButton
             // 
-            CloseButton.Location = new Point(510, 257);
+            CloseButton.Location = new Point(537, 257);
             CloseButton.Name = "CloseButton";
             CloseButton.Size = new Size(75, 23);
             CloseButton.TabIndex = 2;
@@ -116,7 +116,7 @@
             MainPanel.Font = new Font("Segoe UI", 9F);
             MainPanel.Location = new Point(336, 51);
             MainPanel.Name = "MainPanel";
-            MainPanel.Size = new Size(249, 200);
+            MainPanel.Size = new Size(276, 200);
             MainPanel.TabIndex = 5;
             MainPanel.TabStop = false;
             MainPanel.Text = "INFO";

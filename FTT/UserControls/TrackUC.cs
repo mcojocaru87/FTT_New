@@ -8,7 +8,6 @@ using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Metrics;
 
 namespace FTT.UserControls
 {
@@ -127,9 +126,7 @@ namespace FTT.UserControls
 
             if (!_isWorkingExerciseInSession)
             {
-                ComboBoxViewModel selectedExercise = cbExercises.SelectedItem as ComboBoxViewModel;
-
-                if (selectedExercise != null && selectedExercise.ValueMember != null)
+                if (cbExercises.SelectedItem is ComboBoxViewModel selectedExercise && selectedExercise.ValueMember != null)
                 {
                     _exerciseId = (int)selectedExercise.ValueMember;
 
@@ -355,7 +352,7 @@ namespace FTT.UserControls
 
             var anySetsUnderMaxReps = _trackList.Any(x => x.Reps < maxReps);
             var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
-            var progressiveTotalVolume = 
+            var progressiveTotalVolume =
                 CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed, _exerciseMultiplier);
 
             var isProgress = !anySetsUnderMinReps && !anySetsUnderMaxReps &&
@@ -1013,7 +1010,12 @@ namespace FTT.UserControls
 
                 if (showTimer)
                 {
-                    TimerForm timerForm = new();
+                    var exerciseSets = exerciseSettings.MinSets;
+                    var workingSets = _trackList.Count;
+
+                    bool showExercises = workingSets >= exerciseSets;
+
+                    TimerForm timerForm = new(showExercises);
 
                     timerForm.ShowDialog();
                 }

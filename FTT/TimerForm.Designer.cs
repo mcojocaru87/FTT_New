@@ -33,6 +33,8 @@
             lblSkip = new LinkLabel();
             lblTime = new Label();
             timer = new System.Windows.Forms.Timer(components);
+            cbExercises = new ComboBox();
+            txtNotes = new TextBox();
             SuspendLayout();
             // 
             // chkDoNotShow
@@ -73,17 +75,38 @@
             timer.Interval = 1000;
             timer.Tick += timer_Tick;
             // 
+            // cbExercises
+            // 
+            cbExercises.FormattingEnabled = true;
+            cbExercises.Location = new Point(221, 27);
+            cbExercises.Name = "cbExercises";
+            cbExercises.Size = new Size(258, 23);
+            cbExercises.TabIndex = 3;
+            cbExercises.Visible = false;
+            cbExercises.SelectedIndexChanged += cbExercises_SelectedIndexChanged;
+            // 
+            // txtNotes
+            // 
+            txtNotes.Location = new Point(221, 56);
+            txtNotes.Name = "txtNotes";
+            txtNotes.ReadOnly = true;
+            txtNotes.Size = new Size(258, 23);
+            txtNotes.TabIndex = 4;
+            txtNotes.Visible = false;
+            // 
             // TimerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(txtNotes);
+            Controls.Add(cbExercises);
             Controls.Add(lblTime);
             Controls.Add(lblSkip);
             Controls.Add(chkDoNotShow);
             FormBorderStyle = FormBorderStyle.None;
             Name = "TimerForm";
-            Opacity = 0.8D;
+            Opacity = 0.98D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TimerForm";
             ResumeLayout(false);
@@ -96,5 +119,7 @@
         private LinkLabel lblSkip;
         private Label lblTime;
         private System.Windows.Forms.Timer timer;
+        private ComboBox cbExercises;
+        private TextBox txtNotes;
     }
 }
