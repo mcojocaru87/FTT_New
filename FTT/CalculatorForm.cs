@@ -18,10 +18,13 @@ namespace FTT
         private int selectedExerciseId = 0;
         private Setting selectedExerciseSettings = null!;
         private int selectedExerciseEquipmentId = 0;
-        private int selectedMinReps = 0;
-        private int selectedMaxReps = 0;
-        private int defaultMinReps = 0;
-        private int defaultMaxReps = 0;
+        private int multiplier = 1;
+        private decimal calculatedMinVolume = 0;
+        private decimal calculatedTotalMinVolume = 0;
+        private decimal calculatedMaxVolume = 0;
+        private decimal calculatedTotalMaxVolume = 0;
+        private decimal minCalculatedWeight = 0;
+        private decimal maxCalculatedWeight = 0;
 
         public CalculatorForm()
         {
@@ -33,8 +36,7 @@ namespace FTT
             _equipmentRepository = serviceProvider.GetRequiredService<IRepository<Equipment>>();
             _equipmentItemRepository = serviceProvider.GetRequiredService<IRepository<EquipmentItem>>();
 
-            txtWeight.Text = 0.ToString();
-
+            LoadSetsData();
             LoadExerciseData();
         }
 
@@ -43,10 +45,78 @@ namespace FTT
             selectedExerciseId = 0;
             selectedExerciseEquipmentId = 0;
             selectedExerciseSettings = null!;
-            selectedMinReps = 0;
-            selectedMaxReps = 0;
-            defaultMinReps = 0;
-            defaultMaxReps = 0;
+            multiplier = 1;
+            calculatedMinVolume = 0;
+            calculatedTotalMinVolume = 0;
+            calculatedMaxVolume = 0;
+            calculatedTotalMaxVolume = 0;
+
+            if (cbNewIntervals.SelectedIndex >= 0)
+                cbNewIntervals.SelectedIndex = 0;
+            if (cbNewSets.SelectedIndex >= 0)
+                cbNewSets.SelectedIndex = 0;
+            if (cbDefaultIntervals.SelectedIndex >= 0)
+                cbDefaultIntervals.SelectedIndex = 0;
+            if (cbDefaultSets.SelectedIndex >= 0)
+                cbDefaultSets.SelectedIndex = 0;
+            if (cbWeight.SelectedIndex >= 0)
+                cbWeight.SelectedIndex = 0;
+            if (cbMinWeight.SelectedIndex >= 0)
+                cbMinWeight.SelectedIndex = 0;
+            if (cbMaxWeight.SelectedIndex >= 0)
+                cbMaxWeight.SelectedIndex = 0;
+        }
+
+        private void LoadExerciseWeight(int equipmentId, ComboBox control)
+        {
+            List<ComboBoxViewModel> dataSource = [];
+
+            var equipment = _equipmentRepository
+                .GetById(equipmentId, true, "Items");
+
+            if (equipment != null)
+            {
+                if (equipment.Items.Count > 0)
+                {
+                    foreach (var item in equipment.Items)
+                    {
+                        dataSource.Add(new ComboBoxViewModel(item.Weight, item.Weight.ToString()));
+                    }
+
+                    dataSource.Add(new ComboBoxViewModel(0M, "0"));
+                    dataSource = dataSource.OrderBy(x => (decimal)x.ValueMember).ToList();
+                }
+
+                if (dataSource.Count > 0)
+                {
+                    control.DataSource = dataSource;
+                    control.DisplayMember = "DisplayMember";
+                    control.ValueMember = "ValueMember";
+                    control.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void LoadSetsData()
+        {
+            List<ComboBoxViewModel> defaultDataSource = new();
+            List<ComboBoxViewModel> dataSource = new();
+
+            for (int i = 1; i <= 6; i++)
+            {
+                defaultDataSource.Add(new(i, i.ToString()));
+                dataSource.Add(new(i, i.ToString()));
+            }
+
+            cbDefaultSets.DataSource = defaultDataSource;
+            cbDefaultSets.DisplayMember = "DisplayMember";
+            cbDefaultSets.ValueMember = "ValueMember";
+            cbDefaultSets.SelectedValue = 1;
+
+            cbNewSets.DataSource = dataSource;
+            cbNewSets.DisplayMember = "DisplayMember";
+            cbNewSets.ValueMember = "ValueMember";
+            cbNewSets.SelectedValue = 1;
         }
 
         private decimal[] LoadEquipmentItemWeights(int equipmentId)
@@ -58,17 +128,29 @@ namespace FTT
 
         private void LoadIntervalData(int exerciseIntervalId)
         {
-            var intervals = _intervalRepository.GetAll()
+            var defaultIntervals = _intervalRepository.GetAll()
                 .Select(x => new ComboBoxViewModel(x.Id, $"{x.MinReps} - {x.MaxReps}"))
                 .ToList();
 
-            if (intervals.Count > 0)
-            {
-                cbIntervals.DataSource = intervals;
-                cbIntervals.DisplayMember = "DisplayMember";
-                cbIntervals.ValueMember = "ValueMember";
+            var newIntervals = _intervalRepository.GetAll()
+                .Select(x => new ComboBoxViewModel(x.Id, $"{x.MinReps} - {x.MaxReps}"))
+                .ToList();
 
-                cbIntervals.SelectedValue = exerciseIntervalId;
+            if (defaultIntervals.Count > 0)
+            {
+                cbDefaultIntervals.DataSource = defaultIntervals;
+                cbDefaultIntervals.DisplayMember = "DisplayMember";
+                cbDefaultIntervals.ValueMember = "ValueMember";
+                cbDefaultIntervals.SelectedValue = exerciseIntervalId;
+            }
+
+            if (newIntervals.Count > 0)
+            {
+                cbNewIntervals.DataSource = newIntervals;
+                cbNewIntervals.DisplayMember = "DisplayMember";
+                cbNewIntervals.ValueMember = "ValueMember";
+                if (cbNewIntervals.SelectedIndex >= 0)
+                    cbNewIntervals.SelectedIndex = 0;
             }
         }
 
@@ -119,13 +201,9 @@ namespace FTT
                 var minReps = exerciseSettings.MinReps;
                 var maxReps = exerciseSettings.MaxReps;
 
-                selectedMinReps = minReps;
-                selectedMaxReps = maxReps;
-
-                defaultMinReps = minReps;
-                defaultMaxReps = maxReps;
-
                 lblDefaultRange.Text = $"{minReps} - {maxReps}";
+                cbDefaultSets.SelectedValue = exerciseSettings.MinSets;
+                cbDefaultIntervals.SelectedValue = intervalId;
 
                 var equipment = GetEquipment(exercise.EquipmentId);
 
@@ -135,14 +213,16 @@ namespace FTT
 
                     lblEquipmentUsed.Text = equipment.Name;
 
-                    var isValidWeight = decimal.TryParse(txtWeight.Text, out decimal weight);
+                    var weight = (decimal?)cbWeight.SelectedValue ?? 0;
 
-                    if (isValidWeight)
+                    if (weight > 0)
                     {
-                        lblDefaultVolume.Text = $"{weight * minReps} - {weight * maxReps} Kg";
+                        lblDefaultVolume.Text = $"{weight * minReps * multiplier} - {weight * maxReps * multiplier} Kg";
+                        lblDefaultTotalVolume.Text = $"{weight * minReps * multiplier * (int)cbDefaultSets.SelectedValue} - {weight * maxReps * multiplier * (int)cbDefaultSets.SelectedValue} Kg";
                         lblCalculatedVolume.Text = "N/A";
-                        lblMinWeight.Text = "N/A";
-                        lblMaxWeight.Text = "N/A";
+                        lblCalculatedTotalVolume.Text = "N/A";
+                        cbMinWeight.SelectedIndex = 0;
+                        cbMaxWeight.SelectedIndex = 0;
                     }
 
                     MainPanel.Visible = true;
@@ -164,6 +244,11 @@ namespace FTT
 
                 if (exercise != null)
                 {
+                    multiplier = exercise.Multiplier;
+
+                    LoadExerciseWeight(exercise.EquipmentId, cbWeight);
+                    LoadExerciseWeight(exercise.EquipmentId, cbMinWeight);
+                    LoadExerciseWeight(exercise.EquipmentId, cbMaxWeight);
                     LoadExerciseSettings(exercise);
                 }
             }
@@ -202,66 +287,159 @@ namespace FTT
 
         private void CalculateButton_Click(object sender, EventArgs e)
         {
-            var isValidInput = decimal.TryParse(txtWeight.Text.Trim(), out decimal weight);
+            var weight = (decimal?)cbWeight.SelectedValue ?? 0;
 
-            if (!isValidInput)
+            if (weight == 0)
             {
-                weight = 0;
+                return;
             }
 
-            var range = LoadEquipmentItemWeights(selectedExerciseEquipmentId);
+            var defaultIntervalId = (int?)cbDefaultIntervals.SelectedValue ?? 1;
+            var newIntervalId = (int?)cbNewIntervals.SelectedValue ?? 1;
 
-            var minWeight = (weight * defaultMinReps) / selectedMinReps;
-            var maxWeight = (weight * defaultMaxReps) / selectedMaxReps;
+            var defaultInterval = GetInterval(defaultIntervalId);
+            var newInterval = GetInterval(newIntervalId);
 
-            if (minWeight > 0 && maxWeight > 0)
+            if (defaultInterval != null && newInterval != null)
             {
-                var calculatedMinWeight = GetClosest(minWeight, range);
-                var calculatedMaxWeight = GetClosest(maxWeight, range);
+                var defaultMinReps = defaultInterval.MinReps;
+                var defaultMaxReps = defaultInterval.MaxReps;
 
-                if (calculatedMinWeight > 0 && calculatedMaxWeight > 0)
+                var newMinReps = newInterval.MinReps;
+                var newMaxReps = newInterval.MaxReps;
+
+                if (selectedExerciseEquipmentId == 0)
                 {
-                    lblCalculatedVolume.Text = $"{calculatedMinWeight * selectedMinReps} - {calculatedMaxWeight * selectedMaxReps} Kg";
-                    lblMinWeight.Text = $"{calculatedMinWeight:0.00} Kg";
-                    lblMaxWeight.Text = $"{calculatedMaxWeight:0.00} Kg";
+                    return;
                 }
-                else
+
+                var range = LoadEquipmentItemWeights(selectedExerciseEquipmentId);
+
+                var minWeight = (weight * defaultMinReps * (int?)cbDefaultSets.SelectedValue ?? 1) / newMinReps / (int?)cbNewSets.SelectedValue ?? 1;
+                var maxWeight = (weight * defaultMaxReps * (int?)cbDefaultSets.SelectedValue ?? 1) / newMaxReps / (int?)cbNewSets.SelectedValue ?? 1;
+
+                if (minWeight > 0 && maxWeight > 0)
                 {
-                    lblCalculatedVolume.Text = "N/A";
-                    lblMinWeight.Text = "N/A";
-                    lblMaxWeight.Text = "N/A";
+                    var calculatedMinWeight = GetClosest(minWeight, range);
+                    var calculatedMaxWeight = GetClosest(maxWeight, range);
+
+                    if (calculatedMinWeight > 0 && calculatedMaxWeight > 0)
+                    {
+                        calculatedMinVolume = calculatedMinWeight * newMinReps * multiplier;
+                        calculatedMaxVolume = calculatedMaxWeight * newMaxReps * multiplier;
+                        calculatedTotalMinVolume = calculatedMinWeight * newMinReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+                        calculatedTotalMaxVolume = calculatedMaxWeight * newMaxReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+
+                        lblCalculatedVolume.Text = $"{calculatedMinVolume} - {calculatedMaxVolume} Kg";
+                        lblCalculatedTotalVolume.Text = $"{calculatedTotalMinVolume} - {calculatedTotalMaxVolume} Kg";
+
+                        minCalculatedWeight = calculatedMinWeight;
+                        maxCalculatedWeight = calculatedMaxWeight;
+
+                        cbMinWeight.SelectedValue = calculatedMinWeight;
+                        cbMaxWeight.SelectedValue = calculatedMaxWeight;
+                    }
+                    else
+                    {
+                        lblCalculatedVolume.Text = "N/A";
+                        lblCalculatedTotalVolume.Text = "N/A";
+                        cbMinWeight.SelectedIndex = 0;
+                        cbMaxWeight.SelectedIndex = 0;
+                    }
                 }
             }
         }
 
-        private void cbIntervals_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbDefaultSets_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbIntervals.SelectedItem is ComboBoxViewModel selectedInterval && selectedInterval.ValueMember != null)
-            {
-                var intervalId = (int)selectedInterval.ValueMember;
+            var weight = (decimal?)cbWeight.SelectedValue ?? 0;
+            var sets = 1;
 
-                var interval = GetInterval(intervalId);
+            if (weight == 0)
+            {
+                return;
+            }
+
+            if (cbDefaultSets.SelectedItem is ComboBoxViewModel selectedDefaultSets && selectedDefaultSets.ValueMember != null)
+            {
+                sets = (int)selectedDefaultSets.ValueMember;
+            }
+
+            var defaultIntervalId = (int?)cbDefaultIntervals.SelectedValue ?? 1;
+
+            var interval = GetInterval(defaultIntervalId);
+
+            if (interval != null)
+            {
+                lblDefaultVolume.Text = $"{weight * interval.MinReps * multiplier} - {weight * interval.MaxReps * multiplier} Kg";
+                lblDefaultTotalVolume.Text = $"{weight * interval.MinReps * multiplier * sets} - {weight * interval.MaxReps * multiplier * sets} Kg";
+            }
+        }
+
+        private void cbDefaultIntervals_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbDefaultIntervals.SelectedItem is ComboBoxViewModel selectedInterval && selectedInterval.ValueMember != null)
+            {
+                lblDefaultRange.Text = selectedInterval.DisplayMember;
+
+                cbDefaultSets_SelectedIndexChanged(this, null!);
+                CalculateButton_Click(this, null!);
+            }
+        }
+
+        private void cbWeight_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbWeight.SelectedItem is ComboBoxViewModel selectedWeight && selectedWeight.ValueMember != null)
+            {
+                var weight = (decimal)selectedWeight.ValueMember;
+
+                if (weight == 0)
+                {
+                    return;
+                }
+
+                var defaultIntervalId = (int?)cbDefaultIntervals.SelectedValue ?? 1;
+
+                var interval = GetInterval(defaultIntervalId);
 
                 if (interval != null)
                 {
-                    selectedMinReps = interval.MinReps;
-                    selectedMaxReps = interval.MaxReps;
-
-                    CalculateButton_Click(this, null!);
+                    lblDefaultVolume.Text = $"{weight * interval.MinReps * multiplier} - {weight * interval.MaxReps * multiplier} Kg";
+                    lblDefaultTotalVolume.Text = $"{weight * interval.MinReps * multiplier * (int?)cbDefaultSets.SelectedValue ?? 1} - {weight * interval.MaxReps * multiplier * (int?)cbDefaultSets.SelectedValue ?? 1} Kg";
                 }
             }
         }
 
-        private void txtWeight_TextChanged(object sender, EventArgs e)
+        private void cbMinWeight_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var isValidInput = decimal.TryParse(txtWeight.Text.Trim(), out decimal weight);
-
-            if (!isValidInput)
+            if (cbMinWeight.SelectedItem is ComboBoxViewModel selectedMinWeight && selectedMinWeight.ValueMember != null)
             {
-                weight = 0;
-            }
+                if (minCalculatedWeight > 0 &&
+                    calculatedMinVolume > 0 &&
+                    calculatedMaxVolume > 0)
+                {
+                    var minVolume = calculatedMinVolume / minCalculatedWeight * (decimal)selectedMinWeight.ValueMember;
+                    var maxVolume = calculatedMaxVolume / minCalculatedWeight * (decimal)selectedMinWeight.ValueMember;
 
-            lblDefaultVolume.Text = $"{weight * defaultMinReps} - {weight * defaultMaxReps} Kg";
+                    lblCalculatedVolume.Text = $"{minVolume:0.00} - {maxVolume:0.00} Kg";
+                }
+            }
+        }
+
+        private void cbMaxWeight_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbMaxWeight.SelectedItem is ComboBoxViewModel selectedMaxWeight && selectedMaxWeight.ValueMember != null)
+            {
+                if (maxCalculatedWeight > 0 &&
+                    calculatedTotalMinVolume > 0 &&
+                    calculatedTotalMaxVolume > 0)
+                {
+                    var minVolume = calculatedTotalMinVolume / maxCalculatedWeight * (decimal)selectedMaxWeight.ValueMember;
+                    var maxVolume = calculatedTotalMaxVolume / maxCalculatedWeight * (decimal)selectedMaxWeight.ValueMember;
+
+                    lblCalculatedTotalVolume.Text = $"{minVolume:0.00} - {maxVolume:0.00} Kg";
+                }
+            }
         }
     }
 }

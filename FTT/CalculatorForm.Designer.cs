@@ -32,11 +32,14 @@
             label1 = new Label();
             CloseButton = new Button();
             label2 = new Label();
-            txtWeight = new TextBox();
             MainPanel = new GroupBox();
-            lblMaxWeight = new Label();
+            cbMaxWeight = new ComboBox();
+            cbMinWeight = new ComboBox();
+            lblCalculatedTotalVolume = new Label();
+            label13 = new Label();
+            lblDefaultTotalVolume = new Label();
+            label12 = new Label();
             label10 = new Label();
-            lblMinWeight = new Label();
             label8 = new Label();
             lblCalculatedVolume = new Label();
             label7 = new Label();
@@ -47,8 +50,15 @@
             lable5 = new Label();
             label3 = new Label();
             label5 = new Label();
-            cbIntervals = new ComboBox();
+            cbDefaultIntervals = new ComboBox();
             CalculateButton = new Button();
+            label4 = new Label();
+            cbDefaultSets = new ComboBox();
+            label9 = new Label();
+            cbNewSets = new ComboBox();
+            label11 = new Label();
+            cbNewIntervals = new ComboBox();
+            cbWeight = new ComboBox();
             MainPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -73,7 +83,7 @@
             // 
             // CloseButton
             // 
-            CloseButton.Location = new Point(537, 257);
+            CloseButton.Location = new Point(233, 257);
             CloseButton.Name = "CloseButton";
             CloseButton.Size = new Size(75, 23);
             CloseButton.TabIndex = 2;
@@ -85,25 +95,21 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(116, 104);
+            label2.Location = new Point(116, 95);
             label2.Name = "label2";
             label2.Size = new Size(77, 15);
             label2.TabIndex = 3;
             label2.Text = "Weight (Kg):";
             // 
-            // txtWeight
-            // 
-            txtWeight.Location = new Point(116, 122);
-            txtWeight.Name = "txtWeight";
-            txtWeight.Size = new Size(192, 23);
-            txtWeight.TabIndex = 4;
-            txtWeight.TextChanged += txtWeight_TextChanged;
-            // 
             // MainPanel
             // 
-            MainPanel.Controls.Add(lblMaxWeight);
+            MainPanel.Controls.Add(cbMaxWeight);
+            MainPanel.Controls.Add(cbMinWeight);
+            MainPanel.Controls.Add(lblCalculatedTotalVolume);
+            MainPanel.Controls.Add(label13);
+            MainPanel.Controls.Add(lblDefaultTotalVolume);
+            MainPanel.Controls.Add(label12);
             MainPanel.Controls.Add(label10);
-            MainPanel.Controls.Add(lblMinWeight);
             MainPanel.Controls.Add(label8);
             MainPanel.Controls.Add(lblCalculatedVolume);
             MainPanel.Controls.Add(label7);
@@ -116,51 +122,88 @@
             MainPanel.Font = new Font("Segoe UI", 9F);
             MainPanel.Location = new Point(336, 51);
             MainPanel.Name = "MainPanel";
-            MainPanel.Size = new Size(276, 200);
+            MainPanel.Size = new Size(276, 229);
             MainPanel.TabIndex = 5;
             MainPanel.TabStop = false;
             MainPanel.Text = "INFO";
             MainPanel.Visible = false;
             // 
-            // lblMaxWeight
+            // cbMaxWeight
             // 
-            lblMaxWeight.AutoSize = true;
-            lblMaxWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblMaxWeight.ForeColor = Color.DarkGreen;
-            lblMaxWeight.Location = new Point(151, 173);
-            lblMaxWeight.Name = "lblMaxWeight";
-            lblMaxWeight.Size = new Size(81, 15);
-            lblMaxWeight.TabIndex = 17;
-            lblMaxWeight.Text = "62.5 - 100 Kg";
+            cbMaxWeight.FormattingEnabled = true;
+            cbMaxWeight.Location = new Point(137, 182);
+            cbMaxWeight.Name = "cbMaxWeight";
+            cbMaxWeight.Size = new Size(98, 23);
+            cbMaxWeight.TabIndex = 23;
+            cbMaxWeight.SelectedIndexChanged += cbMaxWeight_SelectedIndexChanged;
+            // 
+            // cbMinWeight
+            // 
+            cbMinWeight.FormattingEnabled = true;
+            cbMinWeight.Location = new Point(137, 129);
+            cbMinWeight.Name = "cbMinWeight";
+            cbMinWeight.Size = new Size(98, 23);
+            cbMinWeight.TabIndex = 22;
+            cbMinWeight.SelectedIndexChanged += cbMinWeight_SelectedIndexChanged;
+            // 
+            // lblCalculatedTotalVolume
+            // 
+            lblCalculatedTotalVolume.AutoSize = true;
+            lblCalculatedTotalVolume.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblCalculatedTotalVolume.ForeColor = Color.DarkGreen;
+            lblCalculatedTotalVolume.Location = new Point(151, 209);
+            lblCalculatedTotalVolume.Name = "lblCalculatedTotalVolume";
+            lblCalculatedTotalVolume.Size = new Size(29, 15);
+            lblCalculatedTotalVolume.TabIndex = 21;
+            lblCalculatedTotalVolume.Text = "N/A";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label13.ForeColor = Color.Green;
+            label13.Location = new Point(7, 209);
+            label13.Name = "label13";
+            label13.Size = new Size(82, 15);
+            label13.TabIndex = 20;
+            label13.Text = "Total Volume:";
+            // 
+            // lblDefaultTotalVolume
+            // 
+            lblDefaultTotalVolume.AutoSize = true;
+            lblDefaultTotalVolume.Location = new Point(125, 106);
+            lblDefaultTotalVolume.Name = "lblDefaultTotalVolume";
+            lblDefaultTotalVolume.Size = new Size(30, 15);
+            lblDefaultTotalVolume.TabIndex = 19;
+            lblDefaultTotalVolume.Text = "0 Kg";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label12.Location = new Point(33, 106);
+            label12.Name = "label12";
+            label12.Size = new Size(82, 15);
+            label12.TabIndex = 18;
+            label12.Text = "Total Volume:";
             // 
             // label10
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label10.ForeColor = Color.Green;
-            label10.Location = new Point(7, 173);
+            label10.Location = new Point(7, 185);
             label10.Name = "label10";
             label10.Size = new Size(78, 15);
             label10.TabIndex = 16;
             label10.Text = "Max Weight:";
-            // 
-            // lblMinWeight
-            // 
-            lblMinWeight.AutoSize = true;
-            lblMinWeight.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblMinWeight.ForeColor = Color.DarkGreen;
-            lblMinWeight.Location = new Point(151, 124);
-            lblMinWeight.Name = "lblMinWeight";
-            lblMinWeight.Size = new Size(81, 15);
-            lblMinWeight.TabIndex = 15;
-            lblMinWeight.Text = "62.5 - 100 Kg";
             // 
             // label8
             // 
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label8.ForeColor = Color.Green;
-            label8.Location = new Point(7, 124);
+            label8.Location = new Point(7, 136);
             label8.Name = "label8";
             label8.Size = new Size(75, 15);
             label8.TabIndex = 14;
@@ -171,18 +214,18 @@
             lblCalculatedVolume.AutoSize = true;
             lblCalculatedVolume.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lblCalculatedVolume.ForeColor = Color.DarkGreen;
-            lblCalculatedVolume.Location = new Point(151, 148);
+            lblCalculatedVolume.Location = new Point(151, 160);
             lblCalculatedVolume.Name = "lblCalculatedVolume";
-            lblCalculatedVolume.Size = new Size(81, 15);
+            lblCalculatedVolume.Size = new Size(29, 15);
             lblCalculatedVolume.TabIndex = 13;
-            lblCalculatedVolume.Text = "62.5 - 100 Kg";
+            lblCalculatedVolume.Text = "N/A";
             // 
             // label7
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label7.ForeColor = Color.Green;
-            label7.Location = new Point(7, 148);
+            label7.Location = new Point(7, 160);
             label7.Name = "label7";
             label7.Size = new Size(112, 15);
             label7.TabIndex = 12;
@@ -191,25 +234,24 @@
             // lblDefaultVolume
             // 
             lblDefaultVolume.AutoSize = true;
-            lblDefaultVolume.Location = new Point(125, 86);
+            lblDefaultVolume.Location = new Point(125, 78);
             lblDefaultVolume.Name = "lblDefaultVolume";
-            lblDefaultVolume.Size = new Size(74, 15);
+            lblDefaultVolume.Size = new Size(30, 15);
             lblDefaultVolume.TabIndex = 11;
-            lblDefaultVolume.Text = "62.5 - 100 Kg";
+            lblDefaultVolume.Text = "0 Kg";
             // 
             // lblEquipmentUsed
             // 
             lblEquipmentUsed.AutoSize = true;
-            lblEquipmentUsed.Location = new Point(125, 58);
+            lblEquipmentUsed.Location = new Point(125, 50);
             lblEquipmentUsed.Name = "lblEquipmentUsed";
-            lblEquipmentUsed.Size = new Size(59, 15);
+            lblEquipmentUsed.Size = new Size(0, 15);
             lblEquipmentUsed.TabIndex = 10;
-            lblEquipmentUsed.Text = "Dumbbell";
             // 
             // lblDefaultRange
             // 
             lblDefaultRange.AutoSize = true;
-            lblDefaultRange.Location = new Point(125, 31);
+            lblDefaultRange.Location = new Point(125, 23);
             lblDefaultRange.Name = "lblDefaultRange";
             lblDefaultRange.Size = new Size(30, 15);
             lblDefaultRange.TabIndex = 9;
@@ -219,7 +261,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label6.Location = new Point(18, 86);
+            label6.Location = new Point(18, 78);
             label6.Name = "label6";
             label6.Size = new Size(97, 15);
             label6.TabIndex = 8;
@@ -229,7 +271,7 @@
             // 
             lable5.AutoSize = true;
             lable5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lable5.Location = new Point(18, 58);
+            lable5.Location = new Point(18, 50);
             lable5.Name = "lable5";
             lable5.Size = new Size(101, 15);
             lable5.TabIndex = 7;
@@ -239,7 +281,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(18, 31);
+            label3.Location = new Point(18, 23);
             label3.Name = "label3";
             label3.Size = new Size(90, 15);
             label3.TabIndex = 6;
@@ -249,20 +291,20 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label5.Location = new Point(116, 157);
+            label5.Location = new Point(116, 139);
             label5.Name = "label5";
-            label5.Size = new Size(54, 15);
+            label5.Size = new Size(78, 15);
             label5.TabIndex = 7;
-            label5.Text = "Interval:";
+            label5.Text = "Def Interval:";
             // 
-            // cbIntervals
+            // cbDefaultIntervals
             // 
-            cbIntervals.FormattingEnabled = true;
-            cbIntervals.Location = new Point(116, 175);
-            cbIntervals.Name = "cbIntervals";
-            cbIntervals.Size = new Size(192, 23);
-            cbIntervals.TabIndex = 6;
-            cbIntervals.SelectedIndexChanged += cbIntervals_SelectedIndexChanged;
+            cbDefaultIntervals.FormattingEnabled = true;
+            cbDefaultIntervals.Location = new Point(116, 157);
+            cbDefaultIntervals.Name = "cbDefaultIntervals";
+            cbDefaultIntervals.Size = new Size(90, 23);
+            cbDefaultIntervals.TabIndex = 6;
+            cbDefaultIntervals.SelectedIndexChanged += cbDefaultIntervals_SelectedIndexChanged;
             // 
             // CalculateButton
             // 
@@ -274,16 +316,90 @@
             CalculateButton.UseVisualStyleBackColor = true;
             CalculateButton.Click += CalculateButton_Click;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label4.Location = new Point(220, 139);
+            label4.Name = "label4";
+            label4.Size = new Size(58, 15);
+            label4.TabIndex = 10;
+            label4.Text = "Def Sets:";
+            // 
+            // cbDefaultSets
+            // 
+            cbDefaultSets.FormattingEnabled = true;
+            cbDefaultSets.Location = new Point(220, 157);
+            cbDefaultSets.Name = "cbDefaultSets";
+            cbDefaultSets.Size = new Size(88, 23);
+            cbDefaultSets.TabIndex = 9;
+            cbDefaultSets.SelectedIndexChanged += cbDefaultSets_SelectedIndexChanged;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label9.ForeColor = Color.Green;
+            label9.Location = new Point(220, 183);
+            label9.Name = "label9";
+            label9.Size = new Size(63, 15);
+            label9.TabIndex = 12;
+            label9.Text = "New Sets:";
+            // 
+            // cbNewSets
+            // 
+            cbNewSets.BackColor = SystemColors.Window;
+            cbNewSets.FormattingEnabled = true;
+            cbNewSets.Location = new Point(220, 201);
+            cbNewSets.Name = "cbNewSets";
+            cbNewSets.Size = new Size(88, 23);
+            cbNewSets.TabIndex = 11;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label11.ForeColor = Color.Green;
+            label11.Location = new Point(116, 183);
+            label11.Name = "label11";
+            label11.Size = new Size(83, 15);
+            label11.TabIndex = 14;
+            label11.Text = "New Interval:";
+            // 
+            // cbNewIntervals
+            // 
+            cbNewIntervals.BackColor = SystemColors.Window;
+            cbNewIntervals.FormattingEnabled = true;
+            cbNewIntervals.Location = new Point(116, 201);
+            cbNewIntervals.Name = "cbNewIntervals";
+            cbNewIntervals.Size = new Size(90, 23);
+            cbNewIntervals.TabIndex = 13;
+            // 
+            // cbWeight
+            // 
+            cbWeight.FormattingEnabled = true;
+            cbWeight.Location = new Point(116, 113);
+            cbWeight.Name = "cbWeight";
+            cbWeight.Size = new Size(192, 23);
+            cbWeight.TabIndex = 15;
+            cbWeight.SelectedIndexChanged += cbWeight_SelectedIndexChanged;
+            // 
             // CalculatorForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(cbWeight);
+            Controls.Add(label11);
+            Controls.Add(cbNewIntervals);
+            Controls.Add(label9);
+            Controls.Add(cbNewSets);
+            Controls.Add(label4);
+            Controls.Add(cbDefaultSets);
             Controls.Add(CalculateButton);
             Controls.Add(label5);
-            Controls.Add(cbIntervals);
+            Controls.Add(cbDefaultIntervals);
             Controls.Add(MainPanel);
-            Controls.Add(txtWeight);
             Controls.Add(label2);
             Controls.Add(CloseButton);
             Controls.Add(label1);
@@ -304,12 +420,11 @@
         private Label label1;
         private Button CloseButton;
         private Label label2;
-        private TextBox txtWeight;
         private GroupBox MainPanel;
         private Label lable5;
         private Label label3;
         private Label label5;
-        private ComboBox cbIntervals;
+        private ComboBox cbDefaultIntervals;
         private Label label6;
         private Label lblDefaultRange;
         private Label lblEquipmentUsed;
@@ -317,9 +432,20 @@
         private Label lblCalculatedVolume;
         private Label label7;
         private Button CalculateButton;
-        private Label lblMaxWeight;
         private Label label10;
-        private Label lblMinWeight;
         private Label label8;
+        private Label label4;
+        private ComboBox cbDefaultSets;
+        private Label label9;
+        private ComboBox cbNewSets;
+        private Label lblDefaultTotalVolume;
+        private Label label12;
+        private Label lblCalculatedTotalVolume;
+        private Label label13;
+        private Label label11;
+        private ComboBox cbNewIntervals;
+        private ComboBox cbWeight;
+        private ComboBox cbMaxWeight;
+        private ComboBox cbMinWeight;
     }
 }
