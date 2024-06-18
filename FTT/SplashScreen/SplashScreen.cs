@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Reflection;
 
 namespace FTT
 {
@@ -15,6 +7,14 @@ namespace FTT
         public SplashScreen()
         {
             InitializeComponent();
+            DisplayVersion();
+        }
+
+        private void DisplayVersion()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+
+            lblVersion.Text = $"Ver.: {version}";
         }
     }
 }
