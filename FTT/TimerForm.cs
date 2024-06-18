@@ -1,5 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
+using FTT.Services;
 using FTT.Services.Track;
 using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,21 +10,28 @@ namespace FTT
     public partial class TimerForm : Form
     {
         private readonly IRepository<ToolTimer> _toolTimerRepository;
+        private readonly IWorkoutService _workoutService;
         private readonly bool _showExercises;
 
         private TimeSpan timeLeft;
         private ToolTimer toolTimer;
+        private DateTime startTime;
 
         public TimerForm(bool showExercises = false)
         {
             InitializeComponent();
 
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
+            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
             _showExercises = showExercises;
 
             timer.Interval = 1000;
-            
+            currentTimeTimer.Interval = 1000;
+            workoutTimeTimer.Interval = 1000;
+
             AutoStartTimer();
+            StartWorkoutTimeTimer();
+            StartCurrentTimeTimer();
             SetupExercises();
         }
 
@@ -57,6 +65,16 @@ namespace FTT
             }
         }
 
+        private void StartCurrentTimeTimer()
+        {
+            currentTimeTimer.Start();
+        }
+
+        private void StartWorkoutTimeTimer()
+        {
+            workoutTimeTimer.Start();
+        }
+
         private ToolTimer? LoadTimerSettings()
         {
             return _toolTimerRepository.GetAll().FirstOrDefault();
@@ -66,11 +84,24 @@ namespace FTT
         {
             this.Dispose();
             this.Close();
+
+            currentTimeTimer.Stop();
         }
 
         private void UpdateTimeLabel()
         {
             lblTime.Text = timeLeft.ToString(@"hh\:mm\:ss");
+        }
+
+        private void UpdateCurrentTimeLabel()
+        {
+            lblCurrentTime.Text = DateTime.Now.ToString(@"HH\:mm\:ss");
+        }
+
+        private void UpdateWorkoutTimeLabel()
+        {
+            TimeSpan elapsedTime = DateTime.Now - startTime;
+            lblWorkoutTime.Text = FormatElapsedTime(elapsedTime);
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -156,6 +187,37 @@ namespace FTT
             {
                 txtNotes.Clear();
                 txtNotes.Visible = false;
+            }
+        }
+
+        private void currentTimeTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateCurrentTimeLabel();
+        }
+
+        private void workoutTimeTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateWorkoutTimeLabel();
+        }
+
+        private string FormatElapsedTime(TimeSpan elapsedTime)
+        {
+            return string.Format("{0:D2}:{1:D2}:{2:D2}",
+                elapsedTime.Hours,
+                elapsedTime.Minutes,
+                elapsedTime.Seconds);
+        }
+
+        private void TimerForm_Load(object sender, EventArgs e)
+        {
+            if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
+            {
+                var activeWorkout = _workoutService.GetWorkoutById((int)Session.Instance.ActiveWorkoutId);
+
+                if (activeWorkout != null)
+                {
+                    startTime = activeWorkout.Workout.WorkoutDate;
+                }
             }
         }
     }

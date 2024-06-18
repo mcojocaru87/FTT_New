@@ -35,6 +35,13 @@
             timer = new System.Windows.Forms.Timer(components);
             cbExercises = new ComboBox();
             txtNotes = new TextBox();
+            label1 = new Label();
+            label2 = new Label();
+            lblCurrentTime = new Label();
+            lblWorkoutTime = new Label();
+            label4 = new Label();
+            currentTimeTimer = new System.Windows.Forms.Timer(components);
+            workoutTimeTimer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // chkDoNotShow
@@ -63,10 +70,10 @@
             // lblTime
             // 
             lblTime.AutoSize = true;
-            lblTime.Font = new Font("Impact", 90F);
-            lblTime.Location = new Point(103, 97);
+            lblTime.Font = new Font("Impact", 70F);
+            lblTime.Location = new Point(157, 135);
             lblTime.Name = "lblTime";
-            lblTime.Size = new Size(494, 145);
+            lblTime.Size = new Size(387, 115);
             lblTime.TabIndex = 2;
             lblTime.Text = "00:00:00";
             // 
@@ -94,11 +101,76 @@
             txtNotes.TabIndex = 4;
             txtNotes.Visible = false;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            label1.Location = new Point(178, 111);
+            label1.Name = "label1";
+            label1.Size = new Size(129, 37);
+            label1.TabIndex = 5;
+            label1.Text = "Rest For:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label2.Location = new Point(178, 250);
+            label2.Name = "label2";
+            label2.Size = new Size(113, 21);
+            label2.TabIndex = 6;
+            label2.Text = "Current Time:";
+            // 
+            // lblCurrentTime
+            // 
+            lblCurrentTime.AutoSize = true;
+            lblCurrentTime.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblCurrentTime.Location = new Point(173, 271);
+            lblCurrentTime.Name = "lblCurrentTime";
+            lblCurrentTime.Size = new Size(127, 37);
+            lblCurrentTime.TabIndex = 7;
+            lblCurrentTime.Text = "00:00:00";
+            // 
+            // lblWorkoutTime
+            // 
+            lblWorkoutTime.AutoSize = true;
+            lblWorkoutTime.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblWorkoutTime.Location = new Point(388, 271);
+            lblWorkoutTime.Name = "lblWorkoutTime";
+            lblWorkoutTime.Size = new Size(127, 37);
+            lblWorkoutTime.TabIndex = 9;
+            lblWorkoutTime.Text = "00:00:00";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label4.Location = new Point(393, 250);
+            label4.Name = "label4";
+            label4.Size = new Size(123, 21);
+            label4.TabIndex = 8;
+            label4.Text = "Workout Time:";
+            // 
+            // currentTimeTimer
+            // 
+            currentTimeTimer.Interval = 1000;
+            currentTimeTimer.Tick += currentTimeTimer_Tick;
+            // 
+            // workoutTimeTimer
+            // 
+            workoutTimeTimer.Interval = 1000;
+            workoutTimeTimer.Tick += workoutTimeTimer_Tick;
+            // 
             // TimerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(lblWorkoutTime);
+            Controls.Add(label4);
+            Controls.Add(lblCurrentTime);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(txtNotes);
             Controls.Add(cbExercises);
             Controls.Add(lblTime);
@@ -109,6 +181,7 @@
             Opacity = 0.98D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TimerForm";
+            Load += TimerForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -121,5 +194,12 @@
         private System.Windows.Forms.Timer timer;
         private ComboBox cbExercises;
         private TextBox txtNotes;
+        private Label label1;
+        private Label label2;
+        private Label lblCurrentTime;
+        private Label lblWorkoutTime;
+        private Label label4;
+        private System.Windows.Forms.Timer currentTimeTimer;
+        private System.Windows.Forms.Timer workoutTimeTimer;
     }
 }
