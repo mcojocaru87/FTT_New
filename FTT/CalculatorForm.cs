@@ -19,10 +19,14 @@ namespace FTT
         private Setting selectedExerciseSettings = null!;
         private int selectedExerciseEquipmentId = 0;
         private int multiplier = 1;
-        private decimal calculatedMinVolume = 0;
-        private decimal calculatedTotalMinVolume = 0;
-        private decimal calculatedMaxVolume = 0;
-        private decimal calculatedTotalMaxVolume = 0;
+        private decimal calculatedMinAVolume = 0;
+        private decimal calculatedMinBVolume = 0;
+        private decimal calculatedTotalMinAVolume = 0;
+        private decimal calculatedTotalMinBVolume = 0;
+        private decimal calculatedMaxAVolume = 0;
+        private decimal calculatedMaxBVolume = 0;
+        private decimal calculatedTotalMaxAVolume = 0;
+        private decimal calculatedTotalMaxBVolume = 0;
         private decimal minCalculatedWeight = 0;
         private decimal maxCalculatedWeight = 0;
 
@@ -46,10 +50,14 @@ namespace FTT
             selectedExerciseEquipmentId = 0;
             selectedExerciseSettings = null!;
             multiplier = 1;
-            calculatedMinVolume = 0;
-            calculatedTotalMinVolume = 0;
-            calculatedMaxVolume = 0;
-            calculatedTotalMaxVolume = 0;
+            calculatedMinAVolume = 0;
+            calculatedMinBVolume = 0;
+            calculatedTotalMinAVolume = 0;
+            calculatedTotalMinBVolume = 0;
+            calculatedMaxAVolume = 0;
+            calculatedMaxBVolume = 0;
+            calculatedTotalMaxAVolume = 0;
+            calculatedTotalMaxBVolume = 0;
 
             if (cbNewIntervals.SelectedIndex >= 0)
                 cbNewIntervals.SelectedIndex = 0;
@@ -219,8 +227,8 @@ namespace FTT
                     {
                         lblDefaultVolume.Text = $"{weight * minReps * multiplier} - {weight * maxReps * multiplier} Kg";
                         lblDefaultTotalVolume.Text = $"{weight * minReps * multiplier * (int)cbDefaultSets.SelectedValue} - {weight * maxReps * multiplier * (int)cbDefaultSets.SelectedValue} Kg";
-                        lblCalculatedVolume.Text = "N/A";
-                        lblCalculatedTotalVolume.Text = "N/A";
+                        lblCalculatedMinVolume.Text = "N/A";
+                        lblCalculatedTotalMinVolume.Text = "N/A";
                         cbMinWeight.SelectedIndex = 0;
                         cbMaxWeight.SelectedIndex = 0;
                     }
@@ -325,13 +333,23 @@ namespace FTT
 
                     if (calculatedMinWeight > 0 && calculatedMaxWeight > 0)
                     {
-                        calculatedMinVolume = calculatedMinWeight * newMinReps * multiplier;
-                        calculatedMaxVolume = calculatedMaxWeight * newMaxReps * multiplier;
-                        calculatedTotalMinVolume = calculatedMinWeight * newMinReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
-                        calculatedTotalMaxVolume = calculatedMaxWeight * newMaxReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+                        calculatedMinAVolume = calculatedMinWeight * newMinReps * multiplier;
+                        calculatedMinBVolume = calculatedMinWeight * newMaxReps * multiplier;
+                        
+                        calculatedMaxAVolume = calculatedMaxWeight * newMinReps * multiplier;
+                        calculatedMaxBVolume = calculatedMaxWeight * newMaxReps * multiplier;
 
-                        lblCalculatedVolume.Text = $"{calculatedMinVolume} - {calculatedMaxVolume} Kg";
-                        lblCalculatedTotalVolume.Text = $"{calculatedTotalMinVolume} - {calculatedTotalMaxVolume} Kg";
+                        lblCalculatedMinVolume.Text = $"{calculatedMinAVolume} - {calculatedMinBVolume} Kg";
+                        lblCalculatedMaxVolume.Text = $"{calculatedMaxAVolume} - {calculatedMaxBVolume} Kg";
+
+                        calculatedTotalMinAVolume = calculatedMinWeight * newMinReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+                        calculatedTotalMinBVolume = calculatedMinWeight * newMaxReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+                        
+                        calculatedTotalMaxAVolume = calculatedMaxWeight * newMinReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+                        calculatedTotalMaxBVolume = calculatedMaxWeight * newMaxReps * multiplier * (int?)cbNewSets.SelectedValue ?? 1;
+
+                        lblCalculatedTotalMinVolume.Text = $"{calculatedTotalMinAVolume} - {calculatedTotalMinBVolume} Kg";
+                        lblCalculatedTotalMaxVolume.Text = $"{calculatedTotalMaxAVolume} - {calculatedTotalMaxBVolume} Kg";
 
                         minCalculatedWeight = calculatedMinWeight;
                         maxCalculatedWeight = calculatedMaxWeight;
@@ -341,8 +359,8 @@ namespace FTT
                     }
                     else
                     {
-                        lblCalculatedVolume.Text = "N/A";
-                        lblCalculatedTotalVolume.Text = "N/A";
+                        lblCalculatedMinVolume.Text = "N/A";
+                        lblCalculatedTotalMinVolume.Text = "N/A";
                         cbMinWeight.SelectedIndex = 0;
                         cbMaxWeight.SelectedIndex = 0;
                     }
@@ -414,15 +432,15 @@ namespace FTT
         {
             if (cbMinWeight.SelectedItem is ComboBoxViewModel selectedMinWeight && selectedMinWeight.ValueMember != null)
             {
-                if (minCalculatedWeight > 0 &&
-                    calculatedMinVolume > 0 &&
-                    calculatedMaxVolume > 0)
-                {
-                    var minVolume = calculatedMinVolume / minCalculatedWeight * (decimal)selectedMinWeight.ValueMember;
-                    var maxVolume = calculatedMaxVolume / minCalculatedWeight * (decimal)selectedMinWeight.ValueMember;
+                //if (minCalculatedWeight > 0 &&
+                //    calculatedMinVolume > 0 &&
+                //    calculatedMaxVolume > 0)
+                //{
+                //    var minVolume = calculatedMinVolume / minCalculatedWeight * (decimal)selectedMinWeight.ValueMember;
+                //    var maxVolume = calculatedMaxVolume / minCalculatedWeight * (decimal)selectedMinWeight.ValueMember;
 
-                    lblCalculatedVolume.Text = $"{minVolume:0.00} - {maxVolume:0.00} Kg";
-                }
+                //    lblCalculatedMinVolume.Text = $"{minVolume:0.00} - {maxVolume:0.00} Kg";
+                //}
             }
         }
 
@@ -430,15 +448,15 @@ namespace FTT
         {
             if (cbMaxWeight.SelectedItem is ComboBoxViewModel selectedMaxWeight && selectedMaxWeight.ValueMember != null)
             {
-                if (maxCalculatedWeight > 0 &&
-                    calculatedTotalMinVolume > 0 &&
-                    calculatedTotalMaxVolume > 0)
-                {
-                    var minVolume = calculatedTotalMinVolume / maxCalculatedWeight * (decimal)selectedMaxWeight.ValueMember;
-                    var maxVolume = calculatedTotalMaxVolume / maxCalculatedWeight * (decimal)selectedMaxWeight.ValueMember;
+                //if (maxCalculatedWeight > 0 &&
+                //    calculatedTotalMinVolume > 0 &&
+                //    calculatedTotalMaxVolume > 0)
+                //{
+                //    var minVolume = calculatedTotalMinVolume / maxCalculatedWeight * (decimal)selectedMaxWeight.ValueMember;
+                //    var maxVolume = calculatedTotalMaxVolume / maxCalculatedWeight * (decimal)selectedMaxWeight.ValueMember;
 
-                    lblCalculatedTotalVolume.Text = $"{minVolume:0.00} - {maxVolume:0.00} Kg";
-                }
+                //    lblCalculatedTotalMinVolume.Text = $"{minVolume:0.00} - {maxVolume:0.00} Kg";
+                //}
             }
         }
     }
