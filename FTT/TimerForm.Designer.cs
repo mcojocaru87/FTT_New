@@ -42,6 +42,8 @@
             label4 = new Label();
             currentTimeTimer = new System.Windows.Forms.Timer(components);
             workoutTimeTimer = new System.Windows.Forms.Timer(components);
+            Add30SecButton = new Button();
+            Take30SecButton = new Button();
             SuspendLayout();
             // 
             // chkDoNotShow
@@ -71,7 +73,7 @@
             // 
             lblTime.AutoSize = true;
             lblTime.Font = new Font("Impact", 70F);
-            lblTime.Location = new Point(157, 135);
+            lblTime.Location = new Point(157, 124);
             lblTime.Name = "lblTime";
             lblTime.Size = new Size(387, 115);
             lblTime.TabIndex = 2;
@@ -105,7 +107,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-            label1.Location = new Point(178, 111);
+            label1.Location = new Point(178, 100);
             label1.Name = "label1";
             label1.Size = new Size(129, 37);
             label1.TabIndex = 5;
@@ -135,7 +137,7 @@
             // 
             lblWorkoutTime.AutoSize = true;
             lblWorkoutTime.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-            lblWorkoutTime.Location = new Point(388, 271);
+            lblWorkoutTime.Location = new Point(374, 271);
             lblWorkoutTime.Name = "lblWorkoutTime";
             lblWorkoutTime.Size = new Size(127, 37);
             lblWorkoutTime.TabIndex = 9;
@@ -145,7 +147,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            label4.Location = new Point(393, 250);
+            label4.Location = new Point(379, 250);
             label4.Name = "label4";
             label4.Size = new Size(123, 21);
             label4.TabIndex = 8;
@@ -161,11 +163,39 @@
             workoutTimeTimer.Interval = 1000;
             workoutTimeTimer.Tick += workoutTimeTimer_Tick;
             // 
+            // Add30SecButton
+            // 
+            Add30SecButton.FlatAppearance.BorderSize = 0;
+            Add30SecButton.FlatStyle = FlatStyle.Flat;
+            Add30SecButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            Add30SecButton.Location = new Point(550, 154);
+            Add30SecButton.Name = "Add30SecButton";
+            Add30SecButton.Size = new Size(98, 56);
+            Add30SecButton.TabIndex = 10;
+            Add30SecButton.Text = "+ 30 SEC";
+            Add30SecButton.UseVisualStyleBackColor = true;
+            Add30SecButton.Click += Add30SecButton_Click;
+            // 
+            // Take30SecButton
+            // 
+            Take30SecButton.FlatAppearance.BorderSize = 0;
+            Take30SecButton.FlatStyle = FlatStyle.Flat;
+            Take30SecButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            Take30SecButton.Location = new Point(53, 154);
+            Take30SecButton.Name = "Take30SecButton";
+            Take30SecButton.Size = new Size(98, 56);
+            Take30SecButton.TabIndex = 11;
+            Take30SecButton.Text = "- 30 SEC";
+            Take30SecButton.UseVisualStyleBackColor = true;
+            Take30SecButton.Click += Take30SecButton_Click;
+            // 
             // TimerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(Take30SecButton);
+            Controls.Add(Add30SecButton);
             Controls.Add(lblWorkoutTime);
             Controls.Add(label4);
             Controls.Add(lblCurrentTime);
@@ -176,6 +206,7 @@
             Controls.Add(lblTime);
             Controls.Add(lblSkip);
             Controls.Add(chkDoNotShow);
+            Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.None;
             Name = "TimerForm";
             Opacity = 0.98D;
@@ -201,5 +232,7 @@
         private Label label4;
         private System.Windows.Forms.Timer currentTimeTimer;
         private System.Windows.Forms.Timer workoutTimeTimer;
+        private Button Add30SecButton;
+        private Button Take30SecButton;
     }
 }

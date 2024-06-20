@@ -220,5 +220,23 @@ namespace FTT
                 }
             }
         }
+
+        private void Add30SecButton_Click(object sender, EventArgs e)
+        {
+            if (timeLeft.TotalSeconds > 0)
+            {
+                timeLeft = timeLeft.Add(TimeSpan.FromSeconds(30));
+                UpdateTimeLabel();
+            }
+        }
+
+        private void Take30SecButton_Click(object sender, EventArgs e)
+        {
+            if (timeLeft.TotalSeconds > 30)
+            {
+                timeLeft = timeLeft.Subtract(TimeSpan.FromSeconds(30));
+                UpdateTimeLabel();
+            }
+        }
     }
 }
