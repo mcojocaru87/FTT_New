@@ -8,5 +8,6 @@
         public int ExerciseId { get; set; }
         public int MinSets { get; set; }
         public int RepRangeIntervalId { get; set; }
+        public int ProgressTrys { get; set; }
     }
 }

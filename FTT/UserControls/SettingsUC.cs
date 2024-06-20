@@ -27,6 +27,7 @@ namespace FTT.UserControls
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
             _repRangeIntervalRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<RepRangeInterval>>();
 
+            SetupProgressTrys();
             LoadMinSets();
             LoadExercises();
             LoadTimerSettings();
@@ -39,6 +40,7 @@ namespace FTT.UserControls
             txtMaxReps.Text = "8";
             txtMinReps.Text = "5";
             cbMinSets.SelectedValue = 3;
+            cbProgressTrys.SelectedValue = 2;
 
             SaveButton.Text = "Create";
             lblMode.Text = "New";
@@ -58,6 +60,7 @@ namespace FTT.UserControls
                 txtMaxReps.Text = exerciseSettings.MaxReps.ToString();
                 txtMinReps.Text = exerciseSettings.MinReps.ToString();
                 cbMinSets.SelectedValue = exerciseSettings.MinSets;
+                cbProgressTrys.SelectedValue = exerciseSettings.ProgressTrys;
 
                 if (exerciseSettings.RepRangeIntervalId > 0)
                 {
@@ -113,6 +116,20 @@ namespace FTT.UserControls
             cbMinSets.DataSource = dataSource;
             cbMinSets.ValueMember = "ValueMember";
             cbMinSets.DisplayMember = "DisplayMember";
+        }
+
+        private void SetupProgressTrys()
+        {
+            List<ComboBoxViewModel> dataSource = [];
+
+            for (int i = 1; i <= 10; i++)
+            {
+                dataSource.Add(new(i, i.ToString()));
+            }
+
+            cbProgressTrys.DataSource = dataSource;
+            cbProgressTrys.ValueMember = "ValueMember";
+            cbProgressTrys.DisplayMember = "DisplayMember";
         }
 
         private bool CheckIfRepRangeIntervalExists(int minReps, int maxReps)
@@ -193,6 +210,7 @@ namespace FTT.UserControls
             bool validMinRepsValue = int.TryParse(txtMinReps.Text, out int minReps);
 
             int minSets = (int)cbMinSets.SelectedValue;
+            int progressTrys = (int)cbProgressTrys.SelectedValue;
 
             if (vaildFailAttemptsValue &&
                 vaildMaxRepsValue &&
@@ -206,7 +224,8 @@ namespace FTT.UserControls
                         MaxReps = maxReps,
                         MinReps = minReps,
                         MinSets = minSets,
-                        ExerciseId = exerciseId
+                        ExerciseId = exerciseId,
+                        ProgressTrys = progressTrys,
                     };
 
                     _settingsRepository.Add(newSettings);
@@ -239,7 +258,8 @@ namespace FTT.UserControls
                                     MaxReps = maxReps,
                                     MinReps = minReps,
                                     MinSets = minSets,
-                                    ExerciseId = exerciseId
+                                    ExerciseId = exerciseId,
+                                    ProgressTrys = progressTrys,
                                 };
 
                                 _settingsRepository.Add(newSettings);
@@ -258,6 +278,7 @@ namespace FTT.UserControls
                             item.MaxReps = maxReps;
                             item.MinSets = minSets;
                             item.FailAttempts = failAttempts;
+                            item.ProgressTrys = progressTrys;
 
                             _settingsRepository.Update(item);
 
@@ -277,6 +298,7 @@ namespace FTT.UserControls
                         currentSettings.FailAttempts = failAttempts;
                         currentSettings.MinReps = minReps;
                         currentSettings.MinSets = minSets;
+                        currentSettings.ProgressTrys = progressTrys;
 
                         _settingsRepository.Update(currentSettings);
                         _settingsRepository.Commit();
@@ -325,6 +347,7 @@ namespace FTT.UserControls
             txtMaxReps.Clear();
             txtMinReps.Clear();
             cbMinSets.SelectedValue = 1;
+            cbProgressTrys.SelectedValue = 2;
             cbExercises.SelectedValue = 0;
 
             MainPanel.Visible = false;
@@ -351,10 +374,15 @@ namespace FTT.UserControls
         {
             isPreSet = true;
 
-            txtFailAttempts.Clear();
-            txtMaxReps.Clear();
-            txtMinReps.Clear();
+            IntervalsPanel.Visible = false;
+
+            txtFailAttempts.Text = "2";
+            txtMaxReps.Text = "8";
+            txtMinReps.Text = "5";
+            txtMaxReps.ReadOnly = false;
+            txtMinReps.ReadOnly = false;
             cbMinSets.SelectedValue = 1;
+            cbProgressTrys.SelectedValue = 2;
             lblMode.Text = "Pre-Set";
 
             MainPanel.Visible = true;

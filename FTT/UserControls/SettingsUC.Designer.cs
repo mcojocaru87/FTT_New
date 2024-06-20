@@ -39,6 +39,9 @@
             cbExercises = new ComboBox();
             label4 = new Label();
             MainPanel = new Panel();
+            cbProgressTrys = new ComboBox();
+            label8 = new Label();
+            cbMinSets = new ComboBox();
             IntervalsPanel = new Panel();
             label7 = new Label();
             lblCancel = new LinkLabel();
@@ -50,7 +53,6 @@
             CancelButton = new Button();
             PreSetButton = new Button();
             chkDisplayTimer = new CheckBox();
-            cbMinSets = new ComboBox();
             MainPanel.SuspendLayout();
             IntervalsPanel.SuspendLayout();
             SuspendLayout();
@@ -69,7 +71,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(165, 63);
+            label2.Location = new Point(292, 77);
             label2.Name = "label2";
             label2.Size = new Size(61, 15);
             label2.TabIndex = 1;
@@ -85,7 +87,7 @@
             // 
             // txtMaxReps
             // 
-            txtMaxReps.Location = new Point(164, 80);
+            txtMaxReps.Location = new Point(291, 94);
             txtMaxReps.Margin = new Padding(3, 2, 3, 2);
             txtMaxReps.Name = "txtMaxReps";
             txtMaxReps.Size = new Size(110, 23);
@@ -93,7 +95,7 @@
             // 
             // SaveButton
             // 
-            SaveButton.Location = new Point(165, 204);
+            SaveButton.Location = new Point(292, 217);
             SaveButton.Margin = new Padding(3, 2, 3, 2);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(109, 22);
@@ -115,7 +117,7 @@
             // 
             // txtMinReps
             // 
-            txtMinReps.Location = new Point(164, 122);
+            txtMinReps.Location = new Point(165, 94);
             txtMinReps.Margin = new Padding(3, 2, 3, 2);
             txtMinReps.Name = "txtMinReps";
             txtMinReps.Size = new Size(110, 23);
@@ -125,7 +127,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(165, 105);
+            label3.Location = new Point(165, 77);
             label3.Name = "label3";
             label3.Size = new Size(58, 15);
             label3.TabIndex = 6;
@@ -152,6 +154,8 @@
             // 
             // MainPanel
             // 
+            MainPanel.Controls.Add(cbProgressTrys);
+            MainPanel.Controls.Add(label8);
             MainPanel.Controls.Add(cbMinSets);
             MainPanel.Controls.Add(IntervalsPanel);
             MainPanel.Controls.Add(label6);
@@ -171,6 +175,32 @@
             MainPanel.Size = new Size(436, 286);
             MainPanel.TabIndex = 10;
             MainPanel.Visible = false;
+            // 
+            // cbProgressTrys
+            // 
+            cbProgressTrys.FormattingEnabled = true;
+            cbProgressTrys.Location = new Point(292, 149);
+            cbProgressTrys.Name = "cbProgressTrys";
+            cbProgressTrys.Size = new Size(109, 23);
+            cbProgressTrys.TabIndex = 19;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label8.Location = new Point(291, 131);
+            label8.Name = "label8";
+            label8.Size = new Size(80, 15);
+            label8.TabIndex = 18;
+            label8.Text = "Progress Trys";
+            // 
+            // cbMinSets
+            // 
+            cbMinSets.FormattingEnabled = true;
+            cbMinSets.Location = new Point(166, 149);
+            cbMinSets.Name = "cbMinSets";
+            cbMinSets.Size = new Size(109, 23);
+            cbMinSets.TabIndex = 17;
             // 
             // IntervalsPanel
             // 
@@ -230,7 +260,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label6.Location = new Point(164, 147);
+            label6.Location = new Point(165, 131);
             label6.Name = "label6";
             label6.Size = new Size(55, 15);
             label6.TabIndex = 11;
@@ -257,7 +287,7 @@
             // 
             // CancelButton
             // 
-            CancelButton.Location = new Point(165, 230);
+            CancelButton.Location = new Point(292, 243);
             CancelButton.Margin = new Padding(3, 2, 3, 2);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(109, 22);
@@ -287,14 +317,6 @@
             chkDisplayTimer.Text = "Show Timer";
             chkDisplayTimer.UseVisualStyleBackColor = true;
             chkDisplayTimer.CheckedChanged += chkDisplayTimer_CheckedChanged;
-            // 
-            // cbMinSets
-            // 
-            cbMinSets.FormattingEnabled = true;
-            cbMinSets.Location = new Point(165, 165);
-            cbMinSets.Name = "cbMinSets";
-            cbMinSets.Size = new Size(109, 23);
-            cbMinSets.TabIndex = 17;
             // 
             // SettingsUC
             // 
@@ -343,5 +365,7 @@
         private ComboBox cbIntervals;
         private Panel IntervalsPanel;
         private ComboBox cbMinSets;
+        private ComboBox cbProgressTrys;
+        private Label label8;
     }
 }

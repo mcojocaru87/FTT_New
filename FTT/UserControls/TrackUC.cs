@@ -346,6 +346,7 @@ namespace FTT.UserControls
             var maxReps = exerciseSettings?.MaxReps;
             var minReps = exerciseSettings?.MinReps;
             var minSets = exerciseSettings?.MinSets;
+            var progressTrys = exerciseSettings?.ProgressTrys;
             var intervalId = exerciseSettings?.RepRangeIntervalId;
             var notes = string.Empty;
             var failAttempts = 0;
@@ -359,7 +360,8 @@ namespace FTT.UserControls
                 currentTotalSets >= minSets && currentTotalVolume >= progressiveTotalVolume;
             var counter = isProgress ? 1 : 0;
 
-            SaveProgressiveOverload(counter, _exerciseId, (int)intervalId, currentWeightUsed, string.Join(',', _trackList.Select(x => x.Reps)));
+            SaveProgressiveOverload(counter, _exerciseId, (int)intervalId,
+                currentWeightUsed, string.Join(',', _trackList.Select(x => x.Reps)), (int)progressTrys);
 
             if (anySetsUnderMinReps || currentTotalSets < minSets)
             {
@@ -410,22 +412,34 @@ namespace FTT.UserControls
                     }
                 }
 
+                var progress = IsProgress(_exerciseId, (int)intervalId, currentWeightUsed, (int)progressTrys);
+
                 if (currentTotalSets >= minSets &&
                     currentTotalVolume >= progressiveTotalVolume &&
-                    !anySetsUnderMaxReps && IsProgress(_exerciseId, (int)intervalId, currentWeightUsed))
+                    !anySetsUnderMaxReps)
                 {
                     failAttempts = 0;
-                    notes = $"Increase weight! - {currentWeightUsed} Kg";
 
-                    var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, true);
-
-                    if (nextLoad != null)
+                    if (progress.IsFullProgress)
                     {
-                        notes = (nextLoad.IsMax) ?
-                            $"Max reached - {nextLoad.Weight} Kg" :
-                            $"Increase weight to : {nextLoad.Weight} Kg";
+                        notes = $"Increase weight! - {currentWeightUsed} Kg";
 
-                        loggedWeight = nextLoad.Weight;
+                        var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, true);
+
+                        if (nextLoad != null)
+                        {
+                            notes = (nextLoad.IsMax) ?
+                                $"Max reached - {nextLoad.Weight} Kg" :
+                                $"Increase weight to : {nextLoad.Weight} Kg";
+
+                            loggedWeight = nextLoad.Weight;
+                        }
+                    }
+                    else if (progress.IsPartialProgress)
+                    {
+                        var leftSessionCount = progress.LeftSessionCount;
+
+                        notes = $"{leftSessionCount} more time(s)! - {currentWeightUsed} Kg";
                     }
                 }
             }
@@ -437,7 +451,9 @@ namespace FTT.UserControls
                 {
                     if (!anySetsUnderMaxReps)
                     {
-                        if (IsProgress(_exerciseId, (int)intervalId, currentWeightUsed))
+                        var progress = IsProgress(_exerciseId, (int)intervalId, currentWeightUsed, (int)progressTrys);
+
+                        if (progress.IsFullProgress)
                         {
                             notes = $"Increase weight! - {currentWeightUsed} Kg";
 
@@ -452,9 +468,11 @@ namespace FTT.UserControls
                                 loggedWeight = nextLoad.Weight;
                             }
                         }
-                        else
+                        else if (progress.IsPartialProgress)
                         {
-                            notes = $"One more time! - {currentWeightUsed} Kg";
+                            var leftSessionCount = progress.LeftSessionCount;
+
+                            notes = $"{leftSessionCount} more time(s)! - {currentWeightUsed} Kg";
                         }
                     }
                     else
@@ -525,7 +543,7 @@ namespace FTT.UserControls
             }
         }
 
-        private bool IsProgress(int exerciseId, int intervalId, decimal weight)
+        private ProgressViewModel IsProgress(int exerciseId, int intervalId, decimal weight, int progressTrys)
         {
             var progress = _progressiveOverloadRepository
                 .Find(x => x.ExerciseId == exerciseId &&
@@ -535,20 +553,39 @@ namespace FTT.UserControls
 
             if (progress != null)
             {
-                if (progress.Counter > 1 && !progress.IsActive)
+                if (!progress.IsActive)
                 {
-                    _progressiveOverloadRepository.Delete(progress);
-                    _progressiveOverloadRepository.Commit();
+                    if (progress.Counter >= progressTrys)
+                    {
+                        _progressiveOverloadRepository.Delete(progress);
+                        _progressiveOverloadRepository.Commit();
 
-                    return true;
+                        return new ProgressViewModel { IsFullProgress = true };
+                    }
+                    else
+                    {
+                        return new ProgressViewModel
+                        {
+                            IsPartialProgress = true,
+                            LeftSessionCount = progressTrys - progress.Counter
+                        };
+                    }
+                }
+                else
+                {
+                    return new ProgressViewModel
+                    {
+                        IsPartialProgress = true,
+                        LeftSessionCount = progressTrys - progress.Counter
+                    };
                 }
             }
 
-            return false;
+            return new ProgressViewModel { IsNoProgress = true };
         }
 
         private void SaveProgressiveOverload(int counter, int exerciseId,
-            int intervalId, decimal weight, string setsInfo)
+            int intervalId, decimal weight, string setsInfo, int progressTrys)
         {
             var progress = _progressiveOverloadRepository
                 .Find(x => x.ExerciseId == exerciseId &&
@@ -570,7 +607,7 @@ namespace FTT.UserControls
                 var progressCounter = progress.Counter;
 
                 progress.Counter = progressCounter + counter;
-                progress.IsActive = progress.Counter < 2;
+                progress.IsActive = progress.Counter < progressTrys;
                 progress.LogDate = DateTime.Now;
                 progress.SetsInfo = setsInfo;
 
