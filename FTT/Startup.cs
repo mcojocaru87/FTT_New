@@ -1,6 +1,7 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbDesign;
 using FTT.Services;
+using FTT.Services.Authentication;
 using FTT.Services.ExerciseWLoad;
 using FTT.Services.Track;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,8 @@ namespace FTT
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IWorkoutService), typeof(WorkoutService));
             services.AddScoped(typeof(ITrackService), typeof(TrackService));
-            services.AddScoped(typeof(IExerciseLoadService), typeof(ExerciseLoadService));            
+            services.AddScoped(typeof(IExerciseLoadService), typeof(ExerciseLoadService));
+            services.AddScoped(typeof(IAuthenticationService), typeof(AuthenticationService));
         }
     }
 }

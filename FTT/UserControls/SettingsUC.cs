@@ -480,5 +480,11 @@ namespace FTT.UserControls
                 txtMaxReps.Text = interval.MaxReps.ToString();
             }
         }
+
+        private void lblUserAccounts_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UserAccountForm userAccountForm = new();
+            userAccountForm.Show();
+        }
     }
 }

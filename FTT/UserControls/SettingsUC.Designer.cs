@@ -53,6 +53,7 @@
             CancelButton = new Button();
             PreSetButton = new Button();
             chkDisplayTimer = new CheckBox();
+            lblUserAccounts = new LinkLabel();
             MainPanel.SuspendLayout();
             IntervalsPanel.SuspendLayout();
             SuspendLayout();
@@ -318,11 +319,23 @@
             chkDisplayTimer.UseVisualStyleBackColor = true;
             chkDisplayTimer.CheckedChanged += chkDisplayTimer_CheckedChanged;
             // 
+            // lblUserAccounts
+            // 
+            lblUserAccounts.AutoSize = true;
+            lblUserAccounts.Location = new Point(22, 206);
+            lblUserAccounts.Name = "lblUserAccounts";
+            lblUserAccounts.Size = new Size(83, 15);
+            lblUserAccounts.TabIndex = 13;
+            lblUserAccounts.TabStop = true;
+            lblUserAccounts.Text = "User Accounts";
+            lblUserAccounts.LinkClicked += lblUserAccounts_LinkClicked;
+            // 
             // SettingsUC
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
+            Controls.Add(lblUserAccounts);
             Controls.Add(chkDisplayTimer);
             Controls.Add(PreSetButton);
             Controls.Add(MainPanel);
@@ -367,5 +380,6 @@
         private ComboBox cbMinSets;
         private ComboBox cbProgressTrys;
         private Label label8;
+        private LinkLabel lblUserAccounts;
     }
 }

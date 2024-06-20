@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FTT.DbEntity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
@@ -8,6 +9,7 @@ namespace FTT
 
         public ServiceProvider ServiceProvider { get; set; }
         public int? ActiveWorkoutId { get; set; }
+        public User CurrentUser { get; set; }
 
         private Session() { }
 
