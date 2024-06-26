@@ -7,10 +7,10 @@ namespace FTT.UserControls
 {
     public partial class SettingsUC : UserControl
     {
-        private readonly IRepository<Setting> _settingsRepository;
-        private readonly IRepository<Exercise> _exerciseRepository;
-        private readonly IRepository<ToolTimer> _toolTimerRepository;
-        private readonly IRepository<RepRangeInterval> _repRangeIntervalRepository;
+        private readonly IRepository<Setting> _settingsRepository = RegisteredServiceProvider.Instance.ExerciseSettingsRepository!;
+        private readonly IRepository<Exercise> _exerciseRepository = RegisteredServiceProvider.Instance.ExerciseRepository!;
+        private readonly IRepository<ToolTimer> _toolTimerRepository = RegisteredServiceProvider.Instance.ToolTimerRepository!;
+        private readonly IRepository<RepRangeInterval> _repRangeIntervalRepository = RegisteredServiceProvider.Instance.IntervalRepository!;
 
         private bool isCreateInstance = false;
         private bool isPreSet = false;
@@ -21,11 +21,6 @@ namespace FTT.UserControls
         public SettingsUC()
         {
             InitializeComponent();
-
-            _settingsRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
-            _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
-            _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
-            _repRangeIntervalRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<RepRangeInterval>>();
 
             SetupProgressTrys();
             LoadMinSets();
@@ -141,7 +136,7 @@ namespace FTT.UserControls
             return interval != null;
         }
 
-        private RepRangeInterval GetIntervalByRange(int minReps, int maxReps)
+        private RepRangeInterval? GetIntervalByRange(int minReps, int maxReps)
         {
             return _repRangeIntervalRepository
                  .Find(x => x.MinReps == minReps && x.MaxReps == maxReps)
@@ -209,8 +204,8 @@ namespace FTT.UserControls
             bool vaildMaxRepsValue = int.TryParse(txtMaxReps.Text, out int maxReps);
             bool validMinRepsValue = int.TryParse(txtMinReps.Text, out int minReps);
 
-            int minSets = (int)cbMinSets.SelectedValue;
-            int progressTrys = (int)cbProgressTrys.SelectedValue;
+            int minSets = (int)cbMinSets.SelectedValue!;
+            int progressTrys = (int)cbProgressTrys.SelectedValue!;
 
             if (vaildFailAttemptsValue &&
                 vaildMaxRepsValue &&
@@ -393,7 +388,7 @@ namespace FTT.UserControls
         {
             var toolTimer = _toolTimerRepository.GetAll().FirstOrDefault();
 
-            this.toolTimer = toolTimer;
+            this.toolTimer = toolTimer!;
 
             if (toolTimer != null)
             {

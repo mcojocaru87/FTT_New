@@ -1,19 +1,18 @@
 ﻿using FTT.CustomControls;
 using FTT.Services;
 using FTT.UserControls.CustomCalendar;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
     public partial class WorkoutsForm : Form
     {
-        private readonly IWorkoutService _workoutService;
+        private readonly IWorkoutService? _workoutService;
 
         public WorkoutsForm()
         {
             InitializeComponent();
 
-            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
+            _workoutService = RegisteredServiceProvider.Instance.WorkoutService;
 
             DisplayDays();
         }
@@ -31,7 +30,7 @@ namespace FTT
         {
             daysContainer.Controls.Clear();
 
-            var viewWorkouts = _workoutService.GetAllWorkoutsDatesByMonth(month, year);
+            var viewWorkouts = _workoutService?.GetAllWorkoutsDatesByMonth(month, year);
 
             DateTime startOfMonth = new DateTime(year, month, 1);
 
@@ -67,9 +66,7 @@ namespace FTT
 
         private void dtMonthYear_ValueChanged(object sender, EventArgs e)
         {
-            MonthYearPicker picker = sender as MonthYearPicker;
-
-            if (picker != null)
+            if (sender is MonthYearPicker picker)
             {
                 var year = picker.Value.Year;
                 var month = picker.Value.Month;

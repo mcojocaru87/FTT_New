@@ -1,7 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.Enums;
-using Microsoft.Extensions.DependencyInjection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -9,12 +8,7 @@ namespace FTT.Services.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly IRepository<User> _userRepository;
-
-    public AuthenticationService()
-    {
-        _userRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<User>>();
-    }
+    private readonly IRepository<User> _userRepository = RegisteredServiceProvider.Instance.UserRepository!;
 
     public bool Register(string username, string password, UserRole role)
     {
@@ -85,7 +79,7 @@ public class AuthenticationService : IAuthenticationService
 
     private string GenerateSalt()
     {
-        var rng = new RNGCryptoServiceProvider();
+        var rng = RandomNumberGenerator.Create();
         var saltBytes = new byte[16];
         rng.GetBytes(saltBytes);
         return Convert.ToBase64String(saltBytes);

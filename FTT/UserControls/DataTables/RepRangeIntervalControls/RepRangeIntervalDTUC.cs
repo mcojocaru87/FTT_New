@@ -26,7 +26,7 @@ namespace FTT.UserControls.DataTables.RepRangeIntervalControls
         private void LoadData()
         {
             List<RepRangeInterval> repRangeIntervals = [.. _repRangeIntervalRepository.GetAll()];
-                        
+
             dgvExercise.DataSource = repRangeIntervals;
         }
 
@@ -86,14 +86,13 @@ namespace FTT.UserControls.DataTables.RepRangeIntervalControls
 
         private void dgvExercise_SelectionChanged(object sender, EventArgs e)
         {
-            DataGridView dataGridView = sender as DataGridView;
-            if (dataGridView.SelectedRows.Count > 0)
+            DataGridView dataGridView = (DataGridView)sender;
+            if (dataGridView?.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
-                RepRangeInterval selectedRepRangeInterval = selectedRow.DataBoundItem as RepRangeInterval;
 
                 // Display or process the selected data
-                if (selectedRepRangeInterval != null)
+                if (selectedRow.DataBoundItem is RepRangeInterval selectedRepRangeInterval)
                 {
                     selectedRepRangeIntervalId = selectedRepRangeInterval.Id;
 
@@ -104,6 +103,6 @@ namespace FTT.UserControls.DataTables.RepRangeIntervalControls
             {
                 EnableEditRemoveButtons(false, false);
             }
-        }        
+        }
     }
 }

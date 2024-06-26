@@ -1,18 +1,15 @@
 ﻿using FTT.Services;
 using FTT.UserControls;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
     public partial class MainForm : Form
     {
-        private readonly IWorkoutService _workoutService;
+        private readonly IWorkoutService? workoutService = RegisteredServiceProvider.Instance.WorkoutService;
 
         public MainForm()
         {
             InitializeComponent();
-
-            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
 
             TrackButton.Enabled = false;
         }
@@ -45,7 +42,7 @@ namespace FTT
         private void LoadTrackUserControl()
         {
             TrackUC trackUserControl = new(this);
-            trackUserControl.TriggerButtonEvent += BeginWorkoutButton_Click;
+            trackUserControl.TriggerButtonEvent += BeginWorkoutButton_Click!;
 
             SetupUserControl(trackUserControl);
         }
@@ -90,8 +87,8 @@ namespace FTT
                 BeginWorkoutButton.Text = "Begin Workout";
 
                 if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
-                {
-                    _workoutService.FinishWorkout((int)Session.Instance.ActiveWorkoutId);
+                {                    
+                    workoutService?.FinishWorkout((int)Session.Instance.ActiveWorkoutId);
                 }
 
                 SetupWorkoutStatusPanel(false);

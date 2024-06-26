@@ -1,22 +1,18 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT.UserControls.DataTables.ExerciseControls
 {
     public partial class ExerciseDTUC : UserControl
     {
-        private readonly IRepository<Exercise> _exerciseRepository;
-        private readonly IRepository<Setting> _settingsRepository;
+        private readonly IRepository<Exercise> _exerciseRepository = RegisteredServiceProvider.Instance.ExerciseRepository!;
+        private readonly IRepository<Setting> _settingsRepository = RegisteredServiceProvider.Instance.ExerciseSettingsRepository!;
 
         private int _selectedExerciseId;
 
         public ExerciseDTUC()
         {
             InitializeComponent();
-
-            _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
-            _settingsRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
 
             EnableEditRemoveButtons(false, false);
             LoadData();
@@ -25,7 +21,7 @@ namespace FTT.UserControls.DataTables.ExerciseControls
 
         private void LoadData()
         {
-            List<Exercise> exercises = [.. _exerciseRepository.GetAll()];
+            Exercise[] exercises = [.. _exerciseRepository.GetAll()];
 
             dgvExercise.DataSource = exercises;
         }
@@ -37,14 +33,13 @@ namespace FTT.UserControls.DataTables.ExerciseControls
 
         private void dgvExercise_SelectionChanged(object sender, EventArgs e)
         {
-            DataGridView dataGridView = sender as DataGridView;
+            DataGridView dataGridView = (DataGridView)sender;
             if (dataGridView.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
-                Exercise selectedExercise = selectedRow.DataBoundItem as Exercise;
 
                 // Display or process the selected data
-                if (selectedExercise != null)
+                if (selectedRow.DataBoundItem is Exercise selectedExercise)
                 {
                     _selectedExerciseId = selectedExercise.Id;
 

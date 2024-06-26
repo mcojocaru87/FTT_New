@@ -1,16 +1,14 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
 using FTT.Services;
-using FTT.Services.Track;
 using FTT.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
     public partial class TimerForm : Form
     {
-        private readonly IRepository<ToolTimer> _toolTimerRepository;
-        private readonly IWorkoutService _workoutService;
+        private readonly IRepository<ToolTimer> _toolTimerRepository = RegisteredServiceProvider.Instance.ToolTimerRepository!;
+        private readonly IWorkoutService _workoutService = RegisteredServiceProvider.Instance.WorkoutService!;
         private readonly bool _showExercises;
 
         private TimeSpan timeLeft;
@@ -21,8 +19,6 @@ namespace FTT
         {
             InitializeComponent();
 
-            _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
-            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
             _showExercises = showExercises;
 
             timer.Interval = 1000;
@@ -77,7 +73,7 @@ namespace FTT
 
         private ToolTimer? LoadTimerSettings()
         {
-            return _toolTimerRepository.GetAll().FirstOrDefault();
+            return _toolTimerRepository?.GetAll().FirstOrDefault();
         }
 
         private void CloseForm()
@@ -132,8 +128,8 @@ namespace FTT
                 {
                     toolTimer.IsDisplayed = false;
 
-                    _toolTimerRepository.Update(toolTimer);
-                    _toolTimerRepository.Commit();
+                    _toolTimerRepository?.Update(toolTimer);
+                    _toolTimerRepository?.Commit();
                 }
             }
         }
@@ -142,7 +138,7 @@ namespace FTT
         {
             if (_showExercises)
             {
-                var exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
+                var exerciseRepository = RegisteredServiceProvider.Instance.ExerciseRepository;
 
                 if (exerciseRepository != null)
                 {
@@ -168,8 +164,8 @@ namespace FTT
             {
                 if ((int)selectedExercise.ValueMember > 0)
                 {
-                    var trackService = Session.Instance.ServiceProvider.GetRequiredService<ITrackService>();
-                    var exerciseNotes = trackService.GetTrackingNotes((int)selectedExercise.ValueMember);
+                    var trackService = RegisteredServiceProvider.Instance.TrackService;
+                    var exerciseNotes = trackService?.GetTrackingNotes((int)selectedExercise.ValueMember);
 
                     if (exerciseNotes != null)
                     {
@@ -212,7 +208,7 @@ namespace FTT
         {
             if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
             {
-                var activeWorkout = _workoutService.GetWorkoutById((int)Session.Instance.ActiveWorkoutId);
+                var activeWorkout = _workoutService?.GetWorkoutById((int)Session.Instance.ActiveWorkoutId);
 
                 if (activeWorkout != null)
                 {

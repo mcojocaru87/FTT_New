@@ -37,7 +37,7 @@ namespace FTT.UserControls.DataTables.EquipmentControls
 
         private void dgItems_SelectionChanged(object sender, EventArgs e)
         {
-            DataGridView dataGridView = sender as DataGridView;
+            DataGridView dataGridView = (DataGridView)sender;
             if (dataGridView.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dataGridView.SelectedRows[0];

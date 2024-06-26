@@ -1,17 +1,16 @@
 ﻿using FTT.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
     public partial class InitiateWorkout : Form
     {
-        private readonly IWorkoutService _workoutService;
+        private readonly IWorkoutService? _workoutService;
 
         public InitiateWorkout()
         {
             InitializeComponent();
 
-            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
+            _workoutService = RegisteredServiceProvider.Instance.WorkoutService;
         }
 
         private void SimulateLoading()
@@ -22,7 +21,7 @@ namespace FTT
                 Thread.Sleep(10); // Simulate loading
             }
 
-            _workoutService.CreateWorkout(DateTime.Now);
+            _workoutService?.CreateWorkout(DateTime.Now);
 
             for (int i = 51; i <= 100; i++)
             {

@@ -5,24 +5,24 @@ namespace FTT.CustomControls
 {
     public class CustomListBox : ListBox
     {
-        public event EventHandler ItemAdded;
+        public event EventHandler? ItemAdded;
 
-        private object dataSource;
+        private object? dataSource;
 
         public new object DataSource
         {
-            get { return dataSource; }
+            get { return dataSource!; }
             set
             {
                 if (dataSource != value)
                 {
                     if (dataSource is INotifyCollectionChanged oldNotifySource)
                     {
-                        oldNotifySource.CollectionChanged -= OnDataSourceCollectionChanged;
+                        oldNotifySource.CollectionChanged -= OnDataSourceCollectionChanged!;
                     }
                     if (dataSource is IBindingList oldBindingSource)
                     {
-                        oldBindingSource.ListChanged -= OnDataSourceListChanged;
+                        oldBindingSource.ListChanged -= OnDataSourceListChanged!;
                     }
 
                     dataSource = value;
@@ -30,11 +30,11 @@ namespace FTT.CustomControls
 
                     if (dataSource is INotifyCollectionChanged newNotifySource)
                     {
-                        newNotifySource.CollectionChanged += OnDataSourceCollectionChanged;
+                        newNotifySource.CollectionChanged += OnDataSourceCollectionChanged!;
                     }
                     if (dataSource is IBindingList newBindingSource)
                     {
-                        newBindingSource.ListChanged += OnDataSourceListChanged;
+                        newBindingSource.ListChanged += OnDataSourceListChanged!;
                     }
                 }
             }

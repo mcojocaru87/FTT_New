@@ -94,14 +94,13 @@ namespace FTT.UserControls.DataTables.ToolTimerControls
 
         private void dgvExercise_SelectionChanged(object sender, EventArgs e)
         {
-            DataGridView dataGridView = sender as DataGridView;
+            DataGridView dataGridView = (DataGridView)sender;
             if (dataGridView.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
-                ToolTimer selectedToolTimer = selectedRow.DataBoundItem as ToolTimer;
 
                 // Display or process the selected data
-                if (selectedToolTimer != null)
+                if (selectedRow.DataBoundItem is ToolTimer selectedToolTimer)
                 {
                     selectedToolTimerId = selectedToolTimer.Id;
 

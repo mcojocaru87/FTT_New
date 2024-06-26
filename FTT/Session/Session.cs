@@ -5,11 +5,11 @@ namespace FTT
 {
     public class Session
     {
-        private static Session _instance;
+        private static Session? _instance;
 
-        public ServiceProvider ServiceProvider { get; set; }
+        public ServiceProvider? ServiceProvider { get; set; }
         public int? ActiveWorkoutId { get; set; }
-        public User CurrentUser { get; set; }
+        public User? CurrentUser { get; set; }
 
         private Session() { }
 

@@ -1,30 +1,27 @@
 ﻿using FTT.Services;
 using FTT.Services.Track;
 using FTT.UserControls.ViewWorkout;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
 {
     public partial class ViewWorkoutForm : Form
     {
         private readonly int _workoutId;
-        private readonly IWorkoutService _workoutService;
-        private readonly ITrackService _trackService;
+        private readonly IWorkoutService? _workoutService = RegisteredServiceProvider.Instance.WorkoutService;
+        private readonly ITrackService? _trackService = RegisteredServiceProvider.Instance.TrackService;
 
         public ViewWorkoutForm(int workoutId)
         {
             InitializeComponent();
 
-            _workoutId = workoutId;
-            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
-            _trackService = Session.Instance.ServiceProvider.GetRequiredService<ITrackService>();
+            _workoutId = workoutId;            
 
             LoadWorkout();
         }
 
         public void LoadWorkout()
         {
-            var workout = _workoutService.GetWorkoutById(_workoutId);
+            var workout = _workoutService?.GetWorkoutById(_workoutId);
 
             if (workout != null && workout.Workout != null)
             {
@@ -34,12 +31,12 @@ namespace FTT
                 {
                     foreach (var item in workout.WorkoutItems)
                     {
-                        var workingExercise = _trackService.GetWorkingExerciseById(item.WorkingExerciseId);
+                        var workingExercise = _trackService?.GetWorkingExerciseById(item.WorkingExerciseId);
 
                         if (workingExercise != null)
                         {
-                            var exercise = _trackService.GetExercise(workingExercise.ExerciseId);
-                            var workingExerciseSets = _trackService.GetWorkingExerciseSets(workingExercise.Id);
+                            var exercise = _trackService?.GetExercise(workingExercise.ExerciseId);
+                            var workingExerciseSets = _trackService?.GetWorkingExerciseSets(workingExercise.Id);
 
                             if (exercise != null)
                             {

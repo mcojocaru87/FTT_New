@@ -92,7 +92,7 @@ namespace FTT
                     }
 
                     dataSource.Add(new ComboBoxViewModel(0M, "0"));
-                    dataSource = dataSource.OrderBy(x => (decimal)x.ValueMember).ToList();
+                    dataSource = dataSource.OrderBy(x => (decimal)x.ValueMember!).ToList();
                 }
 
                 if (dataSource.Count > 0)

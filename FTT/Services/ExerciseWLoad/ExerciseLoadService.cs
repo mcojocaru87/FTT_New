@@ -41,7 +41,7 @@ namespace FTT.Services.ExerciseWLoad
             }
         }
 
-        public ExerciseLoad GetExerciseLoadByExerciseId(int exerciseId)
+        public ExerciseLoad? GetExerciseLoadByExerciseId(int exerciseId)
         {
             return _exerciseLoadRepository
                 .Find(x => x.ExerciseId == exerciseId)
@@ -70,7 +70,7 @@ namespace FTT.Services.ExerciseWLoad
                     .Include(x => x.Items)
                     .FirstOrDefault();
 
-                if (aggregate.Items != null && aggregate.Items.Count > 0)
+                if (aggregate?.Items != null && aggregate.Items.Count > 0)
                 {
                     decimal nextWeight = 0;
                     bool isMin = false;

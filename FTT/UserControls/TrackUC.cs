@@ -13,7 +13,7 @@ namespace FTT.UserControls
 {
     public partial class TrackUC : UserControl
     {
-        private readonly IRepository<Exercise> _exerciseRepository;
+        private readonly IRepository<Exercise>? exerciseRepository = RegisteredServiceProvider.Instance.ExerciseRepository;
         private readonly IRepository<Setting> _settingRepository;
         private readonly IRepository<ToolTimer> _toolTimerRepository;
         private readonly IRepository<ProgressiveOverload> _progressiveOverloadRepository;
@@ -21,7 +21,7 @@ namespace FTT.UserControls
         private readonly IRepository<Equipment> _equipmentRepository;
         private readonly IRepository<SlowProgressTrack> _slowProgressTrackRepository;
         private readonly ITrackService _trackService;
-        private readonly IWorkoutService _workoutService;
+        private readonly IWorkoutService? _workoutService;
         private readonly IExerciseLoadService _exerciseLoadService;
         private readonly MainForm _mainForm;
 
@@ -44,9 +44,8 @@ namespace FTT.UserControls
         {
             InitializeComponent();
 
-            _exerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Exercise>>();
             _trackService = Session.Instance.ServiceProvider.GetRequiredService<ITrackService>();
-            _workoutService = Session.Instance.ServiceProvider.GetRequiredService<IWorkoutService>();
+            _workoutService = RegisteredServiceProvider.Instance.WorkoutService;
             _exerciseLoadService = Session.Instance.ServiceProvider.GetRequiredService<IExerciseLoadService>();
             _settingRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Setting>>();
             _toolTimerRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<ToolTimer>>();
@@ -77,12 +76,12 @@ namespace FTT.UserControls
 
         private void LoadExercises()
         {
-            var exercises = _exerciseRepository.GetAll()
+            var exercises = exerciseRepository?.GetAll()
                 .OrderByDescending(x => x.Category)
                 .Select(x => new ComboBoxViewModel(x.Id, $"{x.Category} - {x.Name}"))
                 .ToList();
 
-            exercises.Add(new(null, ""));
+            exercises?.Add(new(null, ""));
 
             cbExercises.DataSource = exercises;
 
@@ -130,7 +129,7 @@ namespace FTT.UserControls
                 {
                     _exerciseId = (int)selectedExercise.ValueMember;
 
-                    var exercise = _exerciseRepository.GetById(_exerciseId);
+                    var exercise = exerciseRepository?.GetById(_exerciseId);
 
                     if (exercise != null)
                     {
@@ -513,7 +512,7 @@ namespace FTT.UserControls
             }
         }
 
-        private SlowProgressTrack GetSlowProgressTrack()
+        private SlowProgressTrack? GetSlowProgressTrack()
         {
             return _slowProgressTrackRepository
                 .Find(x => x.ExerciseId == _exerciseId)
@@ -751,7 +750,7 @@ namespace FTT.UserControls
 
             if (activeWorkoutId != null && activeWorkoutId > 0)
             {
-                _workoutService.AddWorkingExerciseToWorkout((int)activeWorkoutId, workingExerciseId);
+                _workoutService?.AddWorkingExerciseToWorkout((int)activeWorkoutId, workingExerciseId);
             }
         }
 
@@ -763,7 +762,7 @@ namespace FTT.UserControls
             {
                 var activeWorkoutId = Session.Instance.ActiveWorkoutId;
 
-                _workoutService.RemoveWorkingExerciseFromWorkout(activeWorkoutId ?? 0, _workingExerciseId);
+                _workoutService?.RemoveWorkingExerciseFromWorkout(activeWorkoutId ?? 0, _workingExerciseId);
 
                 RemoveFromButton.Visible = false;
                 AddToButton.Visible = true;
@@ -811,7 +810,7 @@ namespace FTT.UserControls
             var workoutId = Session.Instance.ActiveWorkoutId;
             var workoutDate = dtWorkingDate.Value;
 
-            _workoutService.UpdateWorkoutDate(workoutId ?? 0, workoutDate);
+            _workoutService?.UpdateWorkoutDate(workoutId ?? 0, workoutDate);
 
             MessageBox.Show("Workout date has been updated!");
         }
@@ -956,7 +955,7 @@ namespace FTT.UserControls
 
                 if (Controls.Find($"lblSet{i}Data", true).FirstOrDefault() is Label dataLabel)
                 {
-                    dataLabel.Text = string.Format("R{0} x W{1}{2}", set.Reps, set.Weight, (set.Multiplier > 1 ? $" x {set.Multiplier}" : string.Empty));
+                    dataLabel.Text = string.Format("R{0} x W{1}{2}", set?.Reps, set?.Weight, (set?.Multiplier > 1 ? $" x {set.Multiplier}" : string.Empty));
                 }
             }
         }
@@ -989,7 +988,7 @@ namespace FTT.UserControls
 
             if (cbWeight.Visible == true)
             {
-                weight = (decimal)cbWeight.SelectedValue;
+                weight = (decimal)cbWeight.SelectedValue!;
                 validWeightValue = weight > 0;
             }
             else
@@ -1017,7 +1016,7 @@ namespace FTT.UserControls
             var trackListItemCount = lstTrack.Items.Count;
 
             _currentWeightUsed = (cbWeight.Visible == true) ?
-                (decimal)cbWeight.SelectedValue :
+                (decimal)cbWeight.SelectedValue! :
                 decimal.Parse(txtWeight.Text);
 
             _trackList.Add(new TrackListViewModel
@@ -1162,7 +1161,7 @@ namespace FTT.UserControls
                 e.SuppressKeyPress = true;
 
                 if (txtReps.Text.Length > 0 &&
-                    (txtWeight.Text.Length > 0 || (decimal)cbWeight.SelectedValue > 0) &&
+                    (txtWeight.Text.Length > 0 || (decimal)cbWeight.SelectedValue! > 0) &&
                     txtVolume.Text.Length > 0)
                 {
                     // Trigger your event here
@@ -1234,7 +1233,7 @@ namespace FTT.UserControls
                 e.SuppressKeyPress = true;
 
                 if (txtReps.Text.Length > 0 &&
-                    (txtWeight.Text.Length > 0 || (decimal)cbWeight.SelectedValue > 0) &&
+                    (txtWeight.Text.Length > 0 || (decimal)cbWeight.SelectedValue! > 0) &&
                     txtVolume.Text.Length > 0)
                 {
                     // Trigger your event here

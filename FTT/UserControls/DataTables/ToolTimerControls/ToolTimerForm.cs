@@ -27,10 +27,10 @@ namespace FTT.UserControls.DataTables.ToolTimerControls
         {
             if (_toolTimerId > 0)
             {
-                _toolTimer.Minutes = (int)cbMinutes.SelectedValue;
-                _toolTimer.Seconds = (int)cbSeconds.SelectedValue;
-                _toolTimer.Hours = (int)cbHours.SelectedValue;
-                _toolTimer.IsDisplayed = (int)cbDisplay.SelectedValue == 1;
+                _toolTimer.Minutes = (int)cbMinutes.SelectedValue!;
+                _toolTimer.Seconds = (int)cbSeconds.SelectedValue!;
+                _toolTimer.Hours = (int)cbHours.SelectedValue!;
+                _toolTimer.IsDisplayed = (int)cbDisplay.SelectedValue! == 1;
 
                 _toolTimerRepository.Update(_toolTimer);
                 _toolTimerRepository.Commit();
@@ -41,10 +41,10 @@ namespace FTT.UserControls.DataTables.ToolTimerControls
             {
                 var newToolTimer = new ToolTimer
                 {
-                    Hours = (int)cbHours.SelectedValue,
-                    Minutes = (int)cbMinutes.SelectedValue,
-                    Seconds = (int)cbSeconds.SelectedValue,
-                    IsDisplayed = (int)cbDisplay.SelectedValue == 1
+                    Hours = (int)cbHours.SelectedValue!,
+                    Minutes = (int)cbMinutes.SelectedValue!,
+                    Seconds = (int)cbSeconds.SelectedValue!,
+                    IsDisplayed = (int)cbDisplay.SelectedValue! == 1
                 };
 
                 _toolTimerRepository.Add(newToolTimer);

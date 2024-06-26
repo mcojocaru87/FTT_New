@@ -55,8 +55,8 @@ namespace FTT
                 {
                     var interval = _repRangeIntervalRepository.GetById((int)selectedIntervalId);
 
-                    UpdateExerciseSettings(exerciseSettings, (int)selectedIntervalId,
-                        interval.MaxReps, interval.MinReps, (int)cbMinSets.SelectedValue);
+                    UpdateExerciseSettings(exerciseSettings!, (int)selectedIntervalId,
+                        interval.MaxReps, interval.MinReps, (int)cbMinSets.SelectedValue!);
 
                     selectedInterval = cbInterval.Text;
                 }
@@ -71,14 +71,14 @@ namespace FTT
                     _repRangeIntervalRepository.Add(newInterval);
                     _repRangeIntervalRepository.Commit();
 
-                    UpdateExerciseSettings(exerciseSettings, newInterval.Id,
-                        newInterval.MaxReps, newInterval.MaxReps, (int)cbMinSets.SelectedValue);
+                    UpdateExerciseSettings(exerciseSettings!, newInterval.Id,
+                        newInterval.MaxReps, newInterval.MaxReps, (int)cbMinSets.SelectedValue!);
 
                     selectedInterval = $"{txtMinReps.Text} - {txtMaxReps.Text}";
                 }
 
-                Label lbl = (Label)_trackForm.Controls.Find("lblIntervalInUse", true).FirstOrDefault();
-                Label lblMinSets = (Label)_trackForm.Controls.Find("lblMinSets", true).FirstOrDefault();
+                Label lbl = (Label)_trackForm.Controls.Find("lblIntervalInUse", true).FirstOrDefault()!;
+                Label lblMinSets = (Label)_trackForm.Controls.Find("lblMinSets", true).FirstOrDefault()!;
 
                 if (lbl != null)
                 {
@@ -177,9 +177,7 @@ namespace FTT
 
         private void cbInterval_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBoxViewModel selectedInterval = cbInterval.SelectedItem as ComboBoxViewModel;
-
-            if (selectedInterval != null && selectedInterval.ValueMember != null)
+            if (cbInterval.SelectedItem is ComboBoxViewModel selectedInterval && selectedInterval.ValueMember != null)
             {
                 selectedIntervalId = (int)selectedInterval.ValueMember;
 

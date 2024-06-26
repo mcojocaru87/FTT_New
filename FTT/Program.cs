@@ -30,6 +30,7 @@ namespace FTT
             splash.Close();
 
             Session.Instance.ServiceProvider = BuildServiceProvider();
+            RegisteredServiceProvider.Instance.Install();
 
             Application.Run(new MainForm());
         }
