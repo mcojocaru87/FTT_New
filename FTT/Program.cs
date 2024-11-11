@@ -14,21 +14,7 @@ namespace FTT
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
-
-            SplashScreen splash = new();
-            splash.Show();
-            splash.Refresh();
-
-            // Simulate some loading tasks
-
-            for (int i = 0; i <= 100; i++)
-            {
-                splash.Invoke(new Action(() => splash.progressBar.Value = i));
-                Thread.Sleep(20); // Simulate loading
-            }
-
-            splash.Close();
-
+            
             Session.Instance.ServiceProvider = BuildServiceProvider();
             RegisteredServiceProvider.Instance.Install();
 

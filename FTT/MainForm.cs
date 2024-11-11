@@ -75,9 +75,8 @@ namespace FTT
                 BeginWorkoutButton.Text = "Finish Workout";
 
                 InitiateWorkout initiateWorkout = new();
-
-                initiateWorkout.ShowDialog();
-
+                initiateWorkout.CreateWorkout();
+                                
                 SetupWorkoutStatusPanel(true);
 
                 TrackButton.Enabled = true;
@@ -87,7 +86,7 @@ namespace FTT
                 BeginWorkoutButton.Text = "Begin Workout";
 
                 if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
-                {                    
+                {
                     workoutService?.FinishWorkout((int)Session.Instance.ActiveWorkoutId);
                 }
 
@@ -128,6 +127,12 @@ namespace FTT
             CalculatorForm calculatorForm = new();
 
             calculatorForm.ShowDialog();
+        }
+
+        private void ClockButton_Click(object sender, EventArgs e)
+        {
+            TimerForm timerForm = new(false, true);
+            timerForm.Show();
         }
     }
 }

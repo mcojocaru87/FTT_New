@@ -38,6 +38,7 @@
             lblWorkoutStatus = new Label();
             WorkoutsButton = new Button();
             CalculatorButton = new Button();
+            ClockButton = new Button();
             WorkoutStatusPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -126,12 +127,13 @@
             // 
             // WorkoutsButton
             // 
+            WorkoutsButton.BackColor = SystemColors.Control;
             WorkoutsButton.Location = new Point(452, 8);
             WorkoutsButton.Name = "WorkoutsButton";
             WorkoutsButton.Size = new Size(75, 23);
             WorkoutsButton.TabIndex = 6;
             WorkoutsButton.Text = "Workouts";
-            WorkoutsButton.UseVisualStyleBackColor = true;
+            WorkoutsButton.UseVisualStyleBackColor = false;
             WorkoutsButton.Click += WorkoutsButton_Click;
             // 
             // CalculatorButton
@@ -145,19 +147,31 @@
             CalculatorButton.UseVisualStyleBackColor = true;
             CalculatorButton.Click += CalculatorButton_Click;
             // 
+            // ClockButton
+            // 
+            ClockButton.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ClockButton.Location = new Point(695, 8);
+            ClockButton.Name = "ClockButton";
+            ClockButton.Size = new Size(26, 23);
+            ClockButton.TabIndex = 8;
+            ClockButton.Text = "⏲";
+            ClockButton.UseVisualStyleBackColor = true;
+            ClockButton.Click += ClockButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(700, 333);
+            ClientSize = new Size(726, 333);
+            Controls.Add(ClockButton);
+            Controls.Add(DatabaseButton);
+            Controls.Add(SettingsButton);
             Controls.Add(CalculatorButton);
             Controls.Add(WorkoutsButton);
             Controls.Add(WorkoutStatusPanel);
             Controls.Add(BeginWorkoutButton);
             Controls.Add(MainPanel);
             Controls.Add(TrackButton);
-            Controls.Add(SettingsButton);
-            Controls.Add(DatabaseButton);
             Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             Name = "MainForm";
@@ -181,5 +195,6 @@
         private Label lblWorkoutStatus;
         private Button WorkoutsButton;
         private Button CalculatorButton;
+        private Button ClockButton;
     }
 }

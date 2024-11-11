@@ -38,6 +38,8 @@ namespace FTT
 
             var dayOfTheWeek = int.Parse(startOfMonth.DayOfWeek.ToString("d"));
 
+            dayOfTheWeek = dayOfTheWeek == 0 ? 7 : dayOfTheWeek;
+
             for (int i = 1; i < dayOfTheWeek; i++)
             {
                 BlankDay blankDay = new();

@@ -15,7 +15,7 @@ namespace FTT
         private ToolTimer toolTimer;
         private DateTime startTime;
 
-        public TimerForm(bool showExercises = false)
+        public TimerForm(bool showExercises = false, bool isIndependent = false)
         {
             InitializeComponent();
 
@@ -25,10 +25,21 @@ namespace FTT
             currentTimeTimer.Interval = 1000;
             workoutTimeTimer.Interval = 1000;
 
-            AutoStartTimer();
             StartWorkoutTimeTimer();
             StartCurrentTimeTimer();
-            SetupExercises();
+
+            if (!isIndependent)
+            {
+                AutoStartTimer();
+                SetupExercises();
+                StartButton.Visible = false;
+            }
+            else
+            {
+                lblSkip.Text = "Close";
+                chkDoNotShow.Visible = false;
+
+            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -68,7 +79,10 @@ namespace FTT
 
         private void StartWorkoutTimeTimer()
         {
-            workoutTimeTimer.Start();
+            if (Session.Instance.ActiveWorkoutId != null && Session.Instance.ActiveWorkoutId > 0)
+            {
+                workoutTimeTimer.Start();
+            }
         }
 
         private ToolTimer? LoadTimerSettings()
@@ -232,6 +246,37 @@ namespace FTT
             {
                 timeLeft = timeLeft.Subtract(TimeSpan.FromSeconds(30));
                 UpdateTimeLabel();
+            }
+        }
+
+        private void StartButton_Click(object sender, EventArgs e)
+        {
+            if (StartButton.Text == "Start")
+            {
+                AutoStartTimer();
+                StartButton.Text = "Stop";
+                PauseButton.Visible = true;
+            }
+            else
+            {
+                timer.Stop();
+                lblTime.Text = "00:00:00";
+                StartButton.Text = "Start";
+                PauseButton.Visible = false;
+            }
+        }
+
+        private void PauseButton_Click(object sender, EventArgs e)
+        {
+            if (PauseButton.Text == "Pause")
+            {
+                PauseButton.Text = "Resume";
+                timer.Stop();
+            }
+            else
+            {
+                PauseButton.Text = "Pause";
+                timer.Start();
             }
         }
     }

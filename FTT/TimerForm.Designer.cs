@@ -44,6 +44,8 @@
             workoutTimeTimer = new System.Windows.Forms.Timer(components);
             Add30SecButton = new Button();
             Take30SecButton = new Button();
+            StartButton = new Button();
+            PauseButton = new Button();
             SuspendLayout();
             // 
             // chkDoNotShow
@@ -189,11 +191,34 @@
             Take30SecButton.UseVisualStyleBackColor = true;
             Take30SecButton.Click += Take30SecButton_Click;
             // 
+            // StartButton
+            // 
+            StartButton.Location = new Point(355, 100);
+            StartButton.Name = "StartButton";
+            StartButton.Size = new Size(75, 37);
+            StartButton.TabIndex = 12;
+            StartButton.Text = "Start";
+            StartButton.UseVisualStyleBackColor = true;
+            StartButton.Click += StartButton_Click;
+            // 
+            // PauseButton
+            // 
+            PauseButton.Location = new Point(436, 100);
+            PauseButton.Name = "PauseButton";
+            PauseButton.Size = new Size(75, 37);
+            PauseButton.TabIndex = 13;
+            PauseButton.Text = "Pause";
+            PauseButton.UseVisualStyleBackColor = true;
+            PauseButton.Visible = false;
+            PauseButton.Click += PauseButton_Click;
+            // 
             // TimerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(PauseButton);
+            Controls.Add(StartButton);
             Controls.Add(Take30SecButton);
             Controls.Add(Add30SecButton);
             Controls.Add(lblWorkoutTime);
@@ -234,5 +259,7 @@
         private System.Windows.Forms.Timer workoutTimeTimer;
         private Button Add30SecButton;
         private Button Take30SecButton;
+        private Button StartButton;
+        private Button PauseButton;
     }
 }
