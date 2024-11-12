@@ -36,6 +36,8 @@ namespace FTT.UserControls
             label2 = new Label();
             dtWorkingDate = new DateTimePicker();
             MainPanel = new Panel();
+            lblMinSets = new Label();
+            label11 = new Label();
             cbWeight = new ComboBox();
             lblSwitchRange = new LinkLabel();
             lblTotalInWorkVolume = new Label();
@@ -79,13 +81,9 @@ namespace FTT.UserControls
             FinishButton = new Button();
             groupNotes = new GroupBox();
             txtNotes = new TextBox();
-            lblStrikes = new Label();
-            label10 = new Label();
             tlpAddToTrack = new ToolTip(components);
             tlpRemoveFromTrack = new ToolTip(components);
             CancelButton = new Button();
-            lblMinSets = new Label();
-            label11 = new Label();
             MainPanel.SuspendLayout();
             groupHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvHistory).BeginInit();
@@ -167,6 +165,26 @@ namespace FTT.UserControls
             MainPanel.Size = new Size(461, 286);
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
+            // 
+            // lblMinSets
+            // 
+            lblMinSets.AutoSize = true;
+            lblMinSets.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblMinSets.ForeColor = Color.Blue;
+            lblMinSets.Location = new Point(373, 1);
+            lblMinSets.Name = "lblMinSets";
+            lblMinSets.Size = new Size(14, 15);
+            lblMinSets.TabIndex = 23;
+            lblMinSets.Text = "4";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(320, 1);
+            label11.Name = "label11";
+            label11.Size = new Size(55, 15);
+            label11.TabIndex = 22;
+            label11.Text = "Min Sets:";
             // 
             // cbWeight
             // 
@@ -639,8 +657,6 @@ namespace FTT.UserControls
             // groupNotes
             // 
             groupNotes.Controls.Add(txtNotes);
-            groupNotes.Controls.Add(lblStrikes);
-            groupNotes.Controls.Add(label10);
             groupNotes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             groupNotes.Location = new Point(3, 69);
             groupNotes.Margin = new Padding(3, 2, 3, 2);
@@ -655,35 +671,15 @@ namespace FTT.UserControls
             // txtNotes
             // 
             txtNotes.ForeColor = SystemColors.InfoText;
-            txtNotes.Location = new Point(10, 37);
+            txtNotes.Location = new Point(10, 20);
             txtNotes.Margin = new Padding(3, 2, 3, 2);
             txtNotes.Multiline = true;
             txtNotes.Name = "txtNotes";
             txtNotes.ReadOnly = true;
-            txtNotes.Size = new Size(196, 21);
+            txtNotes.Size = new Size(196, 38);
             txtNotes.TabIndex = 3;
             txtNotes.Text = "Increase";
             txtNotes.TextAlign = HorizontalAlignment.Center;
-            // 
-            // lblStrikes
-            // 
-            lblStrikes.AutoSize = true;
-            lblStrikes.ForeColor = Color.Red;
-            lblStrikes.Location = new Point(66, 17);
-            lblStrikes.Name = "lblStrikes";
-            lblStrikes.Size = new Size(59, 15);
-            lblStrikes.TabIndex = 2;
-            lblStrikes.Text = "❌❌❌❌";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label10.Location = new Point(8, 17);
-            label10.Name = "label10";
-            label10.Size = new Size(49, 15);
-            label10.TabIndex = 1;
-            label10.Text = "Strikes:";
             // 
             // CancelButton
             // 
@@ -696,26 +692,6 @@ namespace FTT.UserControls
             CancelButton.Text = "❌";
             CancelButton.UseVisualStyleBackColor = true;
             CancelButton.Click += CancelButton_Click;
-            // 
-            // lblMinSets
-            // 
-            lblMinSets.AutoSize = true;
-            lblMinSets.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblMinSets.ForeColor = Color.Blue;
-            lblMinSets.Location = new Point(373, 1);
-            lblMinSets.Name = "lblMinSets";
-            lblMinSets.Size = new Size(14, 15);
-            lblMinSets.TabIndex = 23;
-            lblMinSets.Text = "4";
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Location = new Point(320, 1);
-            label11.Name = "label11";
-            label11.Size = new Size(55, 15);
-            label11.TabIndex = 22;
-            label11.Text = "Min Sets:";
             // 
             // TrackUC
             // 
@@ -769,8 +745,6 @@ namespace FTT.UserControls
         private Label label9;
         private Label lblWorkingDate;
         private Label label6;
-        private Label label10;
-        private Label lblStrikes;
         private TextBox txtNotes;
         private Label lblSet1Data;
         private Label lblSet3Display;

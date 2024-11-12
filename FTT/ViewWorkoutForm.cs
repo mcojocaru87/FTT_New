@@ -14,7 +14,7 @@ namespace FTT
         {
             InitializeComponent();
 
-            _workoutId = workoutId;            
+            _workoutId = workoutId;
 
             LoadWorkout();
         }
@@ -26,6 +26,10 @@ namespace FTT
             if (workout != null && workout.Workout != null)
             {
                 lblWorkoutDate.Text = workout.Workout.WorkoutDate.ToString("MMMM dd, yyyy");
+                lblWorkoutStartDate.Text = workout.Workout.StartDate.ToString("MMMM dd, yyyy - HH:mm");
+                lblWorkoutEndDate.Text = workout.Workout.EndDate.ToString("MMMM dd, yyyy - HH:mm");
+                lblWorkoutTotalTime.Text = workout.Workout.EndDate.Subtract(workout.Workout.StartDate).ToString(@"hh\:mm\:ss");
+                lblProgressMade.Text = workout.Workout.IsProgressMade ? "Congrats! Yes." : "Keep going!";
 
                 if (workout.WorkoutItems.Count > 0)
                 {

@@ -76,6 +76,7 @@ namespace FTT.Services
                 {
                     workout.Status = WorkoutStatus.Finished;
                     workout.EndDate = DateTime.Now;
+                    workout.IsProgressMade = Session.Instance.IsActiveWorkoutProgressMade;
 
                     _workoutRepository.Update(workout);
                     _workoutRepository.Commit();
@@ -88,6 +89,7 @@ namespace FTT.Services
             }
 
             Session.Instance.ActiveWorkoutId = null;
+            Session.Instance.IsActiveWorkoutProgressMade = false;
         }
 
         public void UpdateWorkoutDate(int workoutId, DateTime newWorkoutDate)

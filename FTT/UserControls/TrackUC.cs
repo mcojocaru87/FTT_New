@@ -32,7 +32,6 @@ namespace FTT.UserControls
         private int _workingExerciseId = 0;
         private decimal _previousTotalVolume = 0;
         private decimal _currentWeightUsed = 0;
-        private int _lastStrikeCount = 0;
         private List<GraphViewModel> _dataPoints;
         private Setting exerciseSettings = null!;
         private bool isDumbbellUsed = false;
@@ -300,103 +299,37 @@ namespace FTT.UserControls
 
             _trackService.FinishWorkingExercise(workingExercise);
 
-            if (exerciseSettings != null)
-            {
-                var maxReps = exerciseSettings.MaxReps;
-                var minReps = exerciseSettings.MinReps;
-
-                var deltaReps = maxReps - minReps;
-
-                var slowProgressTrack = GetSlowProgressTrack();
-
-                if (slowProgressTrack != null)
-                {
-                    var counter = slowProgressTrack.Counter;
-
-                    if (counter >= deltaReps)
-                    {
-                        var messageResponse =
-                            MessageBox.Show("We see some slow progress. Would you consider chaning the Reps Interval / Sets Number?", "Notice", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
-
-                        if (messageResponse == DialogResult.Yes)
-                        {
-                            SwitchIntervalRangeForm switchIntervalRangeForm = new(_exerciseId, this);
-                            switchIntervalRangeForm.ShowDialog();
-                        }
-
-                        ClearSlowProgressTrackForExercise(slowProgressTrack);
-                    }
-                }
-            }
-
             ResetControls();
         }
 
         private RulesResultViewModel RulesOfProgression()
         {
-            var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
-            var currentTotalSets = _trackList.Count;
             var exerciseSettings = this.exerciseSettings;
-            var currentWeightUsed = _trackList.Min(x => x.Weight);
-            decimal loggedWeight = 0;
-            var totalReps = _trackList.Sum(x => x.Reps);
-
-            var maxFailAttempts = exerciseSettings?.FailAttempts;
-            var maxReps = exerciseSettings?.MaxReps;
-            var minReps = exerciseSettings?.MinReps;
-            var minSets = exerciseSettings?.MinSets;
-            var progressTrys = exerciseSettings?.ProgressTrys;
-            var intervalId = exerciseSettings?.RepRangeIntervalId;
+            var maxReps = exerciseSettings?.MaxReps ?? 0;
+            var minReps = exerciseSettings?.MinReps ?? 0;
+            var minSets = exerciseSettings?.MinSets ?? 0;
             var notes = string.Empty;
-            var failAttempts = 0;
+            var currentWeightUsed = _trackList.Min(x => x.Weight);
+            var currentTotalSets = _trackList.Count;
+            var totalReps = _trackList.Sum(x => x.Reps);
+            decimal loggedWeight = 0;
+            bool isProgress = false;
+            var intervalId = exerciseSettings?.RepRangeIntervalId ?? 0;
+            var progressTrys = exerciseSettings?.ProgressTrys ?? 0;
+            var currentTotalVolume = _trackList.Sum(x => x.Reps * x.Weight * _exerciseMultiplier);
 
-            var anySetsUnderMaxReps = _trackList.Any(x => x.Reps < maxReps);
-            var anySetsUnderMinReps = _trackList.Any(x => x.Reps < minReps);
-            var progressiveTotalVolume =
-                CalculateProgressiveTotalVolume((int)minSets, (int)maxReps, currentWeightUsed, _exerciseMultiplier);
+            // 1. If first set is >= to exerciseSettings?.MinReps => Keep going
+            var firstSet = _trackList.FirstOrDefault();
+            var lastSet = _trackList.LastOrDefault();
 
-            var isProgress = !anySetsUnderMinReps && !anySetsUnderMaxReps &&
-                currentTotalSets >= minSets && currentTotalVolume >= progressiveTotalVolume;
-            var counter = isProgress ? 1 : 0;
-
-            SaveProgressiveOverload(counter, _exerciseId, (int)intervalId,
-                currentWeightUsed, string.Join(',', _trackList.Select(x => x.Reps)), (int)progressTrys);
-
-            if (anySetsUnderMinReps || currentTotalSets < minSets)
+            if (firstSet != null)
             {
-                failAttempts++;
-                notes = $"Lower weight! - {currentWeightUsed} Kg";
-
-                var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, false);
-
-                if (nextLoad != null)
-                {
-                    notes = (nextLoad.IsMin) ?
-                        $"Min reached - {nextLoad.Weight} Kg" :
-                        $"Lower weight to : {nextLoad.Weight} Kg";
-
-                    loggedWeight = nextLoad.Weight;
-                }
-            }
-            else if (currentTotalVolume <= _previousTotalVolume)
-            {
-                failAttempts = _lastStrikeCount == maxFailAttempts ? 0 : _lastStrikeCount + 1;
-
-                if (currentTotalSets >= minSets &&
-                    currentTotalVolume >= progressiveTotalVolume &&
-                    !anySetsUnderMaxReps)
-                {
-                    failAttempts = 0;
-                }
-
-                if (failAttempts <= maxFailAttempts)
+                if (firstSet.Reps >= minReps)
                 {
                     notes = $"Keep going! - {currentWeightUsed} Kg";
                 }
-
-                if (_lastStrikeCount == maxFailAttempts)
+                else
                 {
-                    failAttempts = 0;
                     notes = $"Lower weight! - {currentWeightUsed} Kg";
 
                     var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, false);
@@ -410,16 +343,13 @@ namespace FTT.UserControls
                         loggedWeight = nextLoad.Weight;
                     }
                 }
+            }
 
-                var progress = IsProgress(_exerciseId, (int)intervalId, currentWeightUsed, (int)progressTrys);
-
-                if (currentTotalSets >= minSets &&
-                    currentTotalVolume >= progressiveTotalVolume &&
-                    !anySetsUnderMaxReps)
+            if (currentTotalSets >= minSets)
+            {
+                if (totalReps / maxReps >= _trackList.Count)
                 {
-                    failAttempts = 0;
-
-                    if (progress.IsFullProgress)
+                    if (lastSet != null && lastSet.Reps >= maxReps + 2)
                     {
                         notes = $"Increase weight! - {currentWeightUsed} Kg";
 
@@ -432,62 +362,30 @@ namespace FTT.UserControls
                                 $"Increase weight to : {nextLoad.Weight} Kg";
 
                             loggedWeight = nextLoad.Weight;
+
+                            isProgress = true;
                         }
                     }
-                    else if (progress.IsPartialProgress)
-                    {
-                        var leftSessionCount = progress.LeftSessionCount;
-
-                        notes = $"{leftSessionCount} more time(s)! - {currentWeightUsed} Kg";
-                    }
                 }
+            }
+
+            // Check if progress is made
+            if (isProgress)
+            {
+                Session.Instance.IsActiveWorkoutProgressMade = true;
             }
             else
             {
-                failAttempts = 0;
-
-                if (totalReps / maxReps >= _trackList.Count)
+                if (currentTotalVolume > _previousTotalVolume)
                 {
-                    if (!anySetsUnderMaxReps)
-                    {
-                        var progress = IsProgress(_exerciseId, (int)intervalId, currentWeightUsed, (int)progressTrys);
-
-                        if (progress.IsFullProgress)
-                        {
-                            notes = $"Increase weight! - {currentWeightUsed} Kg";
-
-                            var nextLoad = _exerciseLoadService.GetNextLoad(currentWeightUsed, isDumbbellUsed, true);
-
-                            if (nextLoad != null)
-                            {
-                                notes = (nextLoad.IsMax) ?
-                                    $"Max reached - {nextLoad.Weight} Kg" :
-                                    $"Increase weight to : {nextLoad.Weight} Kg";
-
-                                loggedWeight = nextLoad.Weight;
-                            }
-                        }
-                        else if (progress.IsPartialProgress)
-                        {
-                            var leftSessionCount = progress.LeftSessionCount;
-
-                            notes = $"{leftSessionCount} more time(s)! - {currentWeightUsed} Kg";
-                        }
-                    }
-                    else
-                    {
-                        notes = $"Getting there! - {currentWeightUsed} Kg";
-
-                        SaveSlowProgress();
-                    }
-                }
-                else
-                {
-                    notes = $"Getting there! - {currentWeightUsed} Kg";
-
-                    SaveSlowProgress();
+                    Session.Instance.IsActiveWorkoutProgressMade = true;
                 }
             }
+
+            var counter = isProgress ? 1 : 0;
+
+            SaveProgressiveOverload(counter, _exerciseId, intervalId,
+                currentWeightUsed, string.Join(',', _trackList.Select(x => x.Reps)), progressTrys);
 
             if (loggedWeight == 0)
             {
@@ -498,89 +396,9 @@ namespace FTT.UserControls
 
             return new RulesResultViewModel
             {
-                FailCount = failAttempts,
+                FailCount = 0,
                 Notes = notes
             };
-        }
-
-        private void ClearSlowProgressTrackForExercise(SlowProgressTrack slowProgressTrack)
-        {
-            if (slowProgressTrack != null)
-            {
-                _slowProgressTrackRepository.Delete(slowProgressTrack);
-                _slowProgressTrackRepository.Commit();
-            }
-        }
-
-        private SlowProgressTrack? GetSlowProgressTrack()
-        {
-            return _slowProgressTrackRepository
-                .Find(x => x.ExerciseId == _exerciseId)
-                .FirstOrDefault();
-        }
-
-        private void SaveSlowProgress()
-        {
-            var slowProgressTrack = GetSlowProgressTrack();
-
-            if (slowProgressTrack != null)
-            {
-                var counter = slowProgressTrack.Counter;
-
-                counter++;
-
-                slowProgressTrack.Counter = counter;
-
-                _slowProgressTrackRepository.Update(slowProgressTrack);
-                _slowProgressTrackRepository.Commit();
-            }
-            else
-            {
-                _slowProgressTrackRepository
-                    .Add(new SlowProgressTrack { Counter = 1, ExerciseId = _exerciseId });
-                _slowProgressTrackRepository.Commit();
-            }
-        }
-
-        private ProgressViewModel IsProgress(int exerciseId, int intervalId, decimal weight, int progressTrys)
-        {
-            var progress = _progressiveOverloadRepository
-                .Find(x => x.ExerciseId == exerciseId &&
-                    x.Weight == weight &&
-                    x.RepRangeIntervalId == intervalId)
-                .FirstOrDefault();
-
-            if (progress != null)
-            {
-                if (!progress.IsActive)
-                {
-                    if (progress.Counter >= progressTrys)
-                    {
-                        _progressiveOverloadRepository.Delete(progress);
-                        _progressiveOverloadRepository.Commit();
-
-                        return new ProgressViewModel { IsFullProgress = true };
-                    }
-                    else
-                    {
-                        return new ProgressViewModel
-                        {
-                            IsPartialProgress = true,
-                            LeftSessionCount = progressTrys - progress.Counter
-                        };
-                    }
-                }
-                else
-                {
-                    return new ProgressViewModel
-                    {
-                        IsPartialProgress = true,
-                        LeftSessionCount = progressTrys - progress.Counter
-                    };
-                }
-            }
-
-            return new ProgressViewModel { IsNoProgress = true };
         }
 
         private void SaveProgressiveOverload(int counter, int exerciseId,
@@ -663,18 +481,6 @@ namespace FTT.UserControls
         {
             _poAuditRepository.Add(record);
             _poAuditRepository.Commit();
-        }
-
-        private decimal CalculateProgressiveTotalVolume(int minSets, int maxReps, decimal weight, int multiplier)
-        {
-            decimal totalVolume = 0;
-
-            for (int i = 1; i <= minSets; i++)
-            {
-                totalVolume += maxReps * weight * multiplier;
-            }
-
-            return totalVolume;
         }
 
         private void ResetControls()
@@ -828,30 +634,8 @@ namespace FTT.UserControls
             {
                 groupNotes.Visible = true;
 
-                var strikeCount = exerciseNotes.StrikeCount;
                 var notes = exerciseNotes.Notes;
-
-                _lastStrikeCount = strikeCount;
-
-                var displayStrikes = string.Empty;
-
-                if (strikeCount > 0)
-                {
-                    for (int i = 0; i < strikeCount; i++)
-                    {
-                        displayStrikes += "❌";
-                    }
-
-                    lblStrikes.ForeColor = Color.Red;
-                }
-                else
-                {
-                    displayStrikes = "N/A";
-                    lblStrikes.ForeColor = Color.DarkGreen;
-                }
-
                 txtNotes.Text = notes;
-                lblStrikes.Text = displayStrikes;
             }
             else
             {

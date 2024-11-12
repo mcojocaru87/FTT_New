@@ -9,6 +9,7 @@ namespace FTT
 
         public ServiceProvider? ServiceProvider { get; set; }
         public int? ActiveWorkoutId { get; set; }
+        public bool IsActiveWorkoutProgressMade { get; set; }
         public User? CurrentUser { get; set; }
 
         private Session() { }
