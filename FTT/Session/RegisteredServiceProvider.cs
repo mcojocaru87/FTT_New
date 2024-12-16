@@ -3,6 +3,7 @@ using FTT.DbEntity;
 using FTT.Services;
 using FTT.Services.Authentication;
 using FTT.Services.ExerciseWLoad;
+using FTT.Services.RepRange;
 using FTT.Services.Track;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +27,7 @@ namespace FTT
         public IRepository<ToolTimer>? ToolTimerRepository { get; set; }
         public IRepository<RepRangeInterval>? IntervalRepository { get; set; }
         public IRepository<User>? UserRepository { get; set; }
+        public IRepRangeService? RepRangeService { get; set; }
 
         public static RegisteredServiceProvider Instance
         {
@@ -47,6 +49,7 @@ namespace FTT
             ToolTimerRepository = Session.Instance.ServiceProvider?.GetRequiredService<IRepository<ToolTimer>>();
             IntervalRepository = Session.Instance.ServiceProvider?.GetRequiredService<IRepository<RepRangeInterval>>();
             UserRepository = Session.Instance.ServiceProvider?.GetRequiredService<IRepository<User>>();
+            RepRangeService = Session.Instance.ServiceProvider?.GetRequiredService<IRepRangeService>();
         }
     }
 }

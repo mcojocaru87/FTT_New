@@ -3,6 +3,7 @@ using FTT.DbDesign;
 using FTT.Services;
 using FTT.Services.Authentication;
 using FTT.Services.ExerciseWLoad;
+using FTT.Services.RepRange;
 using FTT.Services.Track;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,7 @@ namespace FTT
             services.AddScoped(typeof(ITrackService), typeof(TrackService));
             services.AddScoped(typeof(IExerciseLoadService), typeof(ExerciseLoadService));
             services.AddScoped(typeof(IAuthenticationService), typeof(AuthenticationService));
+            services.AddScoped(typeof(IRepRangeService), typeof(RepRangeService));
         }
     }
 }

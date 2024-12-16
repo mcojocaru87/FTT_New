@@ -179,7 +179,7 @@ namespace FTT
                 if ((int)selectedExercise.ValueMember > 0)
                 {
                     var trackService = RegisteredServiceProvider.Instance.TrackService;
-                    var exerciseNotes = trackService?.GetTrackingNotes((int)selectedExercise.ValueMember);
+                    var exerciseNotes = trackService?.GetTrackingNotes((int)selectedExercise.ValueMember, 0);
 
                     if (exerciseNotes != null)
                     {

@@ -3,6 +3,7 @@ using FTT.DbEntity;
 using FTT.GraphScreen;
 using FTT.Services;
 using FTT.Services.ExerciseWLoad;
+using FTT.Services.RepRange;
 using FTT.Services.Track;
 using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,11 @@ namespace FTT.UserControls
         private bool isDumbbellUsed = false;
         private decimal todayUsedWeight = 0;
 
+        public int RepRangeIntervalId { get; set; }
+
         public event EventHandler TriggerButtonEvent;
+
+        private readonly IRepRangeService _repRangeService = RegisteredServiceProvider.Instance.RepRangeService!;
 
         public TrackUC(MainForm mainForm)
         {
@@ -146,6 +151,7 @@ namespace FTT.UserControls
                     }
 
                     exerciseSettings = LoadExerciseSettings(_exerciseId);
+                    SetRepRangeIntervalId();
 
                     StartButton.Visible = true;
                     FinishButton.Visible = true;
@@ -174,11 +180,21 @@ namespace FTT.UserControls
             }
         }
 
+        private void SetRepRangeIntervalId()
+        {
+            var minReps = exerciseSettings.MinReps;
+            var maxReps = exerciseSettings.MaxReps;
+
+            var interval = _repRangeService.GetIntervalByRange(minReps, maxReps);
+
+            RepRangeIntervalId = interval?.Id ?? 0;
+        }
+
         private Setting LoadExerciseSettings(int exerciseId)
         {
             return _settingRepository
                 .Find(x => x.ExerciseId == exerciseId)
-                .FirstOrDefault();
+                .FirstOrDefault()!;
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -294,6 +310,7 @@ namespace FTT.UserControls
                 ExerciseId = _exerciseId,
                 FailCount = rulesResult.FailCount,
                 Notes = rulesResult.Notes,
+                RepRangeIntervalId = RepRangeIntervalId,
                 WorkingDate = dtWorkingDate.Value
             };
 
@@ -504,6 +521,7 @@ namespace FTT.UserControls
             dtWorkingDate.Value = DateTime.Today.AddDays(1).AddSeconds(-1);
             dtWorkingDate.Value = DateTime.Now;
             _dataPoints.Clear();
+            RepRangeIntervalId = 0;
         }
 
         private void SetMainFormButtonEnabled(bool enabled)
@@ -628,7 +646,7 @@ namespace FTT.UserControls
 
         private void LoadLastWorkingExerciseNotes()
         {
-            var exerciseNotes = _trackService.GetTrackingNotes(_exerciseId);
+            var exerciseNotes = _trackService.GetTrackingNotes(_exerciseId, RepRangeIntervalId);
 
             if (exerciseNotes != null)
             {
@@ -645,7 +663,7 @@ namespace FTT.UserControls
 
         private void LoadLastTracking()
         {
-            var lastTracking = _trackService.GetLastTracking(_exerciseId);
+            var lastTracking = _trackService.GetLastTracking(_exerciseId, RepRangeIntervalId);
             decimal lastTrackedWeight = 0;
 
             if (lastTracking != null)
@@ -844,7 +862,7 @@ namespace FTT.UserControls
 
         private void LoadWorkingExerciseHistory()
         {
-            var history = _trackService.GetWorkingExerciseHistory(_exerciseId);
+            var history = _trackService.GetWorkingExerciseHistory(_exerciseId, RepRangeIntervalId);
             var dataTable = _trackService.ConvertToDataTable(history);
 
             _dataPoints = ConvertFromDataTableToList(dataTable);

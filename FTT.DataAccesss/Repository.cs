@@ -34,10 +34,10 @@
                     query = query.Include(child);
                 }
 
-                return query.SingleOrDefault(x => x.Id == id);
+                return query.SingleOrDefault(x => x.Id == id)!;
             }
 
-            return _dbSet.Find(id);
+            return _dbSet.Find(id)!;
         }
 
         public void Add(T entity)

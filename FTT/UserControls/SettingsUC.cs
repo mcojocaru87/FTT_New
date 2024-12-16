@@ -1,5 +1,6 @@
 ﻿using FTT.DataAccesss;
 using FTT.DbEntity;
+using FTT.Services.RepRange;
 using FTT.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ namespace FTT.UserControls
         private readonly IRepository<Exercise> _exerciseRepository = RegisteredServiceProvider.Instance.ExerciseRepository!;
         private readonly IRepository<ToolTimer> _toolTimerRepository = RegisteredServiceProvider.Instance.ToolTimerRepository!;
         private readonly IRepository<RepRangeInterval> _repRangeIntervalRepository = RegisteredServiceProvider.Instance.IntervalRepository!;
+        private readonly IRepRangeService _repRangeService = RegisteredServiceProvider.Instance.RepRangeService!;
 
         private bool isCreateInstance = false;
         private bool isPreSet = false;
@@ -127,22 +129,6 @@ namespace FTT.UserControls
             cbProgressTrys.DisplayMember = "DisplayMember";
         }
 
-        private bool CheckIfRepRangeIntervalExists(int minReps, int maxReps)
-        {
-            var interval = _repRangeIntervalRepository
-                .Find(x => x.MinReps == minReps && x.MaxReps == maxReps)
-                .FirstOrDefault();
-
-            return interval != null;
-        }
-
-        private RepRangeInterval? GetIntervalByRange(int minReps, int maxReps)
-        {
-            return _repRangeIntervalRepository
-                 .Find(x => x.MinReps == minReps && x.MaxReps == maxReps)
-                 .FirstOrDefault();
-        }
-
         private void UpdateExerciseSettingsInterval(int exerciseId, int minReps, int maxReps)
         {
             var exerciseSettings = _settingsRepository
@@ -164,7 +150,7 @@ namespace FTT.UserControls
 
             if (exerciseId > 0)
             {
-                var interval = GetIntervalByRange(minReps, maxReps);
+                var interval = _repRangeService.GetIntervalByRange(minReps, maxReps);
 
                 if (interval != null)
                 {
@@ -181,7 +167,7 @@ namespace FTT.UserControls
 
         private int CreateNewRepRangeInterval(int minReps, int maxReps)
         {
-            if (!CheckIfRepRangeIntervalExists(minReps, maxReps))
+            if (!_repRangeService.CheckIfRepRangeIntervalExists(minReps, maxReps))
             {
                 var newInterval = new RepRangeInterval
                 {

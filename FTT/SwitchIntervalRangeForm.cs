@@ -80,6 +80,8 @@ namespace FTT
                 Label lbl = (Label)_trackForm.Controls.Find("lblIntervalInUse", true).FirstOrDefault()!;
                 Label lblMinSets = (Label)_trackForm.Controls.Find("lblMinSets", true).FirstOrDefault()!;
 
+                _trackForm.RepRangeIntervalId = exerciseSettings?.RepRangeIntervalId ?? 0;
+
                 if (lbl != null)
                 {
                     lbl.Text = selectedInterval;

@@ -8,11 +8,11 @@ namespace FTT.Services.Track
     {
         bool LastExerciseTrackingExists(int exerciseId);
         int CreateWorkingExercise(WorkingExercise workingExercise);
-        TrackingNotesViewModel? GetTrackingNotes(int exerciseId);
-        LastTrackingViewModel? GetLastTracking(int exerciseId);
+        TrackingNotesViewModel? GetTrackingNotes(int exerciseId, int repRangeIntervalId);
+        LastTrackingViewModel? GetLastTracking(int exerciseId, int repRangeIntervalId);
         void AddSetsToWorkingExercise(List<TrackListViewModel> list, int workingExerciseId);
         void FinishWorkingExercise(WorkingExercise workingExercise);
-        List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId);
+        List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId, int repRangeIntervalId);
         DataTable ConvertToDataTable(List<HistoryViewModel> list);
         WorkingExercise GetWorkingExerciseById(int workingExerciseId);
         Exercise GetExercise(int exerciseId);

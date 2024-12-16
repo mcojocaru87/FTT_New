@@ -34,9 +34,9 @@ namespace FTT.Services.Track
             return workingExercise.Id;
         }
 
-        public TrackingNotesViewModel? GetTrackingNotes(int exerciseId)
+        public TrackingNotesViewModel? GetTrackingNotes(int exerciseId, int repRangeIntervalId)
         {
-            var workingExercise = GetLastWorkingExercise(exerciseId);
+            var workingExercise = GetLastWorkingExercise(exerciseId, repRangeIntervalId);
 
             if (workingExercise != null)
             {
@@ -50,9 +50,9 @@ namespace FTT.Services.Track
             return null; ;
         }
 
-        public LastTrackingViewModel? GetLastTracking(int exerciseId)
+        public LastTrackingViewModel? GetLastTracking(int exerciseId, int repRangeIntervalId)
         {
-            var workingExercise = GetLastWorkingExercise(exerciseId);
+            var workingExercise = GetLastWorkingExercise(exerciseId, repRangeIntervalId);
 
             if (workingExercise != null)
             {
@@ -90,14 +90,24 @@ namespace FTT.Services.Track
             return null;
         }
 
-        private WorkingExercise? GetLastWorkingExercise(int exerciseId)
+        private WorkingExercise? GetLastWorkingExercise(int exerciseId, int repRangeIntervalId)
         {
+            if (repRangeIntervalId > 0)
+            {
+                return _workingExerciseRepository
+               .Find(x => x.ExerciseId == exerciseId && x.RepRangeIntervalId == repRangeIntervalId)
+               .Include("WorkingExerciseSets")
+               .Where(x => x.WorkingExerciseSets.Any())
+               .OrderByDescending(x => x.WorkingDate)
+               .FirstOrDefault();
+            }
+
             return _workingExerciseRepository
-                .Find(x => x.ExerciseId == exerciseId)
-                .Include("WorkingExerciseSets")
-                .Where(x => x.WorkingExerciseSets.Any())
-                .OrderByDescending(x => x.WorkingDate)
-                .FirstOrDefault();
+               .Find(x => x.ExerciseId == exerciseId)
+               .Include("WorkingExerciseSets")
+               .Where(x => x.WorkingExerciseSets.Any())
+               .OrderByDescending(x => x.WorkingDate)
+               .FirstOrDefault();
         }
 
         private List<WorkingExerciseSet> GetLastWorkingExerciseSets(int workingExerciseId)
@@ -139,20 +149,32 @@ namespace FTT.Services.Track
                 workingExerciseToUpdate.WorkingDate = workingExercise.WorkingDate;
                 workingExerciseToUpdate.FailCount = workingExercise.FailCount;
                 workingExerciseToUpdate.Notes = workingExercise.Notes;
+                workingExerciseToUpdate.RepRangeIntervalId = workingExercise.RepRangeIntervalId;    
 
                 _workingExerciseRepository.Update(workingExerciseToUpdate);
                 _workingExerciseRepository.Commit();
             }
         }
 
-        public List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId)
+        public List<HistoryViewModel> GetWorkingExerciseHistory(int exerciseId, int repRangeIntervalId)
         {
             List<HistoryViewModel> viewModel = [];
+            List<WorkingExercise> workingExercises = [];
 
-            var workingExercises = _workingExerciseRepository
-                .Find(x => x.ExerciseId == exerciseId)
-                .OrderByDescending(x => x.WorkingDate)
-                .ToList();
+            if (repRangeIntervalId > 0)
+            {
+                workingExercises = [.. _workingExerciseRepository
+               .Find(x => x.ExerciseId == exerciseId && x.RepRangeIntervalId == repRangeIntervalId)
+               .OrderByDescending(x => x.WorkingDate)];
+            }
+            else
+            {
+                workingExercises = [.. _workingExerciseRepository
+               .Find(x => x.ExerciseId == exerciseId)
+               .OrderByDescending(x => x.WorkingDate)];
+            }
+
+
 
             var exercise = GetExercise(exerciseId);
             var multiplier = exercise.Multiplier;
