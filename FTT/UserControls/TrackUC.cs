@@ -37,6 +37,7 @@ namespace FTT.UserControls
         private Setting exerciseSettings = null!;
         private bool isDumbbellUsed = false;
         private decimal todayUsedWeight = 0;
+        private decimal workingWeight = 0;
 
         public int RepRangeIntervalId { get; set; }
 
@@ -215,7 +216,6 @@ namespace FTT.UserControls
             }
 
             SetRepRangeIntervalLabel();
-            SetUpdateWorkoutDateButton();
             LoadWorkingExerciseHistory();
 
             MainPanel.Visible = true;
@@ -236,19 +236,7 @@ namespace FTT.UserControls
             }
         }
 
-        private void SetUpdateWorkoutDateButton()
-        {
-            var activeWorkoutId = Session.Instance.ActiveWorkoutId;
 
-            if (activeWorkoutId != null && activeWorkoutId > 0)
-            {
-                UpdateWorkoutDateButton.Enabled = dtWorkingDate.Value.Date != DateTime.Today.Date;
-            }
-            else
-            {
-                UpdateWorkoutDateButton.Enabled = false;
-            }
-        }
 
         private void FinishButton_Click(object sender, EventArgs e)
         {
@@ -624,24 +612,8 @@ namespace FTT.UserControls
                     RemoveFromButton.Visible = true;
                     AddToButton.Visible = false;
 
-                    SetUpdateWorkoutDateButton();
                 }
             }
-        }
-
-        private void UpdateWorkoutDateButton_Click(object sender, EventArgs e)
-        {
-            var workoutId = Session.Instance.ActiveWorkoutId;
-            var workoutDate = dtWorkingDate.Value;
-
-            _workoutService?.UpdateWorkoutDate(workoutId ?? 0, workoutDate);
-
-            MessageBox.Show("Workout date has been updated!");
-        }
-
-        private void dtWorkingDate_ValueChanged(object sender, EventArgs e)
-        {
-            SetUpdateWorkoutDateButton();
         }
 
         private void LoadLastWorkingExerciseNotes()
@@ -700,6 +672,7 @@ namespace FTT.UserControls
                 todayUsedWeight = exerciseLoad.CurrentLoad;
                 txtWeight.Text = exerciseLoad.CurrentLoad.ToString();
                 cbWeight.SelectedValue = exerciseLoad.CurrentLoad;
+                workingWeight = exerciseLoad.CurrentLoad;
             }
             else
             {
@@ -713,6 +686,8 @@ namespace FTT.UserControls
                     txtWeight.Text = lastTrackedWeight.ToString();
                     cbWeight.SelectedValue = lastTrackedWeight;
                 }
+
+                workingWeight = (decimal)cbWeight.SelectedValue;
             }
         }
 
@@ -1044,6 +1019,11 @@ namespace FTT.UserControls
             }
         }
 
+        private void lblViewWarmup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            WarmupForm warmupForm = new(_exerciseId, workingWeight);
 
+            warmupForm.ShowDialog();
+        }
     }
 }

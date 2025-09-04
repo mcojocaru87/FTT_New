@@ -36,6 +36,7 @@ namespace FTT.UserControls
             label2 = new Label();
             dtWorkingDate = new DateTimePicker();
             MainPanel = new Panel();
+            lblViewWarmup = new LinkLabel();
             lblMinSets = new Label();
             label11 = new Label();
             cbWeight = new ComboBox();
@@ -46,7 +47,6 @@ namespace FTT.UserControls
             label1 = new Label();
             RemoveFromTrackButton = new Button();
             RepeatLastButton = new Button();
-            UpdateWorkoutDateButton = new Button();
             RemoveFromButton = new Button();
             AddToButton = new Button();
             groupHistory = new GroupBox();
@@ -129,11 +129,11 @@ namespace FTT.UserControls
             dtWorkingDate.Name = "dtWorkingDate";
             dtWorkingDate.Size = new Size(194, 23);
             dtWorkingDate.TabIndex = 3;
-            dtWorkingDate.ValueChanged += dtWorkingDate_ValueChanged;
             // 
             // MainPanel
             // 
             MainPanel.BackColor = SystemColors.ControlLight;
+            MainPanel.Controls.Add(lblViewWarmup);
             MainPanel.Controls.Add(lblMinSets);
             MainPanel.Controls.Add(label11);
             MainPanel.Controls.Add(cbWeight);
@@ -144,7 +144,6 @@ namespace FTT.UserControls
             MainPanel.Controls.Add(label1);
             MainPanel.Controls.Add(RemoveFromTrackButton);
             MainPanel.Controls.Add(RepeatLastButton);
-            MainPanel.Controls.Add(UpdateWorkoutDateButton);
             MainPanel.Controls.Add(RemoveFromButton);
             MainPanel.Controls.Add(AddToButton);
             MainPanel.Controls.Add(groupHistory);
@@ -165,6 +164,17 @@ namespace FTT.UserControls
             MainPanel.Size = new Size(461, 286);
             MainPanel.TabIndex = 4;
             MainPanel.Visible = false;
+            // 
+            // lblViewWarmup
+            // 
+            lblViewWarmup.AutoSize = true;
+            lblViewWarmup.Location = new Point(131, 43);
+            lblViewWarmup.Name = "lblViewWarmup";
+            lblViewWarmup.Size = new Size(81, 15);
+            lblViewWarmup.TabIndex = 24;
+            lblViewWarmup.TabStop = true;
+            lblViewWarmup.Text = "View Warmup";
+            lblViewWarmup.LinkClicked += lblViewWarmup_LinkClicked;
             // 
             // lblMinSets
             // 
@@ -271,17 +281,6 @@ namespace FTT.UserControls
             RepeatLastButton.Text = "Repeat Last";
             RepeatLastButton.UseVisualStyleBackColor = true;
             RepeatLastButton.Click += RepeatLastButton_Click;
-            // 
-            // UpdateWorkoutDateButton
-            // 
-            UpdateWorkoutDateButton.Location = new Point(18, 39);
-            UpdateWorkoutDateButton.Margin = new Padding(3, 2, 3, 2);
-            UpdateWorkoutDateButton.Name = "UpdateWorkoutDateButton";
-            UpdateWorkoutDateButton.Size = new Size(193, 22);
-            UpdateWorkoutDateButton.TabIndex = 14;
-            UpdateWorkoutDateButton.Text = "Update Current Workout Date";
-            UpdateWorkoutDateButton.UseVisualStyleBackColor = true;
-            UpdateWorkoutDateButton.Click += UpdateWorkoutDateButton_Click;
             // 
             // RemoveFromButton
             // 
@@ -761,7 +760,6 @@ namespace FTT.UserControls
         private DataGridView dgvHistory;
         private Button RemoveFromButton;
         private Button AddToButton;
-        private Button UpdateWorkoutDateButton;
         private Button ViewGraphButton;
         private Button RepeatLastButton;
         private Button RemoveFromTrackButton;
@@ -776,5 +774,6 @@ namespace FTT.UserControls
         private ComboBox cbWeight;
         private Label lblMinSets;
         private Label label11;
+        private LinkLabel lblViewWarmup;
     }
 }
