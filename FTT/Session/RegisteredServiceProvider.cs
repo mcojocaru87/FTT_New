@@ -5,6 +5,7 @@ using FTT.Services.Authentication;
 using FTT.Services.ExerciseWLoad;
 using FTT.Services.RepRange;
 using FTT.Services.Track;
+using FTT.Services.WorkoutTemplate;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FTT
@@ -28,6 +29,7 @@ namespace FTT
         public IRepository<RepRangeInterval>? IntervalRepository { get; set; }
         public IRepository<User>? UserRepository { get; set; }
         public IRepRangeService? RepRangeService { get; set; }
+        public IWorkoutTemplateService? WorkoutTemplateService { get; set; }
 
         public static RegisteredServiceProvider Instance
         {
@@ -50,6 +52,7 @@ namespace FTT
             IntervalRepository = Session.Instance.ServiceProvider?.GetRequiredService<IRepository<RepRangeInterval>>();
             UserRepository = Session.Instance.ServiceProvider?.GetRequiredService<IRepository<User>>();
             RepRangeService = Session.Instance.ServiceProvider?.GetRequiredService<IRepRangeService>();
+            WorkoutTemplateService = Session.Instance.ServiceProvider?.GetRequiredService<IWorkoutTemplateService>();
         }
     }
 }

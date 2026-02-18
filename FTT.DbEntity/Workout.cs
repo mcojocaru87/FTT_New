@@ -9,5 +9,6 @@ namespace FTT.Enums
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsProgressMade { get; set; }
+        public int? WorkoutTemplateId { get; set; }
     }
 }

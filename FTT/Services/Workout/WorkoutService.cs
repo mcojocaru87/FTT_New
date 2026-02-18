@@ -10,19 +10,22 @@ namespace FTT.Services
     {
         private readonly IRepository<Workout> _workoutRepository;
         private readonly IRepository<WorkoutItem> _workoutItemRepository;
+        private readonly IRepository<WorkoutTemplateExercise> _templateExerciseRepository;
         public WorkoutService()
         {
             _workoutRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<Workout>>();
             _workoutItemRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<WorkoutItem>>();
+            _templateExerciseRepository = Session.Instance.ServiceProvider.GetRequiredService<IRepository<WorkoutTemplateExercise>>();
         }
 
-        public void CreateWorkout(DateTime workoutDate)
+        public void CreateWorkout(DateTime workoutDate, int? workoutTemplateId = null)
         {
             var newWorkout = new Workout
             {
                 Status = WorkoutStatus.InProgress,
                 WorkoutDate = workoutDate,
-                StartDate = DateTime.Now
+                StartDate = DateTime.Now,
+                WorkoutTemplateId = workoutTemplateId
             };
 
             _workoutRepository.Add(newWorkout);
@@ -132,6 +135,21 @@ namespace FTT.Services
             }
 
             return result;
+        }
+
+        public List<int> GetTemplateExerciseIdsForWorkout(int workoutId)
+        {
+            var workout = _workoutRepository.GetById(workoutId);
+
+            if (workout?.WorkoutTemplateId == null)
+            {
+                return [];
+            }
+
+            return [.. _templateExerciseRepository
+                .Find(x => x.WorkoutTemplateId == workout.WorkoutTemplateId)
+                .Select(x => x.ExerciseId)
+                .Distinct()];
         }
     }
 }
