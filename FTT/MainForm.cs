@@ -72,10 +72,18 @@ namespace FTT
 
             if (buttonText == "Begin Workout")
             {
+                using var selectTemplateForm = new SelectWorkoutTemplateForm();
+                var selectResult = selectTemplateForm.ShowDialog(this);
+
+                if (selectResult != DialogResult.OK)
+                {
+                    return;
+                }
+
                 BeginWorkoutButton.Text = "Finish Workout";
 
                 InitiateWorkout initiateWorkout = new();
-                initiateWorkout.CreateWorkout();
+                initiateWorkout.CreateWorkout(selectTemplateForm.SelectedTemplateId);
                                 
                 SetupWorkoutStatusPanel(true);
 
@@ -133,6 +141,12 @@ namespace FTT
         {
             TimerForm timerForm = new(false, true);
             timerForm.Show();
+        }
+
+        private void TemplateButton_Click(object sender, EventArgs e)
+        {
+            using var workoutTemplateForm = new WorkoutTemplateForm();
+            workoutTemplateForm.ShowDialog(this);
         }
     }
 }

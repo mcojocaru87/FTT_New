@@ -13,8 +13,9 @@ namespace FTT
             _workoutService = RegisteredServiceProvider.Instance.WorkoutService;
         }
 
-        public void CreateWorkout() {
-            _workoutService?.CreateWorkout(DateTime.Now);
+        public void CreateWorkout(int? templateId = null)
+        {
+            _workoutService?.CreateWorkout(DateTime.Now, templateId);
         }
 
         private void InitiateWorkout_Shown(object sender, EventArgs e)

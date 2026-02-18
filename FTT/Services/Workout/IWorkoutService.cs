@@ -4,12 +4,13 @@ namespace FTT.Services
 {
     public interface IWorkoutService
     {
-        void CreateWorkout(DateTime workoutDate);
+        void CreateWorkout(DateTime workoutDate, int? workoutTemplateId = null);
         void FinishWorkout(int workoutId);
         void AddWorkingExerciseToWorkout(int workoutId, int workingExerciseId);
         void RemoveWorkingExerciseFromWorkout(int workoutId, int workingExerciseId);
         void UpdateWorkoutDate(int workoutId, DateTime newWorkoutDate);
         List<ViewWorkoutViewModel> GetAllWorkoutsDatesByMonth(int month, int year);
         WorkoutAggregateViewModel GetWorkoutById(int workoutId);
+        List<int> GetTemplateExerciseIdsForWorkout(int workoutId);
     }
 }

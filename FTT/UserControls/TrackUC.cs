@@ -81,7 +81,19 @@ namespace FTT.UserControls
 
         private void LoadExercises()
         {
-            var exercises = exerciseRepository?.GetAll()
+            var activeWorkoutId = Session.Instance.ActiveWorkoutId;
+            var templateExerciseIds = activeWorkoutId != null
+                ? _workoutService?.GetTemplateExerciseIdsForWorkout(activeWorkoutId.Value)
+                : [];
+
+            var exercisesQuery = exerciseRepository?.GetAll();
+
+            if (templateExerciseIds != null && templateExerciseIds.Count > 0)
+            {
+                exercisesQuery = exercisesQuery?.Where(x => templateExerciseIds.Contains(x.Id));
+            }
+
+            var exercises = exercisesQuery
                 .OrderByDescending(x => x.Category)
                 .Select(x => new ComboBoxViewModel(x.Id, $"{x.Category} - {x.Name}"))
                 .ToList();

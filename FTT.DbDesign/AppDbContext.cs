@@ -21,6 +21,19 @@
         public DbSet<ExerciseLoad> ExerciseLoads { get; set; }
         public DbSet<SlowProgressTrack> SlowProgressTracks { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<WorkoutTemplate> WorkoutTemplates { get; set; }
+        public DbSet<WorkoutTemplateExercise> WorkoutTemplateExercises { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<WorkoutTemplateExercise>()
+                .HasOne<WorkoutTemplate>()
+                .WithMany(x => x.Exercises)
+                .HasForeignKey(x => x.WorkoutTemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
